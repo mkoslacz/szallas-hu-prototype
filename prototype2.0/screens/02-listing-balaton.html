@@ -42,7 +42,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
 
 /* Persistent search — pas pod brand bar */
-.search-pad{background:#fff;border-bottom:1px solid var(--line);padding:14px 24px;position:sticky;top:0;z-index:30}
+.search-pad{background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;position:sticky;top:0;z-index:30}
 .search-bar{display:flex;max-width:1100px;margin:0 auto;background:#fff;border-radius:var(--radius-lg);align-items:stretch;border:1px solid var(--line-strong);box-shadow:var(--shadow-sm)}
 .search-bar > .field-cell{flex:1;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line);min-width:0}
 .search-bar > .field-cell:last-of-type{border-right:0}
@@ -52,8 +52,8 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .search-bar > .btn-search:hover{background:var(--c-primary-hover)}
 
 /* Quick-filter chips */
-.quick-chips{display:flex;gap:8px;padding:12px 0;overflow-x:auto;flex-wrap:nowrap}
-.quick-chips button{flex:0 0 auto;padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-700);font-weight:600;white-space:nowrap}
+.quick-chips{display:flex;gap:6px;padding:8px 0 4px;overflow-x:auto;flex-wrap:nowrap}
+.quick-chips button{flex:0 0 auto;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink-700);font-weight:600;white-space:nowrap}
 .quick-chips button:hover{border-color:var(--c-primary);color:var(--c-primary)}
 .quick-chips button.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
 
@@ -64,14 +64,50 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .title-row .counter{color:var(--ink-500);font-size:14px}
 .title-row .counter a{color:var(--c-primary);font-weight:600;margin-left:8px;text-decoration:underline}
 
-.disclosure{padding:10px 14px;background:#FFF8E1;border:1px solid #F6E4B0;border-radius:var(--radius);font-size:12.5px;color:var(--ink-700);margin:8px 0 14px;display:flex;gap:8px;align-items:center}
+.disclosure{padding:7px 12px;background:#FFF8E1;border:1px solid #F6E4B0;border-radius:var(--radius);font-size:12px;color:var(--ink-700);margin:6px 0 10px;display:flex;gap:8px;align-items:center}
 .disclosure b{color:var(--ink-900)}
 .disclosure a{color:var(--c-primary);text-decoration:underline}
 
-.layout{display:grid;grid-template-columns:240px minmax(0,1fr) 380px;gap:18px;align-items:start}
-@media (max-width:1300px){.layout{grid-template-columns:220px minmax(0,1fr) 320px}}
-@media (max-width:1100px){.layout{grid-template-columns:220px minmax(0,1fr)}.map-col{display:none}}
-@media (max-width:900px){.layout{grid-template-columns:1fr}.filters-col{display:none}}
+/* Default: single-column list (filters left, list right, no map) */
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start}
+.layout.with-map{grid-template-columns:240px minmax(0,1fr) 380px}
+@media (max-width:1300px){.layout.with-map{grid-template-columns:220px minmax(0,1fr) 320px}}
+@media (max-width:1100px){.layout.with-map{grid-template-columns:220px minmax(0,1fr)} .layout.with-map .map-col{display:none}}
+@media (max-width:900px){.layout{grid-template-columns:1fr}.filters-col{display:none}.layout.with-map .map-col{display:none}}
+
+/* View toggle button-row */
+.view-toggle{display:inline-flex;gap:0;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:3px;margin-left:10px;flex-shrink:0}
+.view-toggle button{padding:6px 14px;border:0;background:transparent;color:var(--ink-700);font-weight:700;font-size:13px;cursor:pointer;border-radius:999px;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.view-toggle button.on{background:var(--c-primary);color:#fff;box-shadow:var(--shadow-sm)}
+
+/* Floating "Show on map" FAB — Booking-style bottom-right of viewport */
+.map-fab{position:fixed;right:28px;bottom:28px;z-index:50;display:inline-flex;align-items:center;gap:10px;padding:12px 18px;background:var(--ink-900);color:#fff;border:0;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .15s, box-shadow .15s}
+.map-fab:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.3)}
+.map-fab .thumb{width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,#aac6d3,#7ba9bb);position:relative}
+.map-fab .thumb::after{content:'📍';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px}
+
+/* Fullscreen map overlay */
+.map-fullscreen{position:fixed;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column}
+.map-fs-top{padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-shrink:0}
+.map-fs-top h2{font-size:16px;flex:1}
+.map-fs-close{padding:8px 14px;background:var(--ink-900);color:#fff;border:0;border-radius:8px;font-weight:700;cursor:pointer}
+.map-fs-body{flex:1;position:relative;overflow:hidden}
+.map-fs-body .map-col{position:absolute !important;inset:0 !important;height:100% !important;max-height:none !important;top:0 !important;border-radius:0}
+
+/* Conversion: results header — compact one-liner */
+.results-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);margin:6px 0 10px;flex-wrap:wrap}
+.results-bar .summary-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-700)}
+.results-bar .summary-left b{color:var(--ink-900)}
+.results-bar .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.results-bar select{padding:8px 12px;border:1px solid var(--line-strong);border-radius:var(--radius);background:#fff;font-family:inherit;font-size:13px;font-weight:600}
+
+/* VIP teaser inside list */
+.vip-list-teaser{background:linear-gradient(135deg,#FFE8EA,#FFF1E6);border:1px solid #F6C5C9;border-radius:var(--radius-lg);padding:14px 18px;display:flex;gap:14px;align-items:center;margin:0}
+.vip-list-teaser .vip-word{font-size:32px;font-weight:900;color:var(--c-cta);font-style:italic;line-height:1;letter-spacing:-.02em;flex-shrink:0}
+.vip-list-teaser .body{flex:1}
+.vip-list-teaser h4{font-size:15px;color:var(--ink-900);margin-bottom:2px}
+.vip-list-teaser p{margin:0;font-size:12.5px;color:var(--ink-700)}
+.vip-list-teaser button{padding:8px 16px;background:var(--c-cta);color:#fff;border:0;border-radius:8px;font-weight:800;cursor:pointer;flex-shrink:0;font-size:13px}
 
 /* Filters */
 .filters-col{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto}
@@ -85,37 +121,50 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .fl-row input[type="checkbox"]{accent-color:var(--c-primary);flex-shrink:0}
 .fl-row .cnt{color:var(--ink-400);font-size:12.5px}
 
-/* Hotel cards */
-.list-col{display:flex;flex-direction:column;gap:14px;min-width:0}
-.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr) minmax(150px,190px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer}
+/* Hotel cards — Booking-style compact, 3 fit in 900px viewport */
+.list-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(200px,240px) minmax(0,1fr) minmax(170px,200px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:172px}
 .hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
 .hotel-card.highlight{box-shadow:0 0 0 3px var(--c-primary);border-color:var(--c-primary)}
-.hotel-img{position:relative;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);min-height:200px}
-.hotel-img .heart{position:absolute;top:10px;left:10px;width:36px;height:36px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700)}
+.hotel-img{position:relative;background-size:cover;background-position:center;min-height:172px}
+.hotel-img img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.hotel-img .heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:2;font-size:15px;line-height:1}
 .hotel-img .heart.saved{color:var(--c-primary)}
-.hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800}
-.hotel-img-label{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
-.hotel-info{padding:14px 16px;display:flex;flex-direction:column;gap:7px;min-width:0}
-.hotel-info h3{font-size:16px;color:var(--info);font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:13px}
-.hotel-info .stars .superior{color:var(--info);font-size:12px;margin-left:6px;font-weight:600}
-.hotel-info .amenities{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
-.amenity-pill{display:inline-flex;align-items:center;gap:3px;background:var(--c-success-bg);color:var(--c-success);padding:2px 6px;border-radius:5px;font-size:10.5px;font-weight:700;flex-shrink:0}
-.hotel-info .board{color:var(--c-success);font-size:12.5px;font-weight:700}
-.hotel-info .szep{color:var(--c-success);font-size:12px;font-weight:600}
-.hotel-price{padding:14px 14px;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;background:var(--surface-2);text-align:right;gap:6px;min-width:0}
-.hotel-score{display:flex;align-items:center;gap:6px;text-align:right}
-.hotel-score .lbl{font-size:12px;color:var(--ink-700);font-weight:700}
-.hotel-score .cnt{font-size:11px;color:var(--ink-500)}
-.hotel-score .num{width:40px;height:40px;border-radius:50%;background:var(--c-success);color:#fff;font-weight:800;font-size:15px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:var(--shadow-sm)}
-.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:13px}
-.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.01em}
-.hotel-bigprice .ft{font-size:14px;color:var(--ink-700);font-weight:600;margin-left:2px}
-.hotel-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:-2px}
-.hotel-tax{font-size:11.5px;color:var(--ink-500)}
-.hotel-cta{margin-top:auto;padding:8px 18px;background:#fff;border:1px solid var(--c-primary);color:var(--c-primary);border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
-.hotel-cta:hover{background:var(--c-cta);color:#fff;border-color:var(--c-cta)}
-@media (max-width:900px){.hotel-card{grid-template-columns:1fr}.hotel-img{min-height:180px}.hotel-price{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:flex-end}}
+.hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800;z-index:2}
+.hotel-img .vip-eligible{position:absolute;bottom:10px;left:10px;background:rgba(110,46,229,.94);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;z-index:2;letter-spacing:.02em}
+.hotel-img-label{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;z-index:2}
+.hotel-info{padding:14px 16px 14px 18px;display:flex;flex-direction:column;gap:6px;min-width:0;border-right:1px solid var(--line)}
+.hotel-info .name-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.hotel-info h3{font-size:16px;color:var(--info);font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:12px;flex-shrink:0}
+.hotel-info .stars .superior{color:var(--info);font-size:11px;margin-left:4px;font-weight:600}
+.hotel-info .location{font-size:12.5px;color:var(--ink-700)}
+.hotel-info .location .pin{color:var(--ink-400);margin-right:3px}
+.hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:13px;margin-top:1px}
+.hotel-info .quote{font-size:12px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:6px 10px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-overflow:ellipsis}
+.hotel-info .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;flex-shrink:0}
+.badge.board-br{background:var(--c-success-bg);color:var(--c-success)}
+.badge.board-hp{background:var(--c-deal-bg);color:var(--c-deal-ink)}
+.badge.board-ai{background:#F5EAFF;color:#6B21A8}
+.badge.cancel{background:var(--c-success-bg);color:var(--c-success)}
+.badge.szep{background:#EFF6FF;color:#1E40AF}
+.badge.noref{background:#FEF2F2;color:#991B1B}
+.hotel-price{padding:14px 16px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;background:var(--surface-2);gap:8px;min-width:0}
+.hotel-score{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.hotel-score-text{text-align:right}
+.hotel-score-text .lbl{font-size:12.5px;color:var(--ink-900);font-weight:800;line-height:1.1}
+.hotel-score-text .cnt{font-size:10.5px;color:var(--ink-500)}
+.hotel-score .num{width:38px;height:38px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.hotel-pricing{text-align:right;margin-top:auto}
+.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:13px;display:block}
+.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.01em;line-height:1.1;display:flex;align-items:baseline;gap:3px;justify-content:flex-end}
+.hotel-bigprice .ft{font-size:13px;color:var(--ink-700);font-weight:600}
+.hotel-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:1px}
+.hotel-tax{font-size:11px;color:var(--ink-500)}
+.hotel-cta{display:block;width:100%;padding:9px 14px;background:var(--c-primary);color:#fff;border:0;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;transition:all .15s;text-align:center}
+.hotel-cta:hover{background:var(--c-primary-hover)}
+@media (max-width:900px){.hotel-card{grid-template-columns:1fr}.hotel-img{min-height:180px}.hotel-price{align-items:flex-start;text-align:left}.hotel-info{border-right:0;border-bottom:1px solid var(--line)}.hotel-bigprice{justify-content:flex-start}.hotel-pricing{text-align:left}}
 
 /* Map column */
 .map-col{position:sticky;top:84px;height:calc(100vh - 100px);border-radius:var(--radius-lg);overflow:hidden;background:#dbe6ec;box-shadow:var(--shadow-sm)}
@@ -141,47 +190,66 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
 
+// Picsum photos seeded with hotel id for deterministic images (resort/landscape photos)
+const photo = (seed, w=600, h=400) => `https://picsum.photos/seed/szhotel-${seed}/${w}/${h}`;
+
 const HOTELS = [
   { id:'aurora', name:'Hotel Aurora Balaton', city:'Siófok', stars:4, superior:false,
     score:9.1, scoreLbl:'Kiváló', reviews:1247, lat:46.9034, lng:18.0561,
-    img:'#dbe6ec', img2:'#b5c8d2',
+    img: photo('aurora-pool'),
     discount:9, original:42400, price:38600, board:'Reggeli az árban', boardKind:'breakfast',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true,
+    refundable:true, cancelUntil:'jún. 8', vipEligible:true,
+    topQuote:'„Fantasztikus hétvégét töltöttünk itt. A wellness részleg tiszta és nyugodt." — Eszter K.' },
   { id:'ensana', name:'Ensana Thermal Aqua', city:'Hévíz', stars:4, superior:false,
     score:9.5, scoreLbl:'Kiváló', reviews:5587, lat:46.7847, lng:17.1922,
-    img:'#e4d7b5', img2:'#b5a785',
+    img: photo('ensana-spa'),
     discount:9, original:96085, price:86642, board:'All inclusive ellátással', boardKind:'allinc',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'200 m a tóhoz', wellness:true },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'200 m a tóhoz', wellness:true,
+    refundable:true, cancelUntil:'jún. 7', vipEligible:true,
+    topQuote:'„Csodálatos hely a feltöltődéshez. A termálvíz és a tó közelsége tökéletes." — Balázs T.' },
   { id:'danubius-marina', name:'Danubius Hotel Marina', city:'Balatonfüred', stars:3, superior:true,
     score:9.3, scoreLbl:'Nagyon jó', reviews:4283, lat:46.9579, lng:17.8825,
-    img:'#bedcbe', img2:'#8db98d',
+    img: photo('marina-sunset'),
     discount:0, original:0, price:57971, board:'All inclusive ellátással', boardKind:'allinc',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'80 m a parttól', wellness:true },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'80 m a parttól', wellness:true,
+    refundable:true, cancelUntil:'jún. 8', vipEligible:true,
+    topQuote:'„Tökéletes a marinához közel. All inclusive valóban mindent tartalmazott." — Nikolett S.' },
   { id:'ce-plaza', name:'CE Plaza Hotel', city:'Siófok', stars:4, superior:false,
     score:8.8, scoreLbl:'Jó', reviews:3581, lat:46.9120, lng:18.0490,
-    img:'#dde8b3', img2:'#a8b685',
+    img: photo('plaza-modern'),
     discount:0, original:0, price:37400, board:'Félpanzió az árban', boardKind:'halfboard',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥'], distance:'600 m a parttól', wellness:false },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥'], distance:'600 m a parttól', wellness:false,
+    refundable:false, cancelUntil:null, vipEligible:false,
+    topQuote:'„Jó ár-érték arány, központi elhelyezkedés. Jól kihasználtuk." — Dániel V.' },
   { id:'residence-balaton', name:'Residence Hotel Balaton', city:'Siófok', stars:4, superior:true,
     score:9.6, scoreLbl:'Kiváló', reviews:1677, lat:46.9081, lng:18.0612,
-    img:'#cfb5d8', img2:'#9a85a3',
+    img: photo('residence-elegant'),
     discount:0, original:0, price:58400, board:'Félpanzió az árban', boardKind:'halfboard',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'900 m a parttól', wellness:true },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'900 m a parttól', wellness:true,
+    refundable:true, cancelUntil:'jún. 8', vipEligible:true,
+    topQuote:'„Az egyik legjobb hotel a Balatonon. A személyzet végig barátságos." — Andrea P.' },
   { id:'helikon-keszthely', name:'Hotel Helikon', city:'Keszthely', stars:4, superior:true,
     score:9.6, scoreLbl:'Kiváló', reviews:1202, lat:46.7651, lng:17.2470,
-    img:'#b5cedd', img2:'#7a9aab',
+    img: photo('helikon-lake'),
     discount:0, original:0, price:58800, board:'Félpanzió az árban', boardKind:'halfboard',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true },
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true,
+    refundable:true, cancelUntil:'jún. 6', vipEligible:true,
+    topQuote:'„Festői panoráma a tóra. A wellness és az étel kiváló volt." — Gábor M.' },
   { id:'lelle-hotel', name:'Lelle Hotel', city:'Balatonlelle', stars:3, superior:false,
     score:9.3, scoreLbl:'Nagyon jó', reviews:500, lat:46.7842, lng:17.6938,
-    img:'#dde2cf', img2:'#a7ad94',
+    img: photo('lelle-beach'),
     discount:0, original:0, price:46000, board:'Reggeli az árban', boardKind:'breakfast',
-    amenities:['❄️','📶','🅿️','👥','🧖'], distance:'150 m a parttól', wellness:true },
+    amenities:['❄️','📶','🅿️','👥','🧖'], distance:'150 m a parttól', wellness:true,
+    refundable:true, cancelUntil:'jún. 9', vipEligible:false,
+    topQuote:'„Családbarát, közvetlen a parton. Gyerekek imádták az animációt." — Krisztina H.' },
   { id:'europa-fit', name:'Hotel Európa Fit', city:'Hévíz', stars:4, superior:true,
     score:9.5, scoreLbl:'Kiváló', reviews:2105, lat:46.7920, lng:17.1840,
-    img:'#cdc3e5', img2:'#9a8eb9',
+    img: photo('europa-thermal'),
     discount:0, original:0, price:41120, board:'Félpanzió az árban', boardKind:'halfboard',
-    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'1 km a tóhoz', wellness:true }
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'1 km a tóhoz', wellness:true,
+    refundable:true, cancelUntil:'jún. 7', vipEligible:true,
+    topQuote:'„Modern wellness-hotel a thermálfürdő közelében. Tökéletes felfrissülés." — Tamás K.' }
 ];
 
 const FILTERS = {
@@ -239,39 +307,46 @@ const BoardChip = ({ board, kind }) => {
 
 const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) => (
   <div className={'hotel-card'+(highlight?' highlight':'')} onMouseEnter={onHover} onMouseLeave={onLeave} onClick={onClick}>
-    <div className="hotel-img" style={{background:`linear-gradient(135deg,${h.img},${h.img2})`}}>
+    <div className="hotel-img">
+      <img src={h.img} alt={h.name} loading="lazy"/>
       <button className={'heart'+(saved?' saved':'')} onClick={(e)=>{e.stopPropagation();onSave()}}>{saved?'❤':'♡'}</button>
       {h.discount>0 && <div className="discount">−{h.discount}%</div>}
+      {h.vipEligible && <div className="vip-eligible">VIP −15%</div>}
       <div className="hotel-img-label">{h.city}</div>
     </div>
     <div className="hotel-info">
-      <h3>{h.name}</h3>
-      <div>
-        <span className="stars">{'★'.repeat(h.stars)}</span>
-        {h.superior && <span className="superior">+superior</span>}
+      <div className="name-row">
+        <h3>{h.name}</h3>
+        <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
       </div>
-      <div className="amenities">
-        {h.amenities.map((a,i)=><span key={i} className="amenity-pill">{a} FREE</span>)}
+      <div className="location"><span className="pin">📍</span>{h.distance} · {h.city}</div>
+      <div className="amenities">{h.amenities.slice(0,7).join(' · ')}</div>
+      <div className="quote">{h.topQuote}</div>
+      <div className="badges">
+        <span className={'badge board-'+(h.boardKind==='allinc'?'ai':h.boardKind==='halfboard'?'hp':'br')}>
+          {h.boardKind==='allinc'?'🥂':h.boardKind==='halfboard'?'🍽️':'🍳'} {h.board}
+        </span>
+        {h.refundable
+          ? <span className="badge cancel">↩️ Ingyenes lemondás {h.cancelUntil}-ig</span>
+          : <span className="badge noref">🔒 Nem visszatéríthető</span>}
+        <span className="badge szep">💳 SZÉP-kártya</span>
       </div>
-      <BoardChip board={h.board} kind={h.boardKind}/>
-      <div style={{fontSize:12.5,color:'var(--ink-500)'}}>{h.distance}</div>
-      <div className="szep">✓ SZÉP-kártyával is fizethetsz</div>
     </div>
     <div className="hotel-price">
       <div className="hotel-score">
-        <div>
+        <div className="hotel-score-text">
           <div className="lbl">{h.scoreLbl}</div>
           <div className="cnt">{fmt(h.reviews)} értékelés</div>
         </div>
         <div className="num">{h.score}</div>
       </div>
-      <div style={{textAlign:'right'}}>
-        {h.original>0 && <div className="hotel-strike">{fmt(h.original)} Ft</div>}
-        <div className="hotel-bigprice">{fmt(h.price)}<span className="ft"> Ft</span></div>
+      <div className="hotel-pricing">
+        {h.original>0 && <span className="hotel-strike">{fmt(h.original)} Ft</span>}
+        <div className="hotel-bigprice">{fmt(h.price)}<span className="ft">Ft</span></div>
         <div className="hotel-priceunit">2 fő · 1 éj</div>
-        <div className="hotel-tax">Tartalmazza az adókat és díjakat</div>
+        <div className="hotel-tax">Adók és díjak benne</div>
       </div>
-      <button className="hotel-cta">Megnézem</button>
+      <button className="hotel-cta">Megnézem →</button>
     </div>
   </div>
 );
@@ -343,6 +418,15 @@ const Page = () => {
   const [active, setActive] = React.useState(null);
   const [saved, setSaved] = React.useState({});
   const [activeChip, setActiveChip] = React.useState(null);
+  const [view, setView] = React.useState('list'); // 'list' | 'split'
+  const [fsMap, setFsMap] = React.useState(false);
+
+  // Insert VIP teaser after 3rd hotel for conversion
+  const items = [];
+  HOTELS.forEach((h, idx) => {
+    items.push({ kind:'hotel', h });
+    if (idx === 2) items.push({ kind:'vip-teaser' });
+  });
 
   return (
     <React.Fragment>
@@ -373,17 +457,22 @@ const Page = () => {
           ))}
         </div>
 
-        <div style={{padding:'8px 0',fontSize:13,color:'var(--ink-500)'}}>
+        <div style={{padding:'6px 0 2px',fontSize:13,color:'var(--ink-500)'}}>
           <a href="01-homepage.html">Főoldal</a> &rsaquo; <a href="#">Magyarország</a> &rsaquo; Balaton
         </div>
 
-        <div className="title-row">
-          <div>
-            <h1>Balaton szálláshelyek</h1>
-            <div className="counter">5 167 találat <a href="#">🗺️ térkép nézet</a></div>
+        <div className="results-bar">
+          <div className="summary-left">
+            <div><b>Balaton szálláshelyek</b> · <span>5 167 találat</span></div>
+            <div style={{color:'var(--c-success)',fontWeight:700}}>✓ Ingyenes lemondás 73%-nál</div>
+            <div style={{color:'var(--ink-500)'}}>jún. 11–13 · 2 felnőtt</div>
           </div>
-          <div>
-            <select style={{padding:'8px 12px',border:'1px solid var(--line-strong)',borderRadius:'var(--radius)',background:'#fff'}}>
+          <div className="right">
+            <div className="view-toggle">
+              <button className={view==='list'?'on':''} onClick={()=>setView('list')}>☰ Lista</button>
+              <button className={view==='split'?'on':''} onClick={()=>setView('split')}>🗺 Lista + térkép</button>
+            </div>
+            <select>
               <option>Ajánlásunk szerint</option>
               <option>Legolcsóbb</option>
               <option>Legmagasabb pontszám</option>
@@ -397,7 +486,7 @@ const Page = () => {
           <div>A szálláshelyek által fizetett jutalék befolyásolhatja a megjelenés sorrendjét. <a href="#">Bővebben</a></div>
         </div>
 
-        <div className="layout">
+        <div className={'layout'+(view==='split'?' with-map':'')}>
           <aside className="filters-col">
             <FilterGroup title="Kedvezmények" items={FILTERS.discounts}/>
             <FilterGroup title="Legnépszerűbb szűrők" items={FILTERS.popular}/>
@@ -408,20 +497,53 @@ const Page = () => {
           </aside>
 
           <div className="list-col">
-            {HOTELS.map(h => (
-              <HotelCard key={h.id} h={h}
-                highlight={active===h.id}
-                saved={!!saved[h.id]}
-                onHover={()=>setActive(h.id)}
-                onLeave={()=>{}}
-                onSave={()=>setSaved({...saved, [h.id]:!saved[h.id]})}
-                onClick={()=>{ window.location.href = '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
-            ))}
+            {items.map((it, i) => {
+              if (it.kind === 'vip-teaser') {
+                return (
+                  <div className="vip-list-teaser" key={'vip-'+i}>
+                    <div className="vip-word">VIP</div>
+                    <div className="body">
+                      <h4>Lépj be, és foglalj olcsóbban!</h4>
+                      <p>Akár 10–20% kedvezmény csak VIP tagoknak · {HOTELS.filter(h=>h.vipEligible).length} jogosult ajánlat.</p>
+                    </div>
+                    <button>Belépek</button>
+                  </div>
+                );
+              }
+              const h = it.h;
+              return (
+                <HotelCard key={h.id} h={h}
+                  highlight={active===h.id}
+                  saved={!!saved[h.id]}
+                  onHover={()=>setActive(h.id)}
+                  onLeave={()=>{}}
+                  onSave={()=>setSaved({...saved, [h.id]:!saved[h.id]})}
+                  onClick={()=>{ window.location.href = '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
+              );
+            })}
           </div>
 
-          <MapView hotels={HOTELS} activeId={active} onMarkerClick={setActive}/>
+          {view === 'split' && <MapView hotels={HOTELS} activeId={active} onMarkerClick={setActive}/>}
         </div>
       </div>
+
+      {view === 'list' && !fsMap && (
+        <button className="map-fab" onClick={()=>setFsMap(true)}>
+          <span className="thumb"/> Térkép · {HOTELS.length} találat
+        </button>
+      )}
+
+      {fsMap && (
+        <div className="map-fullscreen">
+          <div className="map-fs-top">
+            <h2 style={{margin:0}}>🗺 Balaton szálláshelyek térképen ({HOTELS.length} találat)</h2>
+            <button className="map-fs-close" onClick={()=>setFsMap(false)}>✕ Bezárás</button>
+          </div>
+          <div className="map-fs-body">
+            <MapView hotels={HOTELS} activeId={active} onMarkerClick={setActive}/>
+          </div>
+        </div>
+      )}
 
       <footer className="footer">
         <div className="footer-inner">

@@ -40,9 +40,10 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-actions .belepek{background:#fff;color:var(--c-primary);font-weight:700}
 
 /* Hero */
-.hero{position:relative;padding:80px 24px 24px;background:linear-gradient(135deg,#dbe6ec 0%,#a7c5d3 35%,#7ba9bb 100%);overflow:hidden;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3)}
-.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.45) 100%),radial-gradient(ellipse at 70% 30%,rgba(255,255,255,.12) 0%,transparent 60%);pointer-events:none}
-.hero-inner{position:relative;max-width:1200px;margin:0 auto}
+.hero{position:relative;padding:80px 24px 24px;overflow:hidden;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4);background:#1a3540}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%);pointer-events:none;z-index:1}
+.hero-inner{position:relative;max-width:1200px;margin:0 auto;z-index:2}
 .hero-tabs{display:flex;gap:8px;margin-bottom:18px}
 .hero-tab{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.32);font-size:14px;font-weight:600;cursor:pointer}
 .hero-tab.active{background:#fff;color:var(--ink-900);border-color:#fff}
@@ -76,15 +77,10 @@ section.block h2{font-size:26px;margin-bottom:16px}
 .cat-row{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory}
 @media (max-width:1100px){.cat-row{grid-template-columns:repeat(4,1fr)}}
 @media (max-width:700px){.cat-row{grid-template-columns:repeat(2,1fr)}}
-.cat-tile{position:relative;aspect-ratio:1/1.15;border-radius:var(--radius-lg);overflow:hidden;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:800;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.5);cursor:pointer;transition:transform .15s}
+.cat-tile{position:relative;aspect-ratio:1/1.15;border-radius:var(--radius-lg);overflow:hidden;background:#a7c5d3 center/cover;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:800;font-size:14px;text-shadow:0 2px 6px rgba(0,0,0,.6);cursor:pointer;transition:transform .15s}
 .cat-tile:hover{transform:translateY(-2px)}
-.cat-tile.alt2{background:linear-gradient(135deg,#e4d7b5,#b5a785)}
-.cat-tile.alt3{background:linear-gradient(135deg,#bedcbe,#8db98d)}
-.cat-tile.alt4{background:linear-gradient(135deg,#dde2cf,#a7ad94)}
-.cat-tile.alt5{background:linear-gradient(135deg,#cfb5d8,#9a85a3)}
-.cat-tile.alt6{background:linear-gradient(135deg,#cdc3e5,#9a8eb9)}
-.cat-tile.alt7{background:linear-gradient(135deg,#dde8b3,#a8b685)}
-.cat-tile.alt8{background:linear-gradient(135deg,#b5cedd,#7a9aab)}
+.cat-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.6) 100%);pointer-events:none}
+.cat-tile > span{position:relative;z-index:1}
 
 /* Top offers grid */
 .offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -92,7 +88,7 @@ section.block h2{font-size:26px;margin-bottom:16px}
 @media (max-width:600px){.offers-grid{grid-template-columns:1fr}}
 .offer-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:box-shadow .15s, transform .15s;display:flex;flex-direction:column}
 .offer-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.offer-img{aspect-ratio:16/10;position:relative;background:linear-gradient(135deg,#dbe6ec,#a7c5d3)}
+.offer-img{aspect-ratio:16/10;position:relative;background:#dbe6ec center/cover}
 .offer-score{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;background:var(--c-success);color:#fff;font-weight:800;font-size:14px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:var(--shadow-sm)}
 .offer-heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700)}
 .offer-info{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
@@ -119,11 +115,11 @@ section.block h2{font-size:26px;margin-bottom:16px}
 
 /* Inspirations mosaic */
 .mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:200px 200px;gap:12px}
-.mosaic > *{border-radius:var(--radius-lg);overflow:hidden;position:relative;cursor:pointer;color:#fff;font-weight:800;font-size:16px;display:flex;align-items:flex-end;padding:16px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.mosaic > *:nth-child(1){grid-row:1/3;background:linear-gradient(135deg,#cfb5d8,#9a85a3)}
-.mosaic > *:nth-child(2){background:linear-gradient(135deg,#bedcbe,#8db98d)}
-.mosaic > *:nth-child(3){background:linear-gradient(135deg,#e4d7b5,#b5a785)}
-.mosaic > *:nth-child(4){background:linear-gradient(135deg,#b5cedd,#7a9aab);grid-row:1/3}
+.mosaic > *{border-radius:var(--radius-lg);overflow:hidden;position:relative;cursor:pointer;color:#fff;font-weight:800;font-size:16px;display:flex;align-items:flex-end;padding:16px;text-shadow:0 2px 6px rgba(0,0,0,.6);background-size:cover;background-position:center}
+.mosaic > *::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.6) 100%);pointer-events:none}
+.mosaic > * > span{position:relative;z-index:1}
+.mosaic > *:nth-child(1){grid-row:1/3}
+.mosaic > *:nth-child(4){grid-row:1/3}
 @media (max-width:800px){.mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}.mosaic > *:nth-child(1){grid-row:auto}.mosaic > *:nth-child(4){grid-row:auto}}
 
 /* Featured grid */
@@ -149,35 +145,44 @@ section.block h2{font-size:26px;margin-bottom:16px}
   <script type="text/babel">
 
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+const photo = (seed, w=600, h=400) => `https://picsum.photos/seed/szhomepage-${seed}/${w}/${h}`;
 
 const CATEGORIES = [
-  { id:'pentecost', lbl:'Pünkösdi hosszú hétvége', alt:'' },
-  { id:'best-balaton', lbl:'A Balaton legjobb ajánlatai', alt:'alt2' },
-  { id:'wellness', lbl:'Wellness és spa', alt:'alt3' },
-  { id:'croatia', lbl:'Horvátország legjobb ajánlatai', alt:'alt4' },
-  { id:'halfboard', lbl:'Szállások félpanzióval', alt:'alt5' },
-  { id:'top-cities', lbl:'TOP úti célok', alt:'alt6' },
-  { id:'castles', lbl:'Romantikus kastélyszállók', alt:'alt7' },
-  { id:'wood-houses', lbl:'Faházak', alt:'alt8' }
+  { id:'pentecost', lbl:'Pünkösdi hosszú hétvége', img: photo('pentecost', 400, 460) },
+  { id:'best-balaton', lbl:'A Balaton legjobb ajánlatai', img: photo('balaton-best', 400, 460) },
+  { id:'wellness', lbl:'Wellness és spa', img: photo('wellness-spa', 400, 460) },
+  { id:'croatia', lbl:'Horvátország legjobb ajánlatai', img: photo('croatia', 400, 460) },
+  { id:'halfboard', lbl:'Szállások félpanzióval', img: photo('halfboard', 400, 460) },
+  { id:'top-cities', lbl:'TOP úti célok', img: photo('top-cities', 400, 460) },
+  { id:'castles', lbl:'Romantikus kastélyszállók', img: photo('castles', 400, 460) },
+  { id:'wood-houses', lbl:'Faházak', img: photo('wood-houses', 400, 460) }
 ];
 
 const TOP_OFFERS = [
-  { name:'Hotel Vécsecity Hernádvécse', city:'Hernádvécse', score:9.3, price:24673, img:'#bedcbe', img2:'#8db98d' },
-  { name:'Hotel Aquarell Cegléd', city:'Cegléd', score:9.1, price:22576, img:'#b5cedd', img2:'#7a9aab' },
-  { name:'Bellevue Hotel Esztergom', city:'Esztergom', score:8.6, price:21863, img:'#cfb5d8', img2:'#9a85a3' },
-  { name:'Ensana Thermal Sárvár', city:'Sárvár', score:9.5, price:25490, img:'#e4d7b5', img2:'#b5a785' },
-  { name:'Wellness Hotel Gyula', city:'Gyula', score:9.5, price:33193, img:'#dde2cf', img2:'#a7ad94' },
-  { name:'Hotel Szieszta Sopron', city:'Sopron', score:9.4, price:30545, img:'#dbe6ec', img2:'#a7c5d3' }
+  { name:'Hotel Vécsecity Hernádvécse', city:'Hernádvécse', score:9.3, price:24673, img: photo('vecsecity', 600, 400) },
+  { name:'Hotel Aquarell Cegléd', city:'Cegléd', score:9.1, price:22576, img: photo('aquarell', 600, 400) },
+  { name:'Bellevue Hotel Esztergom', city:'Esztergom', score:8.6, price:21863, img: photo('bellevue', 600, 400) },
+  { name:'Ensana Thermal Sárvár', city:'Sárvár', score:9.5, price:25490, img: photo('ensana-sarvar', 600, 400) },
+  { name:'Wellness Hotel Gyula', city:'Gyula', score:9.5, price:33193, img: photo('gyula', 600, 400) },
+  { name:'Hotel Szieszta Sopron', city:'Sopron', score:9.4, price:30545, img: photo('szieszta', 600, 400) }
 ];
 
 const FEATURED = [
-  { name:'Hotel Aurora Balaton', city:'Siófok', score:9.1, price:38600, original:42400, img:'#dbe6ec', img2:'#a7c5d3', link:'../Hotel%20Aurora%20Balaton%20-%20standalone.html' },
-  { name:'Hotel Európa Fit', city:'Hévíz', score:9.5, price:41120, img:'#cdc3e5', img2:'#9a8eb9' },
-  { name:'Hotel Romantik Eger', city:'Eger', score:9.4, price:16000, img:'#dde8b3', img2:'#a8b685' },
-  { name:'Tisza-tó Apartmanpark', city:'Kisköre', score:8.8, price:18500, img:'#e4d7b5', img2:'#b5a785' },
-  { name:'Erzsébet Park Hotel', city:'Parádfürdő', score:9.4, price:35200, img:'#bedcbe', img2:'#8db98d' },
-  { name:'Aventinus Hotel', city:'Nyíregyháza', score:9.2, price:28400, img:'#b5cedd', img2:'#7a9aab' }
+  { name:'Hotel Aurora Balaton', city:'Siófok', score:9.1, price:38600, original:42400, img: photo('aurora-featured', 600, 400), link:'../Hotel%20Aurora%20Balaton%20-%20standalone.html' },
+  { name:'Hotel Európa Fit', city:'Hévíz', score:9.5, price:41120, img: photo('europa-fit', 600, 400) },
+  { name:'Hotel Romantik Eger', city:'Eger', score:9.4, price:16000, img: photo('romantik-eger', 600, 400) },
+  { name:'Tisza-tó Apartmanpark', city:'Kisköre', score:8.8, price:18500, img: photo('tisza-to', 600, 400) },
+  { name:'Erzsébet Park Hotel', city:'Parádfürdő', score:9.4, price:35200, img: photo('erzsebet-park', 600, 400) },
+  { name:'Aventinus Hotel', city:'Nyíregyháza', score:9.2, price:28400, img: photo('aventinus', 600, 400) }
 ];
+
+const HERO_IMG = photo('homepage-hero', 1600, 700);
+const MOSAIC_IMGS = {
+  family: photo('mosaic-family', 600, 800),
+  balcsi: photo('mosaic-balcsi', 600, 400),
+  seaside: photo('mosaic-seaside', 600, 400),
+  hungary: photo('mosaic-hungary', 600, 800)
+};
 
 const DESTINATIONS = [
   { type:'region', name:'Balaton', count:5167, emoji:'🌊', slug:'02-listing-balaton.html' },
@@ -194,6 +199,7 @@ const Hero = () => {
   const filtered = q ? DESTINATIONS.filter(d => d.name.toLowerCase().includes(q.toLowerCase())) : [];
   return (
     <section className="hero">
+      <div className="hero-bg" style={{backgroundImage:`url(${HERO_IMG})`}}/>
       <div className="hero-inner">
         <div className="hero-tabs">
           <button className={'hero-tab'+(tab==='stays'?' active':'')} onClick={()=>setTab('stays')}>🛏️ Szállások</button>
@@ -239,7 +245,7 @@ const Categories = () => (
     <h2>Inspirálódj a következő utazásodhoz!</h2>
     <div className="cat-row">
       {CATEGORIES.map(c => (
-        <a key={c.id} href="02-listing-balaton.html" className={'cat-tile '+c.alt}>{c.lbl}</a>
+        <a key={c.id} href="02-listing-balaton.html" className="cat-tile" style={{backgroundImage:`url(${c.img})`}}><span>{c.lbl}</span></a>
       ))}
     </div>
   </section>
@@ -251,7 +257,7 @@ const TopOffers = () => (
     <div className="offers-grid">
       {TOP_OFFERS.map(o => (
         <a key={o.name} href="../Hotel%20Aurora%20Balaton%20-%20standalone.html" className="offer-card">
-          <div className="offer-img" style={{background:`linear-gradient(135deg,${o.img},${o.img2})`}}>
+          <div className="offer-img" style={{backgroundImage:`url(${o.img})`}}>
             <div className="offer-score">{o.score}</div>
             <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
           </div>
@@ -284,10 +290,10 @@ const Inspirations = () => (
   <section className="block">
     <h2>Tippek a következő felejthetetlen utazásodhoz</h2>
     <div className="mosaic">
-      <a href="02-listing-balaton.html">Családi wellness pihenés »</a>
-      <a href="02-listing-balaton.html">Irány a Balcsi »</a>
-      <a href="02-listing-balaton.html">Tengerparti nyaralás »</a>
-      <a href="02-listing-balaton.html">Akciós belföldi pihenés »</a>
+      <a href="02-listing-balaton.html" style={{backgroundImage:`url(${MOSAIC_IMGS.family})`}}><span>Családi wellness pihenés »</span></a>
+      <a href="02-listing-balaton.html" style={{backgroundImage:`url(${MOSAIC_IMGS.balcsi})`}}><span>Irány a Balcsi »</span></a>
+      <a href="02-listing-balaton.html" style={{backgroundImage:`url(${MOSAIC_IMGS.seaside})`}}><span>Tengerparti nyaralás »</span></a>
+      <a href="02-listing-balaton.html" style={{backgroundImage:`url(${MOSAIC_IMGS.hungary})`}}><span>Akciós belföldi pihenés »</span></a>
     </div>
   </section>
 );
@@ -310,7 +316,7 @@ const Featured = () => (
     <div className="featured-grid">
       {FEATURED.map(o => (
         <a key={o.name} href={o.link || '../Hotel%20Aurora%20Balaton%20-%20standalone.html'} className="offer-card">
-          <div className="offer-img" style={{background:`linear-gradient(135deg,${o.img},${o.img2})`}}>
+          <div className="offer-img" style={{backgroundImage:`url(${o.img})`}}>
             <div className="offer-score">{o.score}</div>
             <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
           </div>
