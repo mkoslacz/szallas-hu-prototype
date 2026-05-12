@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Szallas.hu — Találd meg álmaid szállását!</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --c-primary:#E30613;--c-primary-hover:#b40510;--c-cta:#E85A00;
+  --c-success:#1F7F3E;--c-success-bg:#E8F5EC;
+  --c-deal-bg:#FFF1E6;--c-deal-ink:#C84B00;
+  --ink-900:#1F2A36;--ink-700:#394654;--ink-500:#6B7683;--ink-400:#8A93A1;
+  --line:#E1E4EA;--line-strong:#C9CED6;
+  --surface:#FFFFFF;--surface-2:#F5F6F8;--surface-3:#ECEEF2;
+  --info:#1F6FE0;
+  --radius-sm:6px;--radius:10px;--radius-lg:14px;--radius-xl:20px;
+  --shadow-sm:0 1px 2px rgba(31,42,54,.06),0 2px 6px rgba(31,42,54,.06);
+  --shadow:0 2px 6px rgba(31,42,54,.06),0 6px 18px rgba(31,42,54,.08);
+  --shadow-lg:0 4px 12px rgba(31,42,54,.08),0 8px 24px rgba(31,42,54,.06);
+  --shadow-cta:0 6px 18px rgba(227,6,19,.28);
+  --font-ui:'Inter','Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink-900);font-family:var(--font-ui);font-weight:500;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;font-weight:500}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
+
+.brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px}
+.brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+.brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:26px;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.brandbar-logo .tag{background:#fff;color:var(--c-primary);font-size:11px;padding:3px 8px;border-radius:10px;font-style:normal;font-weight:800;transform:rotate(-6deg)}
+.brandbar-logo .dot{color:#FF5A00}
+.brandbar-actions{margin-left:auto;display:flex;gap:10px;align-items:center;color:#fff;font-size:14px}
+.brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
+.brandbar-actions .belepek{background:#fff;color:var(--c-primary);font-weight:700}
+
+/* Hero */
+.hero{position:relative;padding:80px 24px 24px;background:linear-gradient(135deg,#dbe6ec 0%,#a7c5d3 35%,#7ba9bb 100%);overflow:hidden;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.45) 100%),radial-gradient(ellipse at 70% 30%,rgba(255,255,255,.12) 0%,transparent 60%);pointer-events:none}
+.hero-inner{position:relative;max-width:1200px;margin:0 auto}
+.hero-tabs{display:flex;gap:8px;margin-bottom:18px}
+.hero-tab{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.32);font-size:14px;font-weight:600;cursor:pointer}
+.hero-tab.active{background:#fff;color:var(--ink-900);border-color:#fff}
+.hero h1{font-size:48px;line-height:1.1;color:#fff;margin-bottom:8px}
+.hero .sub{font-size:18px;color:#fff;opacity:.92;margin-bottom:32px}
+.hero-search{background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);max-width:840px;display:flex;align-items:stretch;color:var(--ink-900);text-shadow:none;position:relative}
+.hero-search .cell{flex:1;padding:14px 18px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line);min-width:0}
+.hero-search .cell:last-of-type{border-right:0}
+.hero-search .cell .lbl{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.hero-search .cell input{border:0;font-size:15px;color:var(--ink-900);font-weight:600;padding:2px 0;font-family:inherit;background:transparent;outline:none;width:100%}
+.hero-search .btn-search{padding:0 30px;background:var(--c-primary);color:#fff;border:0;font-weight:800;font-size:15px;border-radius:0 16px 16px 0;display:flex;align-items:center;gap:8px}
+.hero-search .btn-search:hover{background:var(--c-primary-hover)}
+.hero-trust{display:flex;gap:24px;margin-top:18px;font-size:13.5px;color:#fff;opacity:.92;flex-wrap:wrap}
+.hero-trust span{display:inline-flex;gap:6px;align-items:center}
+
+/* Typeahead */
+.typeahead{position:absolute;top:calc(100% + 6px);left:0;width:340px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;z-index:20;border:1px solid var(--line)}
+.typeahead-item{display:flex;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--surface-3);cursor:pointer}
+.typeahead-item:last-of-type{border-bottom:0}
+.typeahead-item:hover{background:var(--surface-2)}
+.typeahead-thumb{width:44px;height:44px;border-radius:var(--radius);background:linear-gradient(135deg,#dbe6ec,#a7c5d3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.typeahead-name{font-weight:700;font-size:14px;color:var(--ink-900)}
+.typeahead-meta{font-size:12px;color:var(--ink-500);margin-top:2px}
+
+/* Sections */
+section.block{max-width:1200px;margin:0 auto;padding:48px 24px}
+section.block h2{font-size:26px;margin-bottom:16px}
+.block-sub{color:var(--ink-500);font-size:14px;margin-top:-12px;margin-bottom:18px}
+
+/* Categories carousel */
+.cat-row{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory}
+@media (max-width:1100px){.cat-row{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:700px){.cat-row{grid-template-columns:repeat(2,1fr)}}
+.cat-tile{position:relative;aspect-ratio:1/1.15;border-radius:var(--radius-lg);overflow:hidden;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:800;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.5);cursor:pointer;transition:transform .15s}
+.cat-tile:hover{transform:translateY(-2px)}
+.cat-tile.alt2{background:linear-gradient(135deg,#e4d7b5,#b5a785)}
+.cat-tile.alt3{background:linear-gradient(135deg,#bedcbe,#8db98d)}
+.cat-tile.alt4{background:linear-gradient(135deg,#dde2cf,#a7ad94)}
+.cat-tile.alt5{background:linear-gradient(135deg,#cfb5d8,#9a85a3)}
+.cat-tile.alt6{background:linear-gradient(135deg,#cdc3e5,#9a8eb9)}
+.cat-tile.alt7{background:linear-gradient(135deg,#dde8b3,#a8b685)}
+.cat-tile.alt8{background:linear-gradient(135deg,#b5cedd,#7a9aab)}
+
+/* Top offers grid */
+.offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:1000px){.offers-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.offers-grid{grid-template-columns:1fr}}
+.offer-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:box-shadow .15s, transform .15s;display:flex;flex-direction:column}
+.offer-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.offer-img{aspect-ratio:16/10;position:relative;background:linear-gradient(135deg,#dbe6ec,#a7c5d3)}
+.offer-score{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;background:var(--c-success);color:#fff;font-weight:800;font-size:14px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+.offer-heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700)}
+.offer-info{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.offer-info h3{font-size:16px;color:var(--info)}
+.offer-info .city{font-size:12.5px;color:var(--ink-500)}
+.offer-price{margin-top:auto;font-size:22px;font-weight:900;color:var(--c-cta);font-family:var(--font-ui)}
+.offer-price .ft{font-size:13px;color:var(--ink-700);font-weight:600}
+.offer-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:-2px}
+
+/* VIP banner */
+.vip-banner{background:linear-gradient(135deg,#FFE8EA 0%,#FFF1E6 100%);border-radius:var(--radius-xl);padding:28px 32px;display:flex;gap:24px;align-items:center;border:1px solid var(--primary-soft, #FFE8EA)}
+.vip-banner .vip-word{font-size:64px;font-weight:900;color:var(--c-cta);font-style:italic;line-height:1;letter-spacing:-.04em}
+.vip-banner-body{flex:1}
+.vip-banner h3{font-size:22px;color:var(--ink-900)}
+.vip-banner h3 .red{color:var(--c-primary)}
+.vip-banner p{font-size:14px;color:var(--ink-700);margin:6px 0 14px;line-height:1.5}
+.vip-banner button{padding:10px 22px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;cursor:pointer}
+
+/* Mobile discount */
+.mobile-banner{background:linear-gradient(135deg,#E8F5EC,#D4EAD9);border-radius:var(--radius-xl);padding:24px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.mobile-banner h3{color:var(--c-success);font-size:20px}
+.mobile-banner p{font-size:13.5px;color:var(--ink-700);margin-top:4px}
+.mobile-banner button{padding:10px 18px;background:var(--c-success);color:#fff;border:0;border-radius:var(--radius);font-weight:800;cursor:pointer}
+
+/* Inspirations mosaic */
+.mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:200px 200px;gap:12px}
+.mosaic > div{border-radius:var(--radius-lg);overflow:hidden;position:relative;cursor:pointer;color:#fff;font-weight:800;font-size:16px;display:flex;align-items:flex-end;padding:16px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.mosaic > div:nth-child(1){grid-row:1/3;background:linear-gradient(135deg,#cfb5d8,#9a85a3)}
+.mosaic > div:nth-child(2){background:linear-gradient(135deg,#bedcbe,#8db98d)}
+.mosaic > div:nth-child(3){background:linear-gradient(135deg,#e4d7b5,#b5a785)}
+.mosaic > div:nth-child(4){background:linear-gradient(135deg,#b5cedd,#7a9aab);grid-row:1/3}
+@media (max-width:800px){.mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}.mosaic > div:nth-child(1){grid-row:auto}.mosaic > div:nth-child(4){grid-row:auto}}
+
+/* Featured grid */
+.featured-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:1000px){.featured-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.featured-grid{grid-template-columns:1fr}}
+
+/* Footer */
+.footer{background:#0f1419;color:#cbd2da;padding:48px 24px 24px;margin-top:48px}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.footer h5{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.footer ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:13.5px}
+.footer a{color:#cbd2da}
+.footer-bottom{max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12.5px;color:#8a93a1}
+.footer-trust{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.footer-trust-badge{padding:5px 10px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px}
+@media (max-width:900px){.footer-inner{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:900px){.hero h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+const CATEGORIES = [
+  { id:'pentecost', lbl:'Pünkösdi hosszú hétvége', alt:'' },
+  { id:'best-balaton', lbl:'A Balaton legjobb ajánlatai', alt:'alt2' },
+  { id:'wellness', lbl:'Wellness és spa', alt:'alt3' },
+  { id:'croatia', lbl:'Horvátország legjobb ajánlatai', alt:'alt4' },
+  { id:'halfboard', lbl:'Szállások félpanzióval', alt:'alt5' },
+  { id:'top-cities', lbl:'TOP úti célok', alt:'alt6' },
+  { id:'castles', lbl:'Romantikus kastélyszállók', alt:'alt7' },
+  { id:'wood-houses', lbl:'Faházak', alt:'alt8' }
+];
+
+const TOP_OFFERS = [
+  { name:'Hotel Vécsecity Hernádvécse', city:'Hernádvécse', score:9.3, price:24673, img:'#bedcbe', img2:'#8db98d' },
+  { name:'Hotel Aquarell Cegléd', city:'Cegléd', score:9.1, price:22576, img:'#b5cedd', img2:'#7a9aab' },
+  { name:'Bellevue Hotel Esztergom', city:'Esztergom', score:8.6, price:21863, img:'#cfb5d8', img2:'#9a85a3' },
+  { name:'Ensana Thermal Sárvár', city:'Sárvár', score:9.5, price:25490, img:'#e4d7b5', img2:'#b5a785' },
+  { name:'Wellness Hotel Gyula', city:'Gyula', score:9.5, price:33193, img:'#dde2cf', img2:'#a7ad94' },
+  { name:'Hotel Szieszta Sopron', city:'Sopron', score:9.4, price:30545, img:'#dbe6ec', img2:'#a7c5d3' }
+];
+
+const FEATURED = [
+  { name:'Hotel Aurora Balaton', city:'Siófok', score:9.1, price:38600, original:42400, img:'#dbe6ec', img2:'#a7c5d3', link:'../Hotel%20Aurora%20Balaton%20-%20standalone.html' },
+  { name:'Hotel Európa Fit', city:'Hévíz', score:9.5, price:41120, img:'#cdc3e5', img2:'#9a8eb9' },
+  { name:'Hotel Romantik Eger', city:'Eger', score:9.4, price:16000, img:'#dde8b3', img2:'#a8b685' },
+  { name:'Tisza-tó Apartmanpark', city:'Kisköre', score:8.8, price:18500, img:'#e4d7b5', img2:'#b5a785' },
+  { name:'Erzsébet Park Hotel', city:'Parádfürdő', score:9.4, price:35200, img:'#bedcbe', img2:'#8db98d' },
+  { name:'Aventinus Hotel', city:'Nyíregyháza', score:9.2, price:28400, img:'#b5cedd', img2:'#7a9aab' }
+];
+
+const DESTINATIONS = [
+  { type:'region', name:'Balaton', count:5167, emoji:'🌊', slug:'02-listing-balaton.html' },
+  { type:'region', name:'Budapest', count:4231, emoji:'🏛️' },
+  { type:'city', name:'Siófok', count:817, emoji:'🏖️' },
+  { type:'city', name:'Hévíz', count:278, emoji:'♨️' },
+  { type:'city', name:'Balatonfüred', count:261, emoji:'⛵' },
+  { type:'region', name:'Mátra', count:320, emoji:'🏔️' }
+];
+
+const Hero = () => {
+  const [tab, setTab] = React.useState('stays');
+  const [q, setQ] = React.useState('');
+  const filtered = q ? DESTINATIONS.filter(d => d.name.toLowerCase().includes(q.toLowerCase())) : [];
+  return (
+    <section className="hero">
+      <div className="hero-inner">
+        <div className="hero-tabs">
+          <button className={'hero-tab'+(tab==='stays'?' active':'')} onClick={()=>setTab('stays')}>🛏️ Szállások</button>
+          <button className={'hero-tab'+(tab==='programs'?' active':'')} onClick={()=>setTab('programs')}>🎫 Programkereső</button>
+          <button className={'hero-tab'+(tab==='packages'?' active':'')} onClick={()=>setTab('packages')}>🎁 Csomagok</button>
+        </div>
+        <h1>Találd meg álmaid szállását!</h1>
+        <div className="sub">Fedezd fel Magyarország mesés tájait!</div>
+        <div className="hero-search">
+          <div className="cell" style={{position:'relative'}}>
+            <span className="lbl">Hová</span>
+            <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="pl. Balaton, Budapest, Hévíz…"/>
+            {filtered.length>0 && (
+              <div className="typeahead">
+                {filtered.map(d => (
+                  <a key={d.name} href={d.slug || '02-listing-balaton.html'} className="typeahead-item">
+                    <div className="typeahead-thumb">{d.emoji}</div>
+                    <div>
+                      <div className="typeahead-name">{d.name}</div>
+                      <div className="typeahead-meta">{d.type==='region'?'régió':'város'} · {fmt(d.count)} szálláshely</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="cell"><span className="lbl">Érkezés – Távozás</span><input placeholder="Válassz dátumot…"/></div>
+          <div className="cell"><span className="lbl">Vendégek és szobák</span><input defaultValue="2 felnőtt · 1 szoba"/></div>
+          <button className="btn-search">🔍 Keresés</button>
+        </div>
+        <div className="hero-trust">
+          <span>✓ Fizess online akár SZÉP-kártyával is</span>
+          <span>✓ Ingyenes lemondás a legtöbb hotelnél</span>
+          <span>✓ 3 158 600+ valódi vendégvélemény</span>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Categories = () => (
+  <section className="block">
+    <h2>Inspirálódj a következő utazásodhoz!</h2>
+    <div className="cat-row">
+      {CATEGORIES.map(c => (
+        <a key={c.id} href="02-listing-balaton.html" className={'cat-tile '+c.alt}>{c.lbl}</a>
+      ))}
+    </div>
+  </section>
+);
+
+const TopOffers = () => (
+  <section className="block">
+    <h2>Top ajánlatok</h2>
+    <div className="offers-grid">
+      {TOP_OFFERS.map(o => (
+        <a key={o.name} href="../Hotel%20Aurora%20Balaton%20-%20standalone.html" className="offer-card">
+          <div className="offer-img" style={{background:`linear-gradient(135deg,${o.img},${o.img2})`}}>
+            <div className="offer-score">{o.score}</div>
+            <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
+          </div>
+          <div className="offer-info">
+            <h3>{o.name}</h3>
+            <div className="city">{o.city}</div>
+            <div className="offer-price">{fmt(o.price)} <span className="ft">Ft</span></div>
+            <div className="offer-priceunit">/fő/éj · Tartalmazza az adókat és díjakat</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+);
+
+const VipBanner = () => (
+  <section className="block">
+    <div className="vip-banner">
+      <div className="vip-word">VIP</div>
+      <div className="vip-banner-body">
+        <h3><span className="red">Lépj be,</span> és foglalj olcsóbban!</h3>
+        <p>Akár 10–20% kedvezmény csak VIP tagoknak a résztvevő szálláshelyeken. <a style={{color:'var(--c-cta)',textDecoration:'underline'}} href="#">Részletek</a></p>
+        <button>Belépek</button>
+      </div>
+    </div>
+  </section>
+);
+
+const Inspirations = () => (
+  <section className="block">
+    <h2>Tippek a következő felejthetetlen utazásodhoz</h2>
+    <div className="mosaic">
+      <a href="02-listing-balaton.html">Családi wellness pihenés »</a>
+      <a href="02-listing-balaton.html">Irány a Balcsi »</a>
+      <a href="02-listing-balaton.html">Tengerparti nyaralás »</a>
+      <a href="02-listing-balaton.html">Akciós belföldi pihenés »</a>
+    </div>
+  </section>
+);
+
+const MobileBanner = () => (
+  <section className="block">
+    <div className="mobile-banner">
+      <div>
+        <h3>📱 Szálláshelyek minimum 10%-kal olcsóbban mobilon</h3>
+        <p>Töltsd le az alkalmazást és foglalj kedvezőbben.</p>
+      </div>
+      <button>Letöltöm az appot</button>
+    </div>
+  </section>
+);
+
+const Featured = () => (
+  <section className="block">
+    <h2>Kiemelt ajánlataink</h2>
+    <div className="featured-grid">
+      {FEATURED.map(o => (
+        <a key={o.name} href={o.link || '../Hotel%20Aurora%20Balaton%20-%20standalone.html'} className="offer-card">
+          <div className="offer-img" style={{background:`linear-gradient(135deg,${o.img},${o.img2})`}}>
+            <div className="offer-score">{o.score}</div>
+            <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
+          </div>
+          <div className="offer-info">
+            <h3>{o.name}</h3>
+            <div className="city">{o.city}</div>
+            <div className="offer-price">
+              {o.original && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(o.original)} Ft</span>}
+              {fmt(o.price)} <span className="ft">Ft</span>
+            </div>
+            <div className="offer-priceunit">/fő/éj · Tartalmazza az adókat és díjakat</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+);
+
+const Page = () => (
+  <React.Fragment>
+    <div className="brandbar">
+      <div className="brandbar-inner">
+        <a href="index.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu<span className="tag">Úgy is lett!</span></a>
+        <div className="brandbar-actions">
+          <a href="#">Szállásadóknak</a>
+          <a href="#">🇭🇺 HUF</a>
+          <a href="#">Ügyfélszolgálat</a>
+          <a className="belepek" href="#">Belépek</a>
+        </div>
+      </div>
+    </div>
+    <Hero/>
+    <Categories/>
+    <TopOffers/>
+    <VipBanner/>
+    <Inspirations/>
+    <MobileBanner/>
+    <Featured/>
+
+    <footer className="footer">
+      <div className="footer-inner">
+        <div><h5>Névjegy</h5><ul><li><a>Rólunk</a></li><li><a>Felhasználási feltételek</a></li><li><a>Adatvédelem</a></li></ul></div>
+        <div><h5>Népszerű</h5><ul><li><a href="02-listing-balaton.html">Balaton</a></li><li><a>Budapest</a></li><li><a>Wellness</a></li><li><a>VIP program</a></li></ul></div>
+        <div><h5>Partnerek</h5><ul><li><a>Regisztrálom a szállásomat</a></li><li><a>Médiaajánlat</a></li></ul></div>
+        <div><h5>Kontakt</h5><ul><li><a href="tel:+36303442000">+36 30 344 2000</a></li><li><a>szallas@szallas.hu</a></li></ul></div>
+      </div>
+      <div className="footer-bottom">
+        <div className="footer-trust">
+          <span className="footer-trust-badge">🔒 100% SSL</span>
+          <span className="footer-trust-badge">Deloitte Fast 50 — 2021</span>
+          <span className="footer-trust-badge">Aplikacja Roku 2022</span>
+        </div>
+        <div>© 2008–2026 Szallas.hu</div>
+      </div>
+    </footer>
+  </React.Fragment>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
+  </script>
+</body>
+</html>

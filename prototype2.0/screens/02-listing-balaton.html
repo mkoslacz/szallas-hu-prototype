@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Balaton szálláshelyek · Szallas.hu</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --c-primary:#E30613;--c-primary-hover:#b40510;--c-cta:#E85A00;
+  --c-success:#1F7F3E;--c-success-bg:#E8F5EC;
+  --c-deal-bg:#FFF1E6;--c-deal-ink:#C84B00;--c-warn-low:#F5A524;
+  --primary-soft:#FFE8EA;--primary-border:#F6C5C9;
+  --ink-900:#1F2A36;--ink-700:#394654;--ink-500:#6B7683;--ink-400:#8A93A1;--ink-300:#A1A8B3;
+  --line:#E1E4EA;--line-strong:#C9CED6;
+  --surface:#FFFFFF;--surface-2:#F5F6F8;--surface-3:#ECEEF2;
+  --info:#1F6FE0;
+  --radius-sm:6px;--radius:10px;--radius-lg:14px;
+  --shadow-sm:0 1px 2px rgba(31,42,54,.06),0 2px 6px rgba(31,42,54,.06);
+  --shadow:0 2px 6px rgba(31,42,54,.06),0 6px 18px rgba(31,42,54,.08);
+  --shadow-lg:0 4px 12px rgba(31,42,54,.08),0 8px 24px rgba(31,42,54,.06);
+  --shadow-cta:0 6px 18px rgba(227,6,19,.28);
+  --font-ui:'Inter','Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--surface-2);color:var(--ink-900);font-family:var(--font-ui);font-weight:500;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;font-weight:500}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
+
+/* BrandBar */
+.brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px}
+.brandbar-inner{max-width:1400px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+.brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
+.brandbar-logo .dot{color:#FF5A00}
+.brandbar-actions{margin-left:auto;display:flex;gap:10px;align-items:center;color:#fff;font-size:14px}
+.brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
+
+/* Persistent search */
+.search-bar{display:flex;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);align-items:stretch;border:1px solid var(--line)}
+.search-bar > .field-cell{flex:1;padding:10px 16px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line)}
+.search-bar > .field-cell:last-of-type{border-right:0}
+.search-bar > .field-cell .lbl{font-size:10.5px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.search-bar > .field-cell .val{font-size:13.5px;color:var(--ink-900);font-weight:600;margin-top:2px}
+.search-bar > .btn-search{padding:0 22px;background:var(--c-primary);color:#fff;border:0;font-weight:800;font-size:14px;border-radius:0 var(--radius-lg) var(--radius-lg) 0;display:flex;align-items:center;gap:6px}
+
+/* Quick-filter chips */
+.quick-chips{display:flex;gap:8px;padding:12px 0;overflow-x:auto;flex-wrap:nowrap}
+.quick-chips button{flex:0 0 auto;padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-700);font-weight:600;white-space:nowrap}
+.quick-chips button:hover{border-color:var(--c-primary);color:var(--c-primary)}
+.quick-chips button.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+
+/* Page layout 3 cols */
+.page{max-width:1400px;margin:0 auto;padding:0 24px}
+.title-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin:8px 0 4px}
+.title-row h1{font-size:28px}
+.title-row .counter{color:var(--ink-500);font-size:14px}
+.title-row .counter a{color:var(--c-primary);font-weight:600;margin-left:8px;text-decoration:underline}
+
+.disclosure{padding:10px 14px;background:#FFF8E1;border:1px solid #F6E4B0;border-radius:var(--radius);font-size:12.5px;color:var(--ink-700);margin:8px 0 14px;display:flex;gap:8px;align-items:center}
+.disclosure b{color:var(--ink-900)}
+.disclosure a{color:var(--c-primary);text-decoration:underline}
+
+.layout{display:grid;grid-template-columns:260px 1fr 480px;gap:20px;align-items:start}
+@media (max-width:1200px){.layout{grid-template-columns:240px 1fr}.map-col{display:none}}
+@media (max-width:900px){.layout{grid-template-columns:1fr}.filters-col{display:none}}
+
+/* Filters */
+.filters-col{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto}
+.fl-group{padding:14px 16px;border-bottom:1px solid var(--line)}
+.fl-group:last-of-type{border-bottom:0}
+.fl-title{font-size:13px;font-weight:800;color:var(--ink-900);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.fl-title .chev{transition:transform .15s}
+.fl-title.collapsed .chev{transform:rotate(-90deg)}
+.fl-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:5px 0;color:var(--ink-700);gap:8px;cursor:pointer}
+.fl-row:hover{color:var(--ink-900)}
+.fl-row input[type="checkbox"]{accent-color:var(--c-primary);flex-shrink:0}
+.fl-row .cnt{color:var(--ink-400);font-size:12.5px}
+
+/* Hotel cards */
+.list-col{display:flex;flex-direction:column;gap:14px}
+.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:280px 1fr 220px;overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer}
+.hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
+.hotel-card.highlight{box-shadow:0 0 0 3px var(--c-primary);border-color:var(--c-primary)}
+.hotel-img{position:relative;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);min-height:220px}
+.hotel-img .heart{position:absolute;top:10px;left:10px;width:36px;height:36px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700)}
+.hotel-img .heart.saved{color:var(--c-primary)}
+.hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800}
+.hotel-img-label{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.hotel-info{padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.hotel-info h3{font-size:17px;color:var(--info);font-weight:700}
+.hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:13px}
+.hotel-info .stars .superior{color:var(--info);font-size:12px;margin-left:6px;font-weight:600}
+.hotel-info .amenities{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.amenity-pill{display:inline-flex;align-items:center;gap:4px;background:var(--c-success-bg);color:var(--c-success);padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700}
+.hotel-info .board{color:var(--c-success);font-size:12.5px;font-weight:700}
+.hotel-info .szep{color:var(--c-success);font-size:12.5px;font-weight:600}
+.hotel-price{padding:16px 18px;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;background:var(--surface-2);text-align:right;gap:8px}
+.hotel-score{display:flex;align-items:center;gap:8px;text-align:right}
+.hotel-score .lbl{font-size:12.5px;color:var(--ink-700);font-weight:700}
+.hotel-score .cnt{font-size:11px;color:var(--ink-500)}
+.hotel-score .num{width:40px;height:40px;border-radius:50%;background:var(--c-success);color:#fff;font-weight:800;font-size:15px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:13px}
+.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.01em}
+.hotel-bigprice .ft{font-size:14px;color:var(--ink-700);font-weight:600;margin-left:2px}
+.hotel-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:-2px}
+.hotel-tax{font-size:11.5px;color:var(--ink-500)}
+.hotel-cta{margin-top:auto;padding:8px 18px;background:#fff;border:1px solid var(--c-primary);color:var(--c-primary);border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
+.hotel-cta:hover{background:var(--c-cta);color:#fff;border-color:var(--c-cta)}
+@media (max-width:900px){.hotel-card{grid-template-columns:1fr}.hotel-img{min-height:180px}.hotel-price{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:flex-end}}
+
+/* Map column */
+.map-col{position:sticky;top:84px;height:calc(100vh - 100px);border-radius:var(--radius-lg);overflow:hidden;background:#dbe6ec;box-shadow:var(--shadow-sm)}
+.map-col > div{width:100%;height:100%}
+.price-pin-html{background:var(--c-primary);color:#fff;padding:5px 10px;border-radius:12px;font-weight:800;font-size:12.5px;border:2px solid #fff;box-shadow:0 4px 12px rgba(227,6,19,.35);white-space:nowrap}
+.price-pin-html.active{background:var(--c-success);box-shadow:0 4px 14px rgba(31,127,62,.45);transform:scale(1.1)}
+
+/* Footer */
+.footer{background:#0f1419;color:#cbd2da;padding:48px 24px 24px;margin-top:48px}
+.footer-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.footer h5{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.footer ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:13.5px}
+.footer a{color:#cbd2da}
+.footer-bottom{max-width:1400px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12.5px;color:#8a93a1}
+.footer-trust{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.footer-trust-badge{padding:5px 10px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px}
+@media (max-width:900px){.footer-inner{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+const HOTELS = [
+  { id:'aurora', name:'Hotel Aurora Balaton', city:'Siófok', stars:4, superior:false,
+    score:9.1, scoreLbl:'Kiváló', reviews:1247, lat:46.9034, lng:18.0561,
+    img:'#dbe6ec', img2:'#b5c8d2',
+    discount:9, original:42400, price:38600, board:'Reggeli az árban', boardKind:'breakfast',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true },
+  { id:'ensana', name:'Ensana Thermal Aqua', city:'Hévíz', stars:4, superior:false,
+    score:9.5, scoreLbl:'Kiváló', reviews:5587, lat:46.7847, lng:17.1922,
+    img:'#e4d7b5', img2:'#b5a785',
+    discount:9, original:96085, price:86642, board:'All inclusive ellátással', boardKind:'allinc',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'200 m a tóhoz', wellness:true },
+  { id:'danubius-marina', name:'Danubius Hotel Marina', city:'Balatonfüred', stars:3, superior:true,
+    score:9.3, scoreLbl:'Nagyon jó', reviews:4283, lat:46.9579, lng:17.8825,
+    img:'#bedcbe', img2:'#8db98d',
+    discount:0, original:0, price:57971, board:'All inclusive ellátással', boardKind:'allinc',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'80 m a parttól', wellness:true },
+  { id:'ce-plaza', name:'CE Plaza Hotel', city:'Siófok', stars:4, superior:false,
+    score:8.8, scoreLbl:'Jó', reviews:3581, lat:46.9120, lng:18.0490,
+    img:'#dde8b3', img2:'#a8b685',
+    discount:0, original:0, price:37400, board:'Félpanzió az árban', boardKind:'halfboard',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥'], distance:'600 m a parttól', wellness:false },
+  { id:'residence-balaton', name:'Residence Hotel Balaton', city:'Siófok', stars:4, superior:true,
+    score:9.6, scoreLbl:'Kiváló', reviews:1677, lat:46.9081, lng:18.0612,
+    img:'#cfb5d8', img2:'#9a85a3',
+    discount:0, original:0, price:58400, board:'Félpanzió az árban', boardKind:'halfboard',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'900 m a parttól', wellness:true },
+  { id:'helikon-keszthely', name:'Hotel Helikon', city:'Keszthely', stars:4, superior:true,
+    score:9.6, scoreLbl:'Kiváló', reviews:1202, lat:46.7651, lng:17.2470,
+    img:'#b5cedd', img2:'#7a9aab',
+    discount:0, original:0, price:58800, board:'Félpanzió az árban', boardKind:'halfboard',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'120 m a parttól', wellness:true },
+  { id:'lelle-hotel', name:'Lelle Hotel', city:'Balatonlelle', stars:3, superior:false,
+    score:9.3, scoreLbl:'Nagyon jó', reviews:500, lat:46.7842, lng:17.6938,
+    img:'#dde2cf', img2:'#a7ad94',
+    discount:0, original:0, price:46000, board:'Reggeli az árban', boardKind:'breakfast',
+    amenities:['❄️','📶','🅿️','👥','🧖'], distance:'150 m a parttól', wellness:true },
+  { id:'europa-fit', name:'Hotel Európa Fit', city:'Hévíz', stars:4, superior:true,
+    score:9.5, scoreLbl:'Kiváló', reviews:2105, lat:46.7920, lng:17.1840,
+    img:'#cdc3e5', img2:'#9a8eb9',
+    discount:0, original:0, price:41120, board:'Félpanzió az árban', boardKind:'halfboard',
+    amenities:['🍳','💧','❄️','📶','🅿️','👥','🧖'], distance:'1 km a tóhoz', wellness:true }
+];
+
+const FILTERS = {
+  discounts: [
+    { id:'vip', lbl:'Kedvezmények VIP tagoknak', cnt:879 }
+  ],
+  popular: [
+    { id:'wellness', lbl:'Wellness', cnt:1058, icon:'🧖' },
+    { id:'breakfast', lbl:'Reggeli', cnt:388, icon:'🍳' },
+    { id:'high-score', lbl:'Nagyon jó 9.0+', cnt:4151, icon:'⭐' },
+    { id:'pool', lbl:'Medence', cnt:783, icon:'🏊' }
+  ],
+  szep: [
+    { id:'otp', lbl:'OTP Széchenyi', cnt:2341 },
+    { id:'mkb', lbl:'MKB', cnt:1958 },
+    { id:'kh', lbl:'K&H', cnt:2105 }
+  ],
+  board: [
+    { id:'none', lbl:'Nincs ellátás', cnt:4910 },
+    { id:'br', lbl:'Reggeli', cnt:388 },
+    { id:'hp', lbl:'Félpanzió', cnt:114 },
+    { id:'fb', lbl:'Teljes ellátás', cnt:9 },
+    { id:'sai', lbl:'Soft all-inclusive', cnt:1 },
+    { id:'ai', lbl:'All inclusive', cnt:6 }
+  ],
+  type: [
+    { id:'h4', lbl:'Hotel 4★', cnt:131 },
+    { id:'h3', lbl:'Hotel 3★', cnt:483 },
+    { id:'h5', lbl:'Hotel 5★', cnt:14 },
+    { id:'apartment', lbl:'Apartman', cnt:3070 },
+    { id:'guesthouse', lbl:'Vendégház', cnt:1312 }
+  ],
+  beach: [
+    { id:'lt500m', lbl:'500 m a parttól', cnt:1234 },
+    { id:'lt1km', lbl:'1 km a parttól', cnt:2056 },
+    { id:'lt5km', lbl:'5 km a parttól', cnt:4700 }
+  ]
+};
+
+const QUICK_FILTERS = [
+  { id:'pentecost', lbl:'Pünkösdi hétvége' },
+  { id:'best-balaton', lbl:'Balaton legjobb' },
+  { id:'wellness', lbl:'Wellness és spa' },
+  { id:'croatia', lbl:'Horvátország' },
+  { id:'halfboard', lbl:'Félpanzióval' },
+  { id:'family', lbl:'Családi' }
+];
+
+const BoardChip = ({ board, kind }) => {
+  const bg = kind==='allinc' ? '#F5EAFF' : kind==='halfboard' ? '#FFF1E6' : kind==='breakfast' ? 'var(--c-success-bg)' : 'var(--surface-3)';
+  const fg = kind==='allinc' ? '#6B21A8' : kind==='halfboard' ? '#C84B00' : kind==='breakfast' ? 'var(--c-success)' : 'var(--ink-700)';
+  const icon = kind==='allinc' ? '🥂' : kind==='halfboard' ? '🍽️' : kind==='breakfast' ? '🍳' : '🛏️';
+  return <span style={{background:bg,color:fg,padding:'4px 9px',borderRadius:8,fontSize:12.5,fontWeight:700,display:'inline-flex',gap:5,alignItems:'center'}}>{icon} {board}</span>;
+};
+
+const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) => (
+  <div className={'hotel-card'+(highlight?' highlight':'')} onMouseEnter={onHover} onMouseLeave={onLeave} onClick={onClick}>
+    <div className="hotel-img" style={{background:`linear-gradient(135deg,${h.img},${h.img2})`}}>
+      <button className={'heart'+(saved?' saved':'')} onClick={(e)=>{e.stopPropagation();onSave()}}>{saved?'❤':'♡'}</button>
+      {h.discount>0 && <div className="discount">−{h.discount}%</div>}
+      <div className="hotel-img-label">{h.city}</div>
+    </div>
+    <div className="hotel-info">
+      <h3>{h.name}</h3>
+      <div>
+        <span className="stars">{'★'.repeat(h.stars)}</span>
+        {h.superior && <span className="superior">+superior</span>}
+      </div>
+      <div className="amenities">
+        {h.amenities.map((a,i)=><span key={i} className="amenity-pill">{a} FREE</span>)}
+      </div>
+      <BoardChip board={h.board} kind={h.boardKind}/>
+      <div style={{fontSize:12.5,color:'var(--ink-500)'}}>{h.distance}</div>
+      <div className="szep">✓ SZÉP-kártyával is fizethetsz</div>
+    </div>
+    <div className="hotel-price">
+      <div className="hotel-score">
+        <div>
+          <div className="lbl">{h.scoreLbl}</div>
+          <div className="cnt">{fmt(h.reviews)} értékelés</div>
+        </div>
+        <div className="num">{h.score}</div>
+      </div>
+      <div style={{textAlign:'right'}}>
+        {h.original>0 && <div className="hotel-strike">{fmt(h.original)} Ft</div>}
+        <div className="hotel-bigprice">{fmt(h.price)}<span className="ft"> Ft</span></div>
+        <div className="hotel-priceunit">2 fő · 1 éj</div>
+        <div className="hotel-tax">Tartalmazza az adókat és díjakat</div>
+      </div>
+      <button className="hotel-cta">Megnézem</button>
+    </div>
+  </div>
+);
+
+const FilterGroup = ({ title, items, expanded=true, type='check' }) => {
+  const [open, setOpen] = React.useState(expanded);
+  return (
+    <div className="fl-group">
+      <div className={"fl-title "+(open?'':'collapsed')} onClick={()=>setOpen(!open)}>
+        <span>{title}</span><span className="chev">▾</span>
+      </div>
+      {open && items.map(it => (
+        <label className="fl-row" key={it.id}>
+          <span style={{display:'flex',gap:6,alignItems:'center'}}>
+            {type==='check' && <input type="checkbox"/>}
+            {it.icon && <span>{it.icon}</span>}
+            <span>{it.lbl}</span>
+          </span>
+          <span className="cnt">{fmt(it.cnt)}</span>
+        </label>
+      ))}
+    </div>
+  );
+};
+
+const MapView = ({ hotels, activeId, onMarkerClick }) => {
+  const mapRef = React.useRef(null);
+  const mapObj = React.useRef(null);
+  const markers = React.useRef({});
+
+  React.useEffect(() => {
+    if (!mapRef.current || mapObj.current) return;
+    if (typeof L === 'undefined') return;
+    const map = L.map(mapRef.current, { scrollWheelZoom: true }).setView([46.85, 17.85], 9);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(map);
+    hotels.forEach(h => {
+      const icon = L.divIcon({
+        className:'price-pin-wrap',
+        html:`<div class="price-pin-html" data-id="${h.id}">${fmt(h.price)} Ft</div>`,
+        iconSize:[80,30],
+        iconAnchor:[40,15]
+      });
+      const m = L.marker([h.lat, h.lng], { icon })
+        .bindPopup(`<div style="font-weight:700">${h.name}</div><div style="font-size:12px;color:#6B7683">${h.city} · ${h.scoreLbl} ${h.score}</div><div style="font-size:13px;color:#E85A00;font-weight:800;margin-top:4px">${fmt(h.price)} Ft / 2 fő, 1 éj</div>`)
+        .addTo(map);
+      m.on('click', () => onMarkerClick && onMarkerClick(h.id));
+      markers.current[h.id] = m;
+    });
+    mapObj.current = map;
+    return () => { map.remove(); mapObj.current = null; };
+  }, []);
+
+  React.useEffect(() => {
+    if (!mapObj.current) return;
+    Object.entries(markers.current).forEach(([id, m]) => {
+      const el = m.getElement()?.querySelector('.price-pin-html');
+      if (el) el.classList.toggle('active', id===activeId);
+    });
+    if (activeId && markers.current[activeId]) {
+      const m = markers.current[activeId];
+      mapObj.current.flyTo(m.getLatLng(), Math.max(mapObj.current.getZoom(), 11), { duration:0.6 });
+    }
+  }, [activeId]);
+
+  return <div className="map-col"><div ref={mapRef}/></div>;
+};
+
+const Page = () => {
+  const [active, setActive] = React.useState(null);
+  const [saved, setSaved] = React.useState({});
+  const [activeChip, setActiveChip] = React.useState(null);
+
+  return (
+    <React.Fragment>
+      <div className="brandbar">
+        <div className="brandbar-inner">
+          <a href="index.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <div style={{flex:1,maxWidth:680,marginLeft:24}}>
+            <div className="search-bar">
+              <div className="field-cell"><span className="lbl">Hová</span><span className="val">Balaton</span></div>
+              <div className="field-cell"><span className="lbl">Mikor</span><span className="val">jún. 11 – 13</span></div>
+              <div className="field-cell"><span className="lbl">Vendégek</span><span className="val">2 felnőtt · 1 szoba</span></div>
+              <button className="btn-search">Keresés</button>
+            </div>
+          </div>
+          <div className="brandbar-actions">
+            <a href="#">HUF</a>
+            <a href="#">Belépés</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="page">
+        <div className="quick-chips">
+          {QUICK_FILTERS.map(q => (
+            <button key={q.id} className={activeChip===q.id?'active':''} onClick={()=>setActiveChip(activeChip===q.id?null:q.id)}>{q.lbl}</button>
+          ))}
+        </div>
+
+        <div style={{padding:'8px 0',fontSize:13,color:'var(--ink-500)'}}>
+          <a href="index.html">Főoldal</a> &rsaquo; <a href="#">Magyarország</a> &rsaquo; Balaton
+        </div>
+
+        <div className="title-row">
+          <div>
+            <h1>Balaton szálláshelyek</h1>
+            <div className="counter">5 167 találat <a href="#">🗺️ térkép nézet</a></div>
+          </div>
+          <div>
+            <select style={{padding:'8px 12px',border:'1px solid var(--line-strong)',borderRadius:'var(--radius)',background:'#fff'}}>
+              <option>Ajánlásunk szerint</option>
+              <option>Legolcsóbb</option>
+              <option>Legmagasabb pontszám</option>
+              <option>Legközelebb a parthoz</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="disclosure">
+          <b>ℹ️</b>
+          <div>A szálláshelyek által fizetett jutalék befolyásolhatja a megjelenés sorrendjét. <a href="#">Bővebben</a></div>
+        </div>
+
+        <div className="layout">
+          <aside className="filters-col">
+            <FilterGroup title="Kedvezmények" items={FILTERS.discounts}/>
+            <FilterGroup title="Legnépszerűbb szűrők" items={FILTERS.popular}/>
+            <FilterGroup title="SZÉP kártyás fizetés" items={FILTERS.szep}/>
+            <FilterGroup title="Ellátás" items={FILTERS.board}/>
+            <FilterGroup title="Szállástípus" items={FILTERS.type}/>
+            <FilterGroup title="Távolság a parttól" items={FILTERS.beach}/>
+          </aside>
+
+          <div className="list-col">
+            {HOTELS.map(h => (
+              <HotelCard key={h.id} h={h}
+                highlight={active===h.id}
+                saved={!!saved[h.id]}
+                onHover={()=>setActive(h.id)}
+                onLeave={()=>{}}
+                onSave={()=>setSaved({...saved, [h.id]:!saved[h.id]})}
+                onClick={()=>{ window.location.href = '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
+            ))}
+          </div>
+
+          <MapView hotels={HOTELS} activeId={active} onMarkerClick={setActive}/>
+        </div>
+      </div>
+
+      <footer className="footer">
+        <div className="footer-inner">
+          <div><h5>Névjegy</h5><ul><li><a>Rólunk</a></li><li><a>Felhasználási feltételek</a></li><li><a>Adatvédelem</a></li></ul></div>
+          <div><h5>Népszerű</h5><ul><li><a>Balaton</a></li><li><a>Budapest</a></li><li><a>Wellness</a></li><li><a>VIP program</a></li></ul></div>
+          <div><h5>Partnerek</h5><ul><li><a>Regisztrálom a szállásomat</a></li><li><a>Médiaajánlat</a></li></ul></div>
+          <div><h5>Kontakt</h5><ul><li><a href="tel:+36303442000">+36 30 344 2000</a></li><li><a>szallas@szallas.hu</a></li></ul></div>
+        </div>
+        <div className="footer-bottom">
+          <div className="footer-trust">
+            <span className="footer-trust-badge">🔒 100% SSL</span>
+            <span className="footer-trust-badge">Deloitte Fast 50 — 2021</span>
+            <span className="footer-trust-badge">Aplikacja Roku 2022</span>
+          </div>
+          <div>© 2008–2026 Szallas.hu</div>
+        </div>
+      </footer>
+    </React.Fragment>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
+  </script>
+</body>
+</html>

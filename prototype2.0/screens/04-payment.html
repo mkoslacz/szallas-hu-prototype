@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fizetés · Hotel Aurora Balaton · Szallas.hu</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --c-primary:#E30613;--c-primary-hover:#b40510;--c-cta:#E85A00;
+  --c-success:#1F7F3E;--c-success-bg:#E8F5EC;
+  --ink-900:#1F2A36;--ink-700:#394654;--ink-500:#6B7683;--ink-400:#8A93A1;
+  --line:#E1E4EA;--line-strong:#C9CED6;
+  --surface:#FFFFFF;--surface-2:#F5F6F8;--surface-3:#ECEEF2;
+  --info:#1F6FE0;
+  --radius-sm:6px;--radius:10px;--radius-lg:14px;
+  --shadow-sm:0 1px 2px rgba(31,42,54,.06),0 2px 6px rgba(31,42,54,.06);
+  --shadow:0 2px 6px rgba(31,42,54,.06),0 6px 18px rgba(31,42,54,.08);
+  --shadow-cta:0 6px 18px rgba(227,6,19,.28);
+  --font-ui:'Inter','Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--surface-2);color:var(--ink-900);font-family:var(--font-ui);font-weight:500;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;font-weight:500}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
+
+.brandbar{background:#D20000;height:60px}
+.brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+.brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
+.brandbar-logo .dot{color:#FF5A00}
+.brandbar-help{margin-left:auto;color:#fff;font-size:14px;display:flex;gap:14px;align-items:center}
+
+.stepper{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}
+.stepper-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.step{display:flex;align-items:center;gap:10px;color:var(--ink-500);font-size:14px;flex:0 0 auto}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.step.done .step-num{background:var(--c-success);color:#fff}
+.step.active{color:var(--ink-900);font-weight:700}
+.step.active .step-num{background:var(--c-primary);color:#fff}
+.step-line{flex:1;height:2px;background:var(--surface-3);min-width:30px;border-radius:1px}
+.step.done + .step-line{background:var(--c-success)}
+
+.page{max-width:1200px;margin:0 auto;padding:24px}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+.form-col{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 32px}
+.form-col h1{font-size:26px;margin-bottom:6px}
+.form-col > p.sub{color:var(--ink-500);font-size:14px;margin-bottom:24px}
+
+/* Method selector */
+.methods{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+@media (max-width:560px){.methods{grid-template-columns:1fr}}
+.method{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:2px solid var(--line);border-radius:var(--radius-lg);cursor:pointer;transition:border-color .15s, background .15s}
+.method:hover{border-color:var(--c-primary)}
+.method.active{border-color:var(--c-primary);background:var(--c-success-bg);background:#FFE8EA}
+.method-icon{font-size:24px}
+.method-text{flex:1}
+.method-name{font-weight:700;font-size:14px;color:var(--ink-900)}
+.method-sub{font-size:12px;color:var(--ink-500);margin-top:2px}
+.method-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.method.active .method-radio{border-color:var(--c-primary)}
+.method.active .method-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--c-primary)}
+
+.field-group{margin-bottom:24px}
+.field-group > h3{font-size:15px;margin-bottom:14px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.field-grid{grid-template-columns:1fr}}
+.field-label{display:block;font-size:12.5px;color:var(--ink-700);margin-bottom:6px;font-weight:600}
+.field input,.field select{width:100%;border:1px solid var(--line-strong);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink-900)}
+.field input:focus,.field select:focus{outline:0;border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(227,6,19,.16)}
+.field.span2{grid-column:span 2}
+@media (max-width:560px){.field.span2{grid-column:span 1}}
+
+.bank-info{padding:18px 20px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-lg);font-size:13.5px}
+.bank-info h4{font-size:14px;margin-bottom:12px}
+.bank-info .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+.bank-info .row:last-of-type{border-bottom:0}
+.bank-info .row b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-900)}
+.bank-deadline{margin-top:14px;padding:10px 14px;background:#FFFBEA;border:1px solid #FBBF24;border-radius:var(--radius);font-size:13px;color:var(--ink-700);display:flex;gap:8px}
+
+.apple-google-block{padding:24px;background:#000;color:#fff;border-radius:var(--radius-lg);text-align:center}
+.apple-google-block button{margin:6px;padding:12px 22px;border-radius:var(--radius);font-weight:700;border:0;font-size:14px;cursor:pointer}
+.apple-google-block .ap{background:#fff;color:#000}
+.apple-google-block .gp{background:#4285F4;color:#fff}
+
+.trust-strip{display:flex;gap:18px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);margin:18px 0;font-size:12.5px;color:var(--ink-700);font-weight:600;flex-wrap:wrap;justify-content:space-between}
+.trust-strip span{display:inline-flex;gap:6px;align-items:center}
+
+.error-banner{padding:14px 18px;background:#FEE2E2;border:1px solid #FCA5A5;border-radius:var(--radius);color:#991B1B;font-size:14px;margin-bottom:18px;display:flex;gap:10px}
+
+.submit-bar{margin-top:18px;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.submit-bar .btn-primary{padding:16px 32px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;font-size:16px;cursor:pointer;box-shadow:var(--shadow-cta);transition:filter .12s}
+.submit-bar .btn-primary:hover{filter:brightness(1.05)}
+.submit-bar .btn-back{background:transparent;border:0;color:var(--ink-700);font-weight:600;text-decoration:underline}
+
+.cancel-note{font-size:13px;color:var(--ink-700);padding:10px 14px;background:var(--surface-2);border-left:3px solid var(--c-success);border-radius:0 var(--radius) var(--radius) 0;margin-bottom:14px}
+.cancel-note a{color:var(--c-primary);text-decoration:underline}
+
+/* Summary sidebar (same as checkout) */
+.summary{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:24px}
+.summary-img{aspect-ratio:16/9;background:linear-gradient(135deg,#dbe6ec,#a7c5d3)}
+.summary-body{padding:18px 20px}
+.summary h2{font-size:13px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);font-weight:700}
+.summary .hotel-name{font-size:17px;font-weight:800;color:var(--ink-900);margin-bottom:12px}
+.summary .row{display:flex;gap:10px;padding:6px 0;font-size:13px;color:var(--ink-700)}
+.summary .split{padding:14px 0;border-top:1px solid var(--line)}
+.summary .split h4{font-size:13px;margin-bottom:10px}
+.summary .pt-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:var(--ink-700)}
+.summary .pt-row.highlight{background:#FFE8EA;padding:8px 12px;border-radius:var(--radius);margin:6px 0}
+.summary .pt-row .amt{font-weight:800}
+.summary .total{padding:14px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end}
+.summary .total .lbl{font-size:14px;font-weight:800}
+.summary .total .amt{font-size:22px;font-weight:900;color:var(--c-cta);letter-spacing:-.01em}
+
+/* 3D Secure modal */
+.threed-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.threed-card{background:#fff;border-radius:var(--radius-lg);max-width:420px;width:100%;padding:32px;text-align:center}
+.threed-bank{font-size:24px;font-weight:900;margin-bottom:8px;color:var(--ink-900)}
+.threed-amt{font-size:18px;color:var(--c-cta);font-weight:800;margin-bottom:20px}
+.threed-card .otp{font-size:32px;letter-spacing:8px;padding:12px;text-align:center;border:2px solid var(--line-strong);border-radius:var(--radius);width:100%;margin:14px 0;font-family:ui-monospace,monospace}
+.threed-spinner{margin:18px auto;width:32px;height:32px;border:3px solid var(--surface-3);border-top-color:var(--c-primary);border-radius:50%;animation:tspin 0.8s linear infinite}
+@keyframes tspin{to{transform:rotate(360deg)}}
+
+.footer{background:#0f1419;color:#cbd2da;padding:32px 24px 20px;margin-top:48px;font-size:12.5px;text-align:center}
+.footer a{color:#cbd2da;margin:0 12px}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+const Page = () => {
+  const [method, setMethod] = React.useState('card');
+  const [showError, setShowError] = React.useState(false);
+  const [threeDS, setThreeDS] = React.useState(false);
+
+  React.useEffect(() => {
+    if (window.location.search.includes('error=card-declined')) setShowError(true);
+  }, []);
+
+  const onPay = () => {
+    if (method === 'bank') {
+      // Bank transfer — just go to thank you
+      window.location.href = '05-thankyou.html?method=bank';
+      return;
+    }
+    if (method === 'card') {
+      setThreeDS(true);
+      setTimeout(() => {
+        setThreeDS(false);
+        window.location.href = '05-thankyou.html?method=card';
+      }, 3500);
+    } else {
+      window.location.href = '05-thankyou.html?method='+method;
+    }
+  };
+
+  const total = 38600;
+  const onlinePart = 37056;
+  const ifa = 1544;
+
+  return (
+    <React.Fragment>
+      <div className="brandbar">
+        <div className="brandbar-inner">
+          <a href="index.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <div className="brandbar-help">
+            <span>🔒 PCI DSS Level 1 · 256-bit SSL</span>
+            <a href="tel:+36303442000">📞 +36 30 344 2000</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="stepper">
+        <div className="stepper-inner">
+          <div className="step done"><div className="step-num">✓</div><span>Szállás</span></div>
+          <div className="step-line"/>
+          <div className="step done"><div className="step-num">✓</div><span>Adatok</span></div>
+          <div className="step-line"/>
+          <div className="step done"><div className="step-num">✓</div><span>Sikeres foglalás</span></div>
+          <div className="step-line"/>
+          <div className="step active"><div className="step-num">4</div><span>Fizetés</span></div>
+        </div>
+      </div>
+
+      <div className="page">
+        <div className="layout">
+          <div className="form-col">
+            <h1>Fizetés</h1>
+            <p className="sub">Válaszd ki, hogyan szeretnél fizetni. Minden tranzakció titkosított, PCI DSS Level 1 megfelelőséggel.</p>
+
+            {showError && (
+              <div className="error-banner">
+                <span>⚠️</span>
+                <div><b>A kártyádat elutasították.</b> Próbáld újra másik kártyával, vagy válassz másik fizetési módot.</div>
+              </div>
+            )}
+
+            <div className="cancel-note">
+              ↩️ <b>Foglalásod a Lemondási feltételek alapján kezelhetjük.</b> Ingyenes lemondás 2026.06.08-ig. <a>Részletek</a>
+            </div>
+
+            <div className="methods">
+              <div className={'method'+(method==='card'?' active':'')} onClick={()=>setMethod('card')}>
+                <div className="method-icon">💳</div>
+                <div className="method-text">
+                  <div className="method-name">Bankkártya</div>
+                  <div className="method-sub">Visa · Mastercard · Maestro</div>
+                </div>
+                <div className="method-radio"/>
+              </div>
+              <div className={'method'+(method==='szep'?' active':'')} onClick={()=>setMethod('szep')}>
+                <div className="method-icon">🇭🇺</div>
+                <div className="method-text">
+                  <div className="method-name">SZÉP-kártya</div>
+                  <div className="method-sub">OTP · MKB · K&H</div>
+                </div>
+                <div className="method-radio"/>
+              </div>
+              <div className={'method'+(method==='wallet'?' active':'')} onClick={()=>setMethod('wallet')}>
+                <div className="method-icon">📱</div>
+                <div className="method-text">
+                  <div className="method-name">Apple Pay / Google Pay</div>
+                  <div className="method-sub">Gyors fizetés mobillal</div>
+                </div>
+                <div className="method-radio"/>
+              </div>
+              <div className={'method'+(method==='bank'?' active':'')} onClick={()=>setMethod('bank')}>
+                <div className="method-icon">🏦</div>
+                <div className="method-text">
+                  <div className="method-name">Banki átutalás</div>
+                  <div className="method-sub">24 órán belüli megerősítés</div>
+                </div>
+                <div className="method-radio"/>
+              </div>
+            </div>
+
+            {method === 'card' && (
+              <div className="field-group">
+                <h3>Kártya adatai</h3>
+                <div className="field-grid">
+                  <div className="field span2">
+                    <label className="field-label">Kártyaszám</label>
+                    <input placeholder="1234 5678 9012 3456"/>
+                  </div>
+                  <div className="field">
+                    <label className="field-label">Lejárat (HH/ÉÉ)</label>
+                    <input placeholder="12/27"/>
+                  </div>
+                  <div className="field">
+                    <label className="field-label">CVC</label>
+                    <input placeholder="123"/>
+                  </div>
+                  <div className="field span2">
+                    <label className="field-label">Kártyatulajdonos neve</label>
+                    <input placeholder="JOHN DOE"/>
+                  </div>
+                </div>
+                <label style={{display:'flex',gap:8,alignItems:'center',marginTop:12,fontSize:13.5,color:'var(--ink-700)'}}>
+                  <input type="checkbox" style={{accentColor:'var(--c-primary)'}}/>
+                  Mentsem el a kártyát a következő foglaláshoz (titkosítva)
+                </label>
+              </div>
+            )}
+
+            {method === 'szep' && (
+              <div className="field-group">
+                <h3>SZÉP-kártya adatai</h3>
+                <div className="field-grid">
+                  <div className="field span2">
+                    <label className="field-label">Kibocsátó bank</label>
+                    <select>
+                      <option>OTP Bank — Széchenyi Pihenőkártya</option>
+                      <option>MKB Bank — SZÉP-kártya</option>
+                      <option>K&H Bank — SZÉP-kártya</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label className="field-label">Kártyaszám</label>
+                    <input placeholder="603488 …"/>
+                  </div>
+                  <div className="field">
+                    <label className="field-label">PIN / azonosító kód</label>
+                    <input type="password" placeholder="••••"/>
+                  </div>
+                </div>
+                <div style={{marginTop:12,padding:'10px 14px',background:'var(--c-success-bg)',color:'var(--c-success)',borderRadius:'var(--radius)',fontSize:13}}>
+                  ℹ️ A szállás 100%-ban fizethető SZÉP-kártyával a Szállás-Vendéglátás alszámláról.
+                </div>
+              </div>
+            )}
+
+            {method === 'wallet' && (
+              <div className="apple-google-block">
+                <div style={{fontSize:14,marginBottom:14}}>Válaszd a tárcád:</div>
+                <button className="ap">  Pay</button>
+                <button className="gp">G Pay</button>
+                <div style={{fontSize:12,opacity:.7,marginTop:14}}>Touch ID / Face ID megerősítéssel</div>
+              </div>
+            )}
+
+            {method === 'bank' && (
+              <div className="field-group">
+                <div className="bank-info">
+                  <h4>Banki átutalás adatai</h4>
+                  <div className="row"><span>Kedvezményezett:</span><b>Szallas.hu Kft.</b></div>
+                  <div className="row"><span>Bankszámla:</span><b>10918001-00000026-13140003</b></div>
+                  <div className="row"><span>IBAN:</span><b>HU67 1091 8001 0000 0026 1314 0003</b></div>
+                  <div className="row"><span>SWIFT/BIC:</span><b>BACXHUHB</b></div>
+                  <div className="row"><span>Közlemény:</span><b>SZALLAS-A4F7K2</b></div>
+                  <div className="row"><span>Összeg:</span><b style={{color:'var(--c-cta)'}}>{fmt(onlinePart)} Ft</b></div>
+                </div>
+                <div className="bank-deadline">
+                  <span>⏰</span>
+                  <div>Fizetési határidő: <b>2026. május 12. 23:59</b>. A foglalásod 24 órán belül megerősítjük az átutalás megérkezése után. Ha az átutalás nem érkezik meg időben, a foglalás automatikusan törlődik.</div>
+                </div>
+              </div>
+            )}
+
+            <div className="trust-strip">
+              <span>🔒 PCI DSS Level 1</span>
+              <span>🛡️ 256-bit SSL</span>
+              <span>🔐 3D Secure</span>
+            </div>
+
+            <p style={{fontSize:12.5,color:'var(--ink-500)',lineHeight:1.5}}>
+              Nem terhelünk semmilyen rejtett díjat. Az árban szerepel az ÁFA (27%), az IFA pedig külön a helyszínen fizetendő ({fmt(ifa)} Ft).
+            </p>
+
+            <div className="submit-bar">
+              <a className="btn-back" href="03-checkout.html">← Vissza az adatokhoz</a>
+              <button className="btn-primary" onClick={onPay}>
+                {method === 'bank' ? `Megerősítem (${fmt(onlinePart)} Ft átutalása)` : `Fizetés ${fmt(onlinePart)} Ft`}
+                  →
+              </button>
+            </div>
+          </div>
+
+          <aside className="summary">
+            <div className="summary-img"/>
+            <div className="summary-body">
+              <h2>A foglalásod</h2>
+              <div className="hotel-name">Hotel Aurora Balaton ★★★★</div>
+              <div className="row"><span>📅</span><span>jún. 11 – 13 · 2 éj</span></div>
+              <div className="row"><span>👥</span><span>2 felnőtt</span></div>
+              <div className="row"><span>🏠</span><span>Standard kétágyas szoba</span></div>
+              <div className="row"><span>🍽️</span><span>Félpanzió</span></div>
+
+              <div className="split">
+                <h4>Most fizetsz / Később fizetsz</h4>
+                <div className="pt-row highlight">
+                  <span><b>Most online</b></span>
+                  <span className="amt" style={{color:'var(--c-cta)'}}>{fmt(onlinePart)} Ft</span>
+                </div>
+                <div className="pt-row">
+                  <span>Később a hotelben (IFA)</span>
+                  <span className="amt">{fmt(ifa)} Ft</span>
+                </div>
+              </div>
+
+              <div className="total">
+                <div>
+                  <div className="lbl">Teljes ár</div>
+                  <div style={{fontSize:11.5,color:'var(--ink-500)',marginTop:2}}>ÁFA-val</div>
+                </div>
+                <div className="amt">{fmt(total)} Ft</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      {threeDS && (
+        <div className="threed-overlay">
+          <div className="threed-card">
+            <div className="threed-bank">🏦 OTP Bank</div>
+            <div className="threed-amt">{fmt(onlinePart)} Ft</div>
+            <div style={{fontSize:14,color:'var(--ink-700)',marginBottom:14}}>3D Secure megerősítés. Add meg az SMS-ben kapott kódot.</div>
+            <input className="otp" placeholder="••••••" defaultValue="••••••" readOnly/>
+            <div className="threed-spinner"/>
+            <div style={{fontSize:12,color:'var(--ink-500)'}}>Feldolgozás folyamatban…</div>
+          </div>
+        </div>
+      )}
+
+      <footer className="footer">
+        <a>Adatvédelem</a><a>Felhasználási feltételek</a><a href="tel:+36303442000">+36 30 344 2000</a>
+        <div style={{marginTop:8}}>© 2008–2026 Szallas.hu · 🔒 100% SSL</div>
+      </footer>
+    </React.Fragment>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
+  </script>
+</body>
+</html>

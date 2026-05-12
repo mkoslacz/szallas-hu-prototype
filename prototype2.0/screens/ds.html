@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!--
+  ds.html — Szallas.hu prototype design system bootstrap.
+  Each screen (homepage, listing, checkout, payment, thankyou) starts from this file:
+  copy the entire <head> block and the BrandBar/Footer scripts at the bottom of <body>,
+  then add screen-specific content between them.
+
+  Tokens, base CSS, React 18 CDN, Babel CDN, and shared components (BrandBar, Footer,
+  SearchBar, Photo, Stepper, Tag, Switch, Seg, Icons) all live here.
+-->
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Szallas.hu — Design system bootstrap</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style id="ds-tokens">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    :root{
+      --c-primary:#E30613; --c-primary-hover:#b40510; --c-primary-press:#8c040d;
+      --c-cta:#E85A00;
+      --c-grad-from:#FF5A00; --c-grad-to:#D8001A;
+      --c-success:#1F7F3E; --c-success-bg:#E8F5EC;
+      --c-deal-bg:#FFF1E6; --c-deal-ink:#C84B00;
+      --c-warn-low:#F5A524;
+      --primary:var(--c-primary); --primary-hover:var(--c-primary-hover);
+      --primary-soft:#FFE8EA; --primary-border:#F6C5C9;
+      --ink-900:#1F2A36; --ink-700:#394654; --ink-500:#6B7683; --ink-400:#8A93A1; --ink-300:#A1A8B3;
+      --line:#E1E4EA; --line-strong:#C9CED6;
+      --surface:#FFFFFF; --surface-2:#F5F6F8; --surface-3:#ECEEF2;
+      --success:var(--c-success); --success-soft:var(--c-success-bg);
+      --warn:#F5A524; --info:#1F6FE0;
+      --radius-sm:6px; --radius:10px; --radius-lg:14px; --radius-xl:20px;
+      --shadow-sm:0 1px 2px rgba(31,42,54,.06), 0 2px 6px rgba(31,42,54,.06);
+      --shadow:0 2px 6px rgba(31,42,54,.06), 0 6px 18px rgba(31,42,54,.08);
+      --shadow-lg:0 4px 12px rgba(31,42,54,.08), 0 8px 24px rgba(31,42,54,.06);
+      --shadow-cta:0 6px 18px rgba(227,6,19,.28);
+      --font-ui:'Inter','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    }
+  </style>
+  <style id="ds-base">
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#fff;color:var(--ink-900);font-family:var(--font-ui);font-weight:500;-webkit-font-smoothing:antialiased}
+    body{min-height:100vh}
+    button{font-family:inherit;cursor:pointer;font-weight:500}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
+    h1{font-size:32px}h2{font-size:24px}h3{font-size:18px}h4{font-size:15px}
+    p{margin:0;line-height:1.55}
+  </style>
+  <style id="ds-components">
+    /* BrandBar */
+    .brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px;overflow:visible}
+    .brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+    .brandbar-logo{display:flex;align-items:center;gap:10px;color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
+    .brandbar-logo .dot{color:#FF5A00}
+    .brandbar-spacer{flex:1}
+    .brandbar-actions{display:flex;gap:10px;align-items:center;color:#fff;font-size:14px}
+    .brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
+    .brandbar-actions a:hover{background:rgba(255,255,255,.22)}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:var(--radius);font-weight:700;font-size:14px;border:1px solid transparent;cursor:pointer;transition:background .12s, transform .12s, box-shadow .12s}
+    .btn-primary{background:var(--c-primary);color:#fff;box-shadow:var(--shadow-cta)}
+    .btn-primary:hover{background:var(--c-primary-hover)}
+    .btn-cta{background:var(--c-cta);color:#fff}
+    .btn-cta:hover{filter:brightness(1.05)}
+    .btn-secondary{background:#fff;color:var(--ink-900);border:1px solid var(--line-strong)}
+    .btn-secondary:hover{border-color:var(--c-primary);color:var(--c-primary)}
+    .btn-ghost{background:transparent;color:var(--ink-700);border:0;padding:8px 12px}
+    .btn-ghost:hover{color:var(--c-primary)}
+    .btn.lg{padding:14px 22px;font-size:15px}
+    .btn.sm{padding:7px 12px;font-size:13px}
+
+    /* Tag / chip */
+    .tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11.5px;font-weight:700;letter-spacing:.01em}
+    .tag.green{background:var(--c-success-bg);color:var(--c-success)}
+    .tag.red{background:#FEE2E2;color:#B91C1C}
+    .tag.amber{background:var(--c-deal-bg);color:var(--c-deal-ink)}
+    .tag.blue{background:#DBEAFE;color:#1E40AF}
+    .tag.purple{background:#F3E8FF;color:#6B21A8}
+    .tag.gray{background:var(--surface-3);color:var(--ink-700)}
+
+    /* Card */
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:box-shadow .15s, transform .15s}
+    .card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+
+    /* Score circle */
+    .score-circle{width:48px;height:48px;border-radius:50%;background:var(--c-success);color:#fff;font-weight:800;font-size:17px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+    .score-pill{display:inline-flex;gap:10px;align-items:center}
+    .score-pill .lbl{font-size:13px;color:var(--ink-900);font-weight:700}
+    .score-pill .cnt{font-size:11.5px;color:var(--ink-500)}
+
+    /* Container */
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+    /* Inputs */
+    .field{position:relative}
+    .field input,.field select,.field textarea{width:100%;border:1px solid var(--line-strong);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink-900)}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(227,6,19,.16)}
+    .field-label{display:block;font-size:12.5px;color:var(--ink-700);margin-bottom:6px;font-weight:600}
+    .field-error{color:#B91C1C;font-size:12px;margin-top:4px}
+
+    /* Footer */
+    .footer{background:#0f1419;color:#cbd2da;padding:48px 24px 24px}
+    .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+    .footer h5{color:#fff;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+    .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:13.5px}
+    .footer a{color:#cbd2da}.footer a:hover{color:#fff}
+    .footer-bottom{max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12.5px;color:#8a93a1}
+    .footer-trust{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .footer-trust-badge{padding:5px 10px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px;color:#cbd2da}
+    @media (max-width:900px){.footer-inner{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:560px){.footer-inner{grid-template-columns:1fr}}
+
+    /* Search bar (homepage hero) */
+    .search-bar{display:flex;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;align-items:stretch}
+    .search-bar > .field-cell{flex:1;padding:14px 18px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line)}
+    .search-bar > .field-cell:last-of-type{border-right:0}
+    .search-bar > .field-cell .lbl{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+    .search-bar > .field-cell .val{font-size:14.5px;color:var(--ink-900);font-weight:600;margin-top:2px}
+    .search-bar > .btn-search{padding:0 26px;background:var(--c-primary);color:#fff;border:0;font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+    .search-bar > .btn-search:hover{background:var(--c-primary-hover)}
+
+    /* Stepper bar (checkout/payment/thankyou progress) */
+    .stepper{display:flex;align-items:center;gap:0;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line)}
+    .stepper-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px;width:100%}
+    .step{display:flex;align-items:center;gap:10px;color:var(--ink-500);font-size:14px;flex:0 0 auto}
+    .step-num{width:28px;height:28px;border-radius:50%;background:var(--surface-3);color:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+    .step.done .step-num{background:var(--c-success);color:#fff}
+    .step.active{color:var(--ink-900);font-weight:700}
+    .step.active .step-num{background:var(--c-primary);color:#fff}
+    .step-line{flex:1;height:2px;background:var(--surface-3);min-width:24px}
+    .step.done + .step-line{background:var(--c-success)}
+
+    /* Photo / placeholder */
+    .photo-real{display:block;width:100%;height:100%;object-fit:cover}
+    .photo-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8eef2,#d3dde3);color:#6e7c86;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+    /* Skeleton loading */
+    @keyframes ds-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    html[data-loading="1"] img,
+    html[data-loading="1"] .photo-real,
+    html[data-loading="1"] .photo-placeholder{
+      background:linear-gradient(90deg,#eef0f3 25%,#dde1e6 50%,#eef0f3 75%);
+      background-size:200% 100%;animation:ds-shimmer 1.4s linear infinite;
+      color:transparent !important;
+    }
+
+    /* Empty state card */
+    .empty-state{padding:48px 24px;text-align:center;background:var(--surface-2);border-radius:var(--radius-lg);border:1px dashed var(--line-strong)}
+    .empty-state .icon{font-size:48px;line-height:1;margin-bottom:10px}
+    .empty-state h3{margin-bottom:6px;font-size:20px}
+    .empty-state p{color:var(--ink-500);font-size:14px;max-width:480px;margin:0 auto}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+// ============================================================================
+// SHARED REACT COMPONENTS — copy these into every screen below the ds-* styles
+// ============================================================================
+
+const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n)) + ' Ft';
+
+const I = {
+  Search: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>,
+  Pin: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>,
+  Cal: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>,
+  Users: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  ChevR: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
+  ChevL: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>,
+  ChevD: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>,
+  Heart: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill={p.filled?'currentColor':'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  Star: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
+  Check: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  X: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>,
+  Phone: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  Mail: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>,
+  Shield: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 4 5v7c0 5 3.5 8 8 10 4.5-2 8-5 8-10V5l-8-3z"/></svg>,
+  Wifi: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12.55a11 11 0 0 1 14 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>,
+  Car: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 16H9m10-1-2.4-7.2A2 2 0 0 0 14.7 7H9.3a2 2 0 0 0-1.9 1.4L5 16m14 0H5m14 0v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3M5 16v3a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-3"/><circle cx="7.5" cy="16" r="1"/><circle cx="16.5" cy="16" r="1"/></svg>,
+  Sparkle: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg>,
+  Card: (p)=><svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>,
+  Lock: (p)=><svg width={p.size||14} height={p.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+};
+
+const BrandBar = ({ children }) => (
+  <div className="brandbar">
+    <div className="brandbar-inner">
+      <a href="index.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+      <div className="brandbar-spacer"/>
+      {children || (
+        <div className="brandbar-actions">
+          <a href="#">HUF</a>
+          <a href="#">Magyar</a>
+          <a href="#">Ügyfélszolgálat</a>
+          <a href="#">Belépés</a>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const Footer = () => (
+  <footer className="footer">
+    <div className="footer-inner">
+      <div>
+        <h5>Névjegy</h5>
+        <ul>
+          <li><a href="#">Rólunk</a></li>
+          <li><a href="#">Sajtószoba</a></li>
+          <li><a href="#">Felhasználási feltételek</a></li>
+          <li><a href="#">Adatvédelem</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Népszerű</h5>
+        <ul>
+          <li><a href="#">Balaton</a></li>
+          <li><a href="#">Budapest</a></li>
+          <li><a href="#">Wellness</a></li>
+          <li><a href="#">VIP program</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Partnerek</h5>
+        <ul>
+          <li><a href="#">Regisztrálom a szállásomat</a></li>
+          <li><a href="#">Médiaajánlat</a></li>
+          <li><a href="#">Admin</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <ul>
+          <li><a href="tel:+36303442000">+36 30 344 2000</a></li>
+          <li><a href="mailto:szallas@szallas.hu">szallas@szallas.hu</a></li>
+        </ul>
+      </div>
+    </div>
+    <div className="footer-bottom">
+      <div className="footer-trust">
+        <div className="footer-trust-badge">🔒 100% SSL</div>
+        <div className="footer-trust-badge">Deloitte Fast 50 — 2021</div>
+        <div className="footer-trust-badge">Aplikacja Roku 2022</div>
+      </div>
+      <div>© 2008–2026 Szallas.hu</div>
+    </div>
+  </footer>
+);
+
+const Tag = ({ color='gray', children }) => <span className={'tag '+color}>{children}</span>;
+
+const Switch = ({ on, onClick }) => (
+  <button onClick={onClick} aria-pressed={on}
+    style={{width:38,height:22,borderRadius:11,border:0,background:on?'var(--c-primary)':'var(--surface-3)',position:'relative',transition:'background .15s',cursor:'pointer'}}>
+    <span style={{position:'absolute',top:2,left:on?18:2,width:18,height:18,borderRadius:50,background:'#fff',transition:'left .15s',boxShadow:'0 1px 2px rgba(0,0,0,.2)'}}/>
+  </button>
+);
+
+// Demo render — this file isn't a screen by itself, just shows the components
+const Demo = () => (
+  <React.Fragment>
+    <BrandBar/>
+    <div className="container" style={{padding:'40px 24px'}}>
+      <h1>ds.html — Szallas.hu design system</h1>
+      <p style={{color:'var(--ink-500)',marginTop:8}}>This is the bootstrap template for all secondary screens (homepage, listing, checkout, payment, thank-you). Copy the &lt;head&gt; and shared components into a new file, then add screen-specific content.</p>
+
+      <h2 style={{marginTop:40}}>Buttons</h2>
+      <div style={{display:'flex',gap:12,marginTop:12,flexWrap:'wrap'}}>
+        <button className="btn btn-primary">Primary (red brand)</button>
+        <button className="btn btn-cta">Action CTA (orange)</button>
+        <button className="btn btn-secondary">Secondary</button>
+        <button className="btn btn-ghost">Ghost</button>
+        <button className="btn btn-primary lg">Large primary</button>
+        <button className="btn btn-secondary sm">Small</button>
+      </div>
+
+      <h2 style={{marginTop:32}}>Tags</h2>
+      <div style={{display:'flex',gap:8,marginTop:12,flexWrap:'wrap'}}>
+        <Tag color="green">Free cancellation</Tag>
+        <Tag color="amber">Pre-paid</Tag>
+        <Tag color="red">Last 2 rooms</Tag>
+        <Tag color="blue">Popular</Tag>
+        <Tag color="purple">VIP −15%</Tag>
+        <Tag color="gray">Pay at hotel</Tag>
+      </div>
+
+      <h2 style={{marginTop:32}}>Score</h2>
+      <div className="score-pill" style={{marginTop:12}}>
+        <div className="score-circle">9.1</div>
+        <div><div className="lbl">Kiváló</div><div className="cnt">1247 vélemény</div></div>
+      </div>
+
+      <h2 style={{marginTop:32}}>Stepper (checkout flow)</h2>
+      <div className="stepper" style={{borderRadius:'var(--radius-lg)',marginTop:12,border:'1px solid var(--line)'}}>
+        <div className="stepper-inner">
+          <div className="step done"><div className="step-num"><I.Check size={14}/></div><span>Szállás</span></div>
+          <div className="step-line"/>
+          <div className="step active"><div className="step-num">2</div><span>Adatok</span></div>
+          <div className="step-line"/>
+          <div className="step"><div className="step-num">3</div><span>Összegzés</span></div>
+          <div className="step-line"/>
+          <div className="step"><div className="step-num">4</div><span>Fizetés</span></div>
+        </div>
+      </div>
+
+      <h2 style={{marginTop:32}}>Search bar</h2>
+      <div className="search-bar" style={{marginTop:12, maxWidth:820}}>
+        <div className="field-cell"><span className="lbl">Hová</span><span className="val">Balaton</span></div>
+        <div className="field-cell"><span className="lbl">Mikor</span><span className="val">jún. 11 – 13</span></div>
+        <div className="field-cell"><span className="lbl">Vendégek</span><span className="val">2 felnőtt · 1 szoba</span></div>
+        <button className="btn-search"><I.Search/>Keresés</button>
+      </div>
+
+      <h2 style={{marginTop:32}}>Field (form input)</h2>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginTop:12,maxWidth:600}}>
+        <div className="field"><label className="field-label">E-mail</label><input type="email" placeholder="you@example.com"/></div>
+        <div className="field"><label className="field-label">Telefon</label><input type="tel" placeholder="+36 30 …"/></div>
+      </div>
+
+      <h2 style={{marginTop:32}}>Switch</h2>
+      <div style={{display:'flex',gap:18,marginTop:12,alignItems:'center'}}>
+        <Switch on={true} onClick={()=>{}}/> on
+        <Switch on={false} onClick={()=>{}}/> off
+      </div>
+
+      <h2 style={{marginTop:32}}>Empty state</h2>
+      <div className="empty-state" style={{marginTop:12}}>
+        <div className="icon">✨</div>
+        <h3>Új szálláshely — még nincs vendégvélemény</h3>
+        <p>Legyél te az első, aki értékel.</p>
+      </div>
+    </div>
+    <Footer/>
+  </React.Fragment>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+  </script>
+</body>
+</html>

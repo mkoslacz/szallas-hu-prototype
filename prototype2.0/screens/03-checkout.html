@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foglalás · Hotel Aurora Balaton · Szallas.hu</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --c-primary:#E30613;--c-primary-hover:#b40510;--c-cta:#E85A00;
+  --c-success:#1F7F3E;--c-success-bg:#E8F5EC;
+  --c-deal-bg:#FFF1E6;--c-deal-ink:#C84B00;
+  --ink-900:#1F2A36;--ink-700:#394654;--ink-500:#6B7683;--ink-400:#8A93A1;
+  --line:#E1E4EA;--line-strong:#C9CED6;
+  --surface:#FFFFFF;--surface-2:#F5F6F8;--surface-3:#ECEEF2;
+  --info:#1F6FE0;
+  --radius-sm:6px;--radius:10px;--radius-lg:14px;
+  --shadow-sm:0 1px 2px rgba(31,42,54,.06),0 2px 6px rgba(31,42,54,.06);
+  --shadow:0 2px 6px rgba(31,42,54,.06),0 6px 18px rgba(31,42,54,.08);
+  --shadow-cta:0 6px 18px rgba(227,6,19,.28);
+  --font-ui:'Inter','Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--surface-2);color:var(--ink-900);font-family:var(--font-ui);font-weight:500;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;font-weight:500}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
+
+.brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px}
+.brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+.brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
+.brandbar-logo .dot{color:#FF5A00}
+.brandbar-help{margin-left:auto;color:#fff;font-size:14px;display:flex;gap:14px;align-items:center}
+
+/* Stepper */
+.stepper{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}
+.stepper-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.step{display:flex;align-items:center;gap:10px;color:var(--ink-500);font-size:14px;flex:0 0 auto}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.step.done .step-num{background:var(--c-success);color:#fff}
+.step.active{color:var(--ink-900);font-weight:700}
+.step.active .step-num{background:var(--c-primary);color:#fff}
+.step-line{flex:1;height:2px;background:var(--surface-3);min-width:30px;border-radius:1px}
+.step.done + .step-line{background:var(--c-success)}
+
+/* Layout */
+.page{max-width:1200px;margin:0 auto;padding:24px}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+.form-col{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 32px}
+.form-col h1{font-size:26px;margin-bottom:8px}
+.form-col > p.sub{color:var(--ink-500);font-size:14px;margin-bottom:24px}
+.field-group{margin-bottom:24px}
+.field-group > h3{font-size:15px;margin-bottom:14px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.field-grid{grid-template-columns:1fr}}
+.field-label{display:block;font-size:12.5px;color:var(--ink-700);margin-bottom:6px;font-weight:600}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line-strong);border-radius:var(--radius);padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink-900)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(227,6,19,.16)}
+.field.error input{border-color:#B91C1C}
+.field-error{color:#B91C1C;font-size:12px;margin-top:4px}
+.field-phone{display:flex;gap:6px}
+.field-phone select{width:auto;min-width:96px}
+
+.coupon-row{display:flex;gap:8px;align-items:flex-end}
+.coupon-row .field{flex:1}
+.coupon-row button{padding:12px 18px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:700}
+.coupon-applied{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--c-success-bg);color:var(--c-success);border-radius:var(--radius);font-size:13.5px;font-weight:700;margin-top:8px}
+
+.checkbox-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer;font-size:13.5px;color:var(--ink-700);line-height:1.5}
+.checkbox-row input{accent-color:var(--c-primary);margin-top:3px;flex-shrink:0;width:16px;height:16px}
+.checkbox-row a{color:var(--c-primary);text-decoration:underline}
+
+.warning-box{padding:12px 14px;background:#FFFBEA;border:1px solid #FBBF24;border-radius:var(--radius);font-size:13px;color:var(--ink-700);margin:8px 0;display:flex;gap:8px}
+
+.trust-strip{display:flex;gap:18px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);margin:14px 0;font-size:12.5px;color:var(--ink-700);font-weight:600;flex-wrap:wrap;justify-content:space-between}
+.trust-strip span{display:inline-flex;gap:6px;align-items:center}
+
+.submit-bar{margin-top:18px;display:flex;justify-content:flex-end;gap:14px;align-items:center;flex-wrap:wrap}
+.submit-bar .btn-primary{padding:14px 28px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;font-size:15px;cursor:pointer;box-shadow:var(--shadow-cta);transition:filter .12s}
+.submit-bar .btn-primary:hover{filter:brightness(1.05)}
+
+/* Summary sidebar */
+.summary{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:24px}
+.summary-img{aspect-ratio:16/9;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);position:relative}
+.summary-img .city{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.summary-body{padding:18px 20px}
+.summary h2{font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);font-weight:700}
+.summary .hotel-name{font-size:17px;font-weight:800;color:var(--ink-900);margin-bottom:12px}
+.summary .row{display:flex;gap:10px;padding:8px 0;font-size:13.5px;color:var(--ink-700)}
+.summary .row .ico{flex-shrink:0;color:var(--ink-500)}
+.summary .room-line{padding:10px 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-700)}
+.summary .price-table{padding:14px 0;border-top:1px solid var(--line)}
+.summary .price-table h4{font-size:13px;margin-bottom:8px}
+.summary .pt-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13.5px;color:var(--ink-700)}
+.summary .pt-row .lbl{display:flex;flex-direction:column;gap:2px}
+.summary .pt-row .lbl small{font-size:11.5px;color:var(--ink-500)}
+.summary .pt-row .amt{font-weight:700;color:var(--ink-900);white-space:nowrap}
+.summary .total{padding:14px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end}
+.summary .total .lbl{font-size:14px;font-weight:800}
+.summary .total .amt{font-size:24px;font-weight:900;color:var(--c-cta);letter-spacing:-.01em}
+.summary .total-sub{font-size:11.5px;color:var(--ink-500);text-align:right;margin-top:2px}
+.summary .cancel-policy{padding:10px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--c-success)}
+
+/* Footer */
+.footer{background:#0f1419;color:#cbd2da;padding:32px 24px 20px;margin-top:48px;font-size:12.5px;text-align:center}
+.footer-links a{color:#cbd2da;margin:0 12px}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+const Page = () => {
+  const [form, setForm] = React.useState({ first:'', last:'', email:'', phone:'', country:'HU', postal:'', city:'', street:'', note:'', terms:false, gdpr:false, news:false });
+  const [errors, setErrors] = React.useState({});
+  const [coupon, setCoupon] = React.useState('');
+  const [couponApplied, setCouponApplied] = React.useState(null);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const update = (k,v) => setForm({...form, [k]:v});
+  const validate = () => {
+    const e = {};
+    if (!form.first) e.first = 'Kötelező';
+    if (!form.last) e.last = 'Kötelező';
+    if (!form.email || !/.+@.+\..+/.test(form.email)) e.email = 'Helyes e-mail kell';
+    if (!form.phone || form.phone.length < 6) e.phone = 'Helyes telefon kell';
+    if (!form.postal) e.postal = 'Kötelező';
+    if (!form.city) e.city = 'Kötelező';
+    if (!form.street) e.street = 'Kötelező';
+    if (!form.terms) e.terms = 'Kötelező elfogadni';
+    if (!form.gdpr) e.gdpr = 'Kötelező elfogadni';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const applyCoupon = () => {
+    if (coupon.toUpperCase() === 'SZALLAS10') {
+      setCouponApplied({ code:'SZALLAS10', pct:10, off:3860 });
+    } else if (coupon) {
+      setCouponApplied({ code:coupon, invalid:true });
+    }
+  };
+
+  const onSubmit = () => {
+    setSubmitted(true);
+    if (validate()) {
+      window.location.href = '04-payment.html';
+    }
+  };
+
+  const onlinePart = 37056;
+  const ifa = 1544;
+  const discount = couponApplied?.pct ? couponApplied.off : 0;
+  const total = onlinePart + ifa - discount;
+
+  return (
+    <React.Fragment>
+      <div className="brandbar">
+        <div className="brandbar-inner">
+          <a href="index.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <div className="brandbar-help">
+            <span>🔒 Biztonságos foglalás</span>
+            <a href="tel:+36303442000">📞 +36 30 344 2000</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="stepper">
+        <div className="stepper-inner">
+          <div className="step done"><div className="step-num">✓</div><span>Szállás kiválasztása</span></div>
+          <div className="step-line"/>
+          <div className="step active"><div className="step-num">2</div><span>Személyes adatok</span></div>
+          <div className="step-line"/>
+          <div className="step"><div className="step-num">3</div><span>Sikeres foglalás</span></div>
+          <div className="step-line"/>
+          <div className="step"><div className="step-num">4</div><span>Fizetés</span></div>
+        </div>
+      </div>
+
+      <div className="page">
+        <div className="layout">
+          <div className="form-col">
+            <h1>Adatok megadása</h1>
+            <p className="sub">Szinte kész — már csak a kapcsolattartási adatokat kérjük.</p>
+
+            <div className="field-group">
+              <h3>Személyes adatok</h3>
+              <div className="field-grid">
+                <div className={'field'+(submitted&&errors.last?' error':'')}>
+                  <label className="field-label">Vezetéknév *</label>
+                  <input value={form.last} onChange={(e)=>update('last',e.target.value)}/>
+                  {submitted && errors.last && <div className="field-error">{errors.last}</div>}
+                </div>
+                <div className={'field'+(submitted&&errors.first?' error':'')}>
+                  <label className="field-label">Keresztnév *</label>
+                  <input value={form.first} onChange={(e)=>update('first',e.target.value)}/>
+                  {submitted && errors.first && <div className="field-error">{errors.first}</div>}
+                </div>
+                <div className={'field'+(submitted&&errors.email?' error':'')}>
+                  <label className="field-label">E-mail *</label>
+                  <input type="email" value={form.email} onChange={(e)=>update('email',e.target.value)} placeholder="te@example.com"/>
+                  {submitted && errors.email && <div className="field-error">{errors.email}</div>}
+                </div>
+                <div className={'field'+(submitted&&errors.phone?' error':'')}>
+                  <label className="field-label">Telefonszám *</label>
+                  <div className="field-phone">
+                    <select value={form.country} onChange={(e)=>update('country',e.target.value)}>
+                      <option value="HU">HU +36</option>
+                      <option value="DE">DE +49</option>
+                      <option value="AT">AT +43</option>
+                      <option value="PL">PL +48</option>
+                      <option value="GB">GB +44</option>
+                    </select>
+                    <input type="tel" value={form.phone} onChange={(e)=>update('phone',e.target.value)}/>
+                  </div>
+                  {submitted && errors.phone && <div className="field-error">{errors.phone}</div>}
+                </div>
+              </div>
+            </div>
+
+            <div className="field-group">
+              <h3>Cím</h3>
+              <div className="field-grid">
+                <div className="field">
+                  <label className="field-label">Ország</label>
+                  <select value={form.country} onChange={(e)=>update('country',e.target.value)}>
+                    <option value="HU">Magyarország</option>
+                    <option value="DE">Németország</option>
+                    <option value="AT">Ausztria</option>
+                    <option value="PL">Lengyelország</option>
+                  </select>
+                </div>
+                <div className={'field'+(submitted&&errors.postal?' error':'')}>
+                  <label className="field-label">Irányítószám *</label>
+                  <input value={form.postal} onChange={(e)=>{ const v=e.target.value; update('postal',v); if(v.length===4 && !form.city) update('city','Budapest'); }} placeholder="pl. 1051"/>
+                  {submitted && errors.postal && <div className="field-error">{errors.postal}</div>}
+                </div>
+                <div className={'field'+(submitted&&errors.city?' error':'')}>
+                  <label className="field-label">Település *</label>
+                  <input value={form.city} onChange={(e)=>update('city',e.target.value)}/>
+                  {submitted && errors.city && <div className="field-error">{errors.city}</div>}
+                </div>
+                <div className={'field'+(submitted&&errors.street?' error':'')}>
+                  <label className="field-label">Utca, házszám *</label>
+                  <input value={form.street} onChange={(e)=>update('street',e.target.value)}/>
+                  {submitted && errors.street && <div className="field-error">{errors.street}</div>}
+                </div>
+              </div>
+            </div>
+
+            <div className="field-group">
+              <h3>Speciális kérések</h3>
+              <div className="field">
+                <label className="field-label">Megjegyzés (nem kötelező)</label>
+                <textarea rows="3" value={form.note} onChange={(e)=>update('note',e.target.value)} placeholder="pl. Korai check-in, plusz kispárna…"/>
+              </div>
+              <div className="warning-box">
+                <span>⚠️</span>
+                <div>Ez a szálláshely nincs felkészülve kisállatok fogadására.</div>
+              </div>
+            </div>
+
+            <div className="field-group">
+              <h3>Akciós kód</h3>
+              <div className="coupon-row">
+                <div className="field">
+                  <label className="field-label">Promóciós kód</label>
+                  <input value={coupon} onChange={(e)=>setCoupon(e.target.value)} placeholder="pl. SZALLAS10"/>
+                </div>
+                <button onClick={applyCoupon}>Beváltás</button>
+              </div>
+              {couponApplied && couponApplied.invalid && <div className="field-error" style={{marginTop:6}}>Ismeretlen kód</div>}
+              {couponApplied && couponApplied.pct && (
+                <div className="coupon-applied">✓ Kupon "{couponApplied.code}" alkalmazva — {couponApplied.pct}% kedvezmény ({fmt(couponApplied.off)} Ft)</div>
+              )}
+            </div>
+
+            <div className="trust-strip">
+              <span>🔒 256-bit SSL</span>
+              <span>💳 Visa · Mastercard · SZÉP</span>
+              <span>↩️ Ingyenes lemondás 2026.06.08-ig</span>
+            </div>
+
+            <div className="field-group">
+              <label className="checkbox-row">
+                <input type="checkbox" checked={form.news} onChange={(e)=>update('news',e.target.checked)}/>
+                <span>Szeretnék feliratkozni a Szallas.hu hírlevelekre — személyre szabott ajánlatok és utazási tippek.</span>
+              </label>
+              <label className={'checkbox-row'+(submitted&&errors.terms?' error':'')}>
+                <input type="checkbox" checked={form.terms} onChange={(e)=>update('terms',e.target.checked)}/>
+                <span>Elfogadom az <a>előrefizetési és lemondási feltételeket</a>, valamint a <a>Felhasználási feltételeket</a>. *</span>
+              </label>
+              {submitted && errors.terms && <div className="field-error" style={{marginLeft:26}}>{errors.terms}</div>}
+              <label className={'checkbox-row'+(submitted&&errors.gdpr?' error':'')}>
+                <input type="checkbox" checked={form.gdpr} onChange={(e)=>update('gdpr',e.target.checked)}/>
+                <span>Elfogadom az <a>Adatkezelési tájékoztatót</a>. *</span>
+              </label>
+              {submitted && errors.gdpr && <div className="field-error" style={{marginLeft:26}}>{errors.gdpr}</div>}
+            </div>
+
+            <div className="submit-bar">
+              <button className="btn-primary" onClick={onSubmit}>Foglalás elküldése →</button>
+            </div>
+          </div>
+
+          <aside className="summary">
+            <div className="summary-img">
+              <div className="city">Siófok</div>
+            </div>
+            <div className="summary-body">
+              <h2>A foglalásod</h2>
+              <div className="hotel-name">Hotel Aurora Balaton ★★★★</div>
+              <div className="row">
+                <span className="ico">📅</span>
+                <div>jún. 11. cs 14:00 – jún. 13. szo 10:00 előtt<br/><small style={{color:'var(--ink-500)'}}>(3 nap, 2 éjszaka)</small></div>
+              </div>
+              <div className="row"><span className="ico">👥</span><span>2 felnőtt</span></div>
+              <div className="row"><span className="ico">🍽️</span><span>Félpanzió</span></div>
+              <div className="room-line"><b>1 × Standard kétágyas szoba (pótágyazható)</b><br/>2 felnőtt</div>
+              <div className="price-table">
+                <h4>Mikor és mennyit fizetek?</h4>
+                <div className="pt-row">
+                  <div className="lbl">Előrefizetendő<small>eddig: máj. 12. 23:59</small></div>
+                  <div className="amt">{fmt(onlinePart)} Ft</div>
+                </div>
+                <div className="pt-row">
+                  <div className="lbl">A szálláshelyen (IFA)<small>idegenforgalmi adó 4%</small></div>
+                  <div className="amt">{fmt(ifa)} Ft</div>
+                </div>
+                {discount>0 && (
+                  <div className="pt-row" style={{color:'var(--c-success)'}}>
+                    <div className="lbl">Kedvezmény (SZALLAS10)</div>
+                    <div className="amt" style={{color:'var(--c-success)'}}>−{fmt(discount)} Ft</div>
+                  </div>
+                )}
+              </div>
+              <div className="total">
+                <div>
+                  <div className="lbl">Teljes ár</div>
+                  <div style={{fontSize:11.5,color:'var(--ink-500)',marginTop:2}}>ÁFA-val · IFA külön a helyszínen</div>
+                </div>
+                <div style={{textAlign:'right'}}>
+                  <div className="amt">{fmt(total)} Ft</div>
+                </div>
+              </div>
+              <div className="cancel-policy">✓ Ingyenes lemondás 2026.06.08-ig</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <footer className="footer">
+        <div className="footer-links">
+          <a>Adatvédelem</a> · <a>Felhasználási feltételek</a> · <a href="tel:+36303442000">+36 30 344 2000</a>
+        </div>
+        <div style={{marginTop:8}}>© 2008–2026 Szallas.hu · 🔒 100% SSL</div>
+      </footer>
+    </React.Fragment>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
+  </script>
+</body>
+</html>

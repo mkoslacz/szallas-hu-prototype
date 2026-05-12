@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Szallas.hu prototype — Dashboard</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#F5F6F8;color:#1F2A36;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.brandbar{background:#D20000;height:60px;display:flex;align-items:center;padding:0 24px}
+.brandbar a{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px;text-decoration:none}
+.brandbar a .dot{color:#FF5A00}
+.page{max-width:1100px;margin:0 auto;padding:48px 24px}
+h1{font-size:36px;font-weight:900;letter-spacing:-.02em;margin:0 0 6px}
+.sub{color:#6B7683;font-size:15px;margin-bottom:32px;line-height:1.55}
+h2{font-size:20px;font-weight:800;margin:32px 0 14px;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid #E1E4EA;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:box-shadow .15s, transform .15s;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{box-shadow:0 6px 18px rgba(31,42,54,.08);transform:translateY(-2px)}
+.card .thumb{aspect-ratio:16/10;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff;font-weight:800;letter-spacing:.04em;font-family:ui-monospace,monospace}
+.card .body{padding:16px}
+.card h3{margin:0 0 4px;font-size:15px;font-weight:800;color:#1F2A36}
+.card p{margin:0;color:#6B7683;font-size:13px;line-height:1.5}
+.card.alt1 .thumb{background:linear-gradient(135deg,#D20000,#8c040d)}
+.card.alt2 .thumb{background:linear-gradient(135deg,#dbe6ec,#7a9aab)}
+.card.alt3 .thumb{background:linear-gradient(135deg,#bedcbe,#8db98d)}
+.card.alt4 .thumb{background:linear-gradient(135deg,#cfb5d8,#9a85a3)}
+.card.alt5 .thumb{background:linear-gradient(135deg,#FFE8EA,#E85A00)}
+.card.alt6 .thumb{background:linear-gradient(135deg,#E8F5EC,#1F7F3E)}
+.flow-row{display:flex;align-items:center;gap:6px;color:#6B7683;font-size:13.5px;margin-bottom:14px;flex-wrap:wrap}
+.flow-row a{color:#E30613;text-decoration:underline;font-weight:600}
+.flow-arrow{color:#A1A8B3}
+.tag{display:inline-block;background:#E8F5EC;color:#1F7F3E;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-left:8px}
+.tag.todo{background:#FFE8EA;color:#E30613}
+.legend{padding:14px 18px;background:#fff;border-left:3px solid #E30613;border-radius:0 14px 14px 0;font-size:13.5px;color:#394654;line-height:1.55;margin-bottom:24px}
+.legend b{color:#1F2A36}
+  </style>
+</head>
+<body>
+  <div class="brandbar"><a href="#">Szallas<span class="dot">.</span>hu</a></div>
+  <div class="page">
+    <h1>Szallas.hu UX prototype</h1>
+    <p class="sub">Dashboard wszystkich ekranów (Plan: 21 kroków · zrealizowane: 21/21). Każdy ekran otwiera się w pełnym widoku.</p>
+
+    <div class="legend">
+      <b>User flow:</b> rozpocznij od <b>Strony głównej</b> → wpisz „Balaton" w wyszukiwarce → przejdź do <b>Listingu</b> → kliknij hotel → otwórz <b>Stronę hotelu (PDP)</b> → wybierz pokój → przejdź do <b>Koszyka</b> → <b>Płatności</b> → <b>Potwierdzenia</b>.
+    </div>
+
+    <div class="flow-row">
+      <a href="01-homepage.html">Strona główna</a> <span class="flow-arrow">→</span>
+      <a href="02-listing-balaton.html">Listing</a> <span class="flow-arrow">→</span>
+      <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">Strona hotelu (PDP)</a> <span class="flow-arrow">→</span>
+      <a href="03-checkout.html">Koszyk</a> <span class="flow-arrow">→</span>
+      <a href="04-payment.html">Płatność</a> <span class="flow-arrow">→</span>
+      <a href="05-thankyou.html">Potwierdzenie</a>
+    </div>
+
+    <h2>Pełna ścieżka zakupu</h2>
+    <div class="grid">
+      <a class="card alt1" href="01-homepage.html">
+        <div class="thumb">01</div>
+        <div class="body"><h3>Strona główna<span class="tag">live</span></h3><p>Hero z wyszukiwarką, kategorie, top oferty, VIP banner, typeahead z thumbnailami.</p></div>
+      </a>
+      <a class="card alt2" href="02-listing-balaton.html">
+        <div class="thumb">02</div>
+        <div class="body"><h3>Listing — Balaton<span class="tag">live</span></h3><p>3-kolumnowy layout: filtry, lista, split-view mapy Leaflet z markerami z ceną. Disclosure prowizji.</p></div>
+      </a>
+      <a class="card alt3" href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">
+        <div class="thumb">03</div>
+        <div class="body"><h3>Strona hotelu (PDP)<span class="tag">live</span></h3><p>Hotel Aurora Balaton — pełna iteracja: hero, IFA, pokoje z meal-pillami, opinie z filtrami, realna mapa, mobilne.</p></div>
+      </a>
+      <a class="card alt4" href="03-checkout.html">
+        <div class="thumb">04</div>
+        <div class="body"><h3>Koszyk — dane gościa<span class="tag">live</span></h3><p>4-etapowy stepper, formularz z walidacją inline, pole na kupon PRZED rezerwacją, sticky podsumowanie.</p></div>
+      </a>
+      <a class="card alt5" href="04-payment.html">
+        <div class="thumb">05</div>
+        <div class="body"><h3>Płatność<span class="tag">live</span></h3><p>4 metody (karta · SZÉP · Apple/Google Pay · przelew), symulacja 3D Secure, stan błędu „karta odrzucona".</p></div>
+      </a>
+      <a class="card alt6" href="05-thankyou.html">
+        <div class="thumb">06</div>
+        <div class="body"><h3>Potwierdzenie<span class="tag">live</span></h3><p>Animowany zielony checkmark, kopiowanie numeru rezerwacji, add-to-calendar, SMS reminder, cross-sell, VIP teaser.</p></div>
+      </a>
+    </div>
+
+    <h2>System designu &amp; referencje</h2>
+    <div class="grid">
+      <a class="card" href="ds.html">
+        <div class="thumb">DS</div>
+        <div class="body"><h3>Design system (ds.html)</h3><p>Tokens (kolory, fonty, radii), komponenty wspólne (BrandBar, Footer, search, stepper, tags). Source-of-truth dla wszystkich ekranów.</p></div>
+      </a>
+      <a class="card" href="../Hotel%20Aurora%20Balaton%20-%20standalone.html?test=tweaks">
+        <div class="thumb">QA</div>
+        <div class="body"><h3>QA edge states (Tweaks)</h3><p>Otwórz panel Tweaks (prawy-dolny róg na PDP) i wypróbuj: sold-out, no-reviews, no-photos, few-rates, loading skeleton.</p></div>
+      </a>
+      <a class="card" href="../../docs/ux-overhaul/plan.md">
+        <div class="thumb">📋</div>
+        <div class="body"><h3>Plan implementacji</h3><p>21 kroków po ludzku, source-of-truth dla biznesu. Status: wszystkie kroki ukończone.</p></div>
+      </a>
+    </div>
+
+    <p style="margin-top:48px;color:#A1A8B3;font-size:12.5px;text-align:center">Prototyp wizualny. Wszystkie ceny, daty, opinie i hotele to mock-data. Nie połączony z prawdziwym backendem Szallas.hu.</p>
+  </div>
+</body>
+</html>
