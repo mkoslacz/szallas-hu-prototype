@@ -42,11 +42,11 @@
 .view-toggle button{background:transparent;border:0;padding:8px 14px;border-radius:999px;font-size:12.5px;color:#394654;font-weight:600;display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-family:inherit}
 .view-toggle button.on{background:#E30613;color:#fff}
 
-/* Forced mobile preview wrap — light gray surround like a phone in a soft frame.
-   Matches PDP mobile body bg (--surface-2 #F5F6F8) for visual consistency between screens. */
-html[data-view="mobile"] body{background:#F5F6F8;min-height:100vh;padding-top:20px;padding-bottom:80px}
-html[data-view="mobile"] body > *:not(.tweaks-fab):not(.tweaks-panel):not(.view-toggle):not(.tweaks-indicator):not(.map-fullscreen):not(.mobile-filters-drawer){max-width:375px;margin-left:auto;margin-right:auto;box-shadow:0 0 0 1px #c9ced6}
-html[data-view="mobile"] body{display:block}
+/* Forced mobile preview wrap — only when dev toggle is active (data-preview="phone").
+   Real mobile devices skip the 375px constraint (data-view="mobile" alone, no preview attr). */
+html[data-preview="phone"] body{background:#F5F6F8;min-height:100vh;padding-top:20px;padding-bottom:80px}
+html[data-preview="phone"] body > *:not(.tweaks-fab):not(.tweaks-panel):not(.view-toggle):not(.tweaks-indicator):not(.map-fullscreen):not(.mobile-filters-drawer){max-width:375px;margin-left:auto;margin-right:auto;box-shadow:0 0 0 1px #c9ced6}
+html[data-preview="phone"] body{display:block}
 
 /* === Mobile brandbar (compact: hide call-center text, hide account text, icons only) === */
 html[data-view="mobile"] .brandbar{height:52px}
@@ -183,8 +183,22 @@ html[data-view="mobile"] .view-toggle button{padding:6px 12px;font-size:11.5px}
   document.body.appendChild(fab);
 
   // --- ViewToggle (desktop / mobile) ---
+  // Apply mobile rules when EITHER dev toggle is on OR actual viewport <= 768px.
+  // The 375px preview constraint applies only when dev toggle is on (data-preview="phone").
   const initialView = tweaks.viewMode || 'desktop';
-  if (initialView === 'mobile') document.documentElement.setAttribute('data-view', 'mobile');
+  const mq = window.matchMedia('(max-width: 768px)');
+  const applyView = () => {
+    const root = document.documentElement;
+    const isPreview = initialView === 'mobile';
+    const isRealMobile = mq.matches;
+    if (isPreview || isRealMobile) root.setAttribute('data-view', 'mobile');
+    else root.removeAttribute('data-view');
+    if (isPreview) root.setAttribute('data-preview', 'phone');
+    else root.removeAttribute('data-preview');
+  };
+  applyView();
+  if (mq.addEventListener) mq.addEventListener('change', applyView);
+  else if (mq.addListener) mq.addListener(applyView);
   const vt = document.createElement('div');
   vt.className = 'view-toggle';
   vt.id = 'view-toggle';

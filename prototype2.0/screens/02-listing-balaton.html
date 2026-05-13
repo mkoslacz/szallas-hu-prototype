@@ -233,8 +233,8 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hotel-pricing{text-align:right;margin-top:auto;display:flex;flex-direction:column;gap:2px}
 .hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:12.5px;display:inline-block;font-weight:500;margin-right:6px}
 .hotel-savings{display:inline-block;background:var(--c-deal-bg);color:var(--c-deal-ink);font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;letter-spacing:.01em;vertical-align:middle}
-.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.015em;line-height:1.05;display:flex;align-items:baseline;gap:3px;justify-content:flex-end;margin-top:2px}
-.hotel-bigprice .ft{font-size:13px;color:var(--ink-700);font-weight:700}
+.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:28px;font-family:var(--font-ui);letter-spacing:-.015em;line-height:1.05;display:flex;align-items:baseline;gap:4px;justify-content:flex-end;margin-top:2px}
+.hotel-bigprice .ft{font-size:15px;color:var(--ink-700);font-weight:700}
 .hotel-priceunit{font-size:11px;color:var(--ink-500);margin-top:1px}
 .hotel-pernight{font-size:11px;color:var(--ink-700);margin-top:1px;font-weight:600}
 .hotel-tax{font-size:10.5px;color:var(--ink-500);margin-top:1px}
@@ -310,7 +310,7 @@ html[data-view="mobile"] .results-bar.scrolled .summary-left{display:none}
 html[data-view="mobile"] .results-bar .summary-left{gap:6px;flex:1 1 100%;order:0}
 html[data-view="mobile"] .results-bar .summary-left .count{font-size:13px}
 html[data-view="mobile"] .results-bar .summary-left .cancel-stat{display:none}
-html[data-view="mobile"] .crumbs{display:none}
+html[data-view="mobile"] .crumbs{display:block;padding:4px 0 2px !important;font-size:11px !important;color:var(--ink-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 html[data-view="mobile"] .disclosure{display:none}
 html[data-view="mobile"] .results-bar .right{width:100%;justify-content:space-between;gap:6px;order:1}
 html[data-view="mobile"] .results-bar select{font-size:12.5px;padding:8px 10px;flex:1;min-width:0;min-height:36px}
@@ -321,7 +321,8 @@ html[data-view="mobile"] .layout{grid-template-columns:1fr;gap:10px}
 html[data-view="mobile"] .layout.with-map{grid-template-columns:1fr}
 html[data-view="mobile"] .filters-col{display:none}
 html[data-view="mobile"] .layout.with-map .map-col{display:none}
-html[data-view="mobile"] .hotel-card{grid-template-columns:1fr;min-height:0;border-radius:var(--radius)}
+html[data-view="mobile"] .list-col{gap:16px}
+html[data-view="mobile"] .hotel-card{grid-template-columns:1fr;min-height:0;border-radius:var(--radius-lg);border:1px solid var(--line-strong);box-shadow:0 2px 8px rgba(31,42,54,.06)}
 html[data-view="mobile"] .hotel-img{min-height:140px;height:140px}
 html[data-view="mobile"] .hotel-img .heart{width:28px;height:28px;font-size:13px;top:8px;left:8px}
 html[data-view="mobile"] .hotel-img .card-arrow{display:none}
@@ -991,6 +992,6 @@ const Page = () => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
   </script>
-  <script src="tweaks-overlay.js"></script>
+  <script src="tweaks-overlay.js?v=responsive"></script>
 </body>
 </html>
