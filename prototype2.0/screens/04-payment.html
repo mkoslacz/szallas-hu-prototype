@@ -36,7 +36,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .step-num{width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
 .step.done .step-num{background:var(--c-success);color:#fff}
 .step.active{color:var(--ink-900);font-weight:700}
-.step.active .step-num{background:var(--c-primary);color:#fff}
+.step.active .step-num{background:var(--ink-900);color:#fff}
 .step-line{flex:1;height:2px;background:var(--surface-3);min-width:30px;border-radius:1px}
 .step.done + .step-line{background:var(--c-success)}
 
@@ -52,15 +52,15 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .methods{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
 @media (max-width:560px){.methods{grid-template-columns:1fr}}
 .method{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:2px solid var(--line);border-radius:var(--radius-lg);cursor:pointer;transition:border-color .15s, background .15s}
-.method:hover{border-color:var(--c-primary)}
-.method.active{border-color:var(--c-primary);background:var(--c-success-bg);background:#FFE8EA}
+.method:hover{border-color:var(--ink-700)}
+.method.active{border-color:var(--ink-900);background:var(--surface-2)}
 .method-icon{font-size:24px}
 .method-text{flex:1}
 .method-name{font-weight:700;font-size:14px;color:var(--ink-900)}
 .method-sub{font-size:12px;color:var(--ink-500);margin-top:2px}
 .method-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.method.active .method-radio{border-color:var(--c-primary)}
-.method.active .method-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--c-primary)}
+.method.active .method-radio{border-color:var(--ink-900)}
+.method.active .method-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--ink-900)}
 
 .field-group{margin-bottom:24px}
 .field-group > h3{font-size:15px;margin-bottom:14px}

@@ -57,8 +57,8 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 /* Quick-filter chips */
 .quick-chips{display:flex;gap:6px;padding:6px 0 2px;overflow-x:auto;flex-wrap:nowrap}
 .quick-chips button{flex:0 0 auto;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink-700);font-weight:600;white-space:nowrap}
-.quick-chips button:hover{border-color:var(--c-primary);color:var(--c-primary)}
-.quick-chips button.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+.quick-chips button:hover{border-color:var(--ink-700);color:var(--ink-900)}
+.quick-chips button.active{background:var(--ink-900);color:#fff;border-color:var(--ink-900)}
 
 /* Page layout 3 cols */
 .page{max-width:1400px;margin:0 auto;padding:0 24px}
@@ -80,7 +80,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 /* View toggle button-row */
 .lm-toggle{display:inline-flex;gap:0;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:3px;margin-left:10px;flex-shrink:0}
 .lm-toggle button{padding:6px 14px;border:0;background:transparent;color:var(--ink-700);font-weight:700;font-size:13px;cursor:pointer;border-radius:999px;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
-.lm-toggle button.on{background:var(--c-primary);color:#fff;box-shadow:var(--shadow-sm)}
+.lm-toggle button.on{background:var(--ink-900);color:#fff;box-shadow:var(--shadow-sm)}
 
 /* Map button inside filters column (sticky top of sidebar) */
 .filters-map-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;background:linear-gradient(135deg,#aac6d3,#7ba9bb);color:#fff;border:0;border-radius:var(--radius-lg) var(--radius-lg) 0 0;cursor:pointer;font-weight:700;font-size:14px;text-align:left;position:relative;overflow:hidden;transition:filter .15s}
@@ -112,7 +112,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .list-collapse-btn:hover{background:var(--surface-2)}
 .mini-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:8px;display:grid;grid-template-columns:80px 1fr;gap:10px;cursor:pointer;margin-bottom:8px;transition:border-color .15s, box-shadow .15s}
 .mini-card:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm)}
-.mini-card.active{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(227,6,19,.15)}
+.mini-card.active{border-color:var(--ink-900);box-shadow:0 0 0 2px rgba(31,42,54,.12)}
 .mini-card .mini-img{width:80px;height:64px;border-radius:6px;background:#dbe6ec center/cover;background-size:cover;flex-shrink:0;position:relative;overflow:hidden}
 .mini-card .mini-img img{width:100%;height:100%;object-fit:cover}
 .mini-card .mini-heart{position:absolute;top:4px;right:4px;background:rgba(255,255,255,.94);border:0;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;line-height:1;color:var(--ink-700)}
@@ -158,11 +158,21 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .list-col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(240px,280px) minmax(0,1fr) minmax(190px,220px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:180px}
 .hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
-.hotel-card.highlight{box-shadow:0 0 0 3px var(--c-primary);border-color:var(--c-primary)}
+.hotel-card.highlight{box-shadow:0 0 0 3px var(--ink-900);border-color:var(--ink-900)}
 .hotel-img{position:relative;background-size:cover;background-position:center;min-height:180px}
 .hotel-img img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.hotel-img .heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:2;font-size:15px;line-height:1}
+.hotel-img .heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:3;font-size:15px;line-height:1}
 .hotel-img .heart.saved{color:var(--c-primary)}
+/* Photo carousel — desktop arrows (visible on card hover), mobile swipe via touch handlers */
+.hotel-img .card-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.92);border:0;color:var(--ink-900);font-size:20px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;opacity:0;transition:opacity .15s, background .15s;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.hotel-card:hover .hotel-img .card-arrow{opacity:1}
+.hotel-img .card-arrow:hover{background:#fff}
+.hotel-img .card-arrow-prev{left:10px}
+.hotel-img .card-arrow-next{right:10px}
+.hotel-img .card-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;padding:4px 8px;background:rgba(0,0,0,.32);border-radius:999px;backdrop-filter:blur(2px)}
+.hotel-img .card-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);border:0;padding:0;cursor:pointer;transition:background .15s, transform .15s}
+.hotel-img .card-dot.active{background:#fff;transform:scale(1.2)}
+.hotel-img .card-dot:hover{background:rgba(255,255,255,.85)}
 /* Image overlay labels — hidden by default (info shown in promo-badges + location row).
    Restored on mobile where promo-badges are hidden to keep cards compact. */
 .hotel-img .discount,
@@ -172,10 +182,16 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hotel-img .vip-eligible{position:absolute;bottom:10px;left:10px;background:rgba(110,46,229,.94);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;z-index:2;letter-spacing:.02em}
 .hotel-img-label{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;z-index:2}
 .hotel-info{padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0;border-right:1px solid var(--line)}
-.hotel-info .name-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.hotel-info h3{font-size:16.5px;color:var(--info);font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;letter-spacing:-.01em}
+.hotel-info .name-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+.hotel-info .name-stars{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0;flex-wrap:wrap}
+.hotel-info h3{font-size:16.5px;color:var(--info);font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;letter-spacing:-.01em}
 .hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:12px;flex-shrink:0}
 .hotel-info .stars .superior{color:var(--info);font-size:11px;margin-left:4px;font-weight:600}
+.hotel-info .name-score{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
+.hotel-info .name-score-text{text-align:right;line-height:1.1;display:flex;flex-direction:column}
+.hotel-info .name-score-text .lbl{font-size:12px;color:var(--ink-900);font-weight:800}
+.hotel-info .name-score-text .cnt{font-size:10.5px;color:var(--ink-500);margin-top:1px;font-weight:500}
+.hotel-info .name-score-num{width:38px;height:38px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
 .hotel-info .location{font-size:12.5px;color:var(--ink-700);font-weight:500}
 .hotel-info .location .pin{color:var(--ink-400);margin-right:3px}
 .hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:12.5px;margin-top:1px}
@@ -184,38 +200,36 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hotel-info .facts svg, .hotel-info .facts .ico{color:var(--c-success);font-weight:800;flex-shrink:0}
 .hotel-info .quote{font-size:11.5px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:5px 9px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-overflow:ellipsis}
 .hotel-info .promo-badges{display:flex;flex-wrap:wrap;gap:5px}
-.promo-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.01em;line-height:1.3;white-space:nowrap}
-/* Palette reduced to 2 families: red/orange (deals & promos) + green (perks) — no purple */
-.promo-badge.promo-top{background:var(--c-deal-bg);color:var(--c-deal-ink);border:1px solid #F5C29A}
-.promo-badge.promo-vip{background:#FFE8EA;color:#B40510;border:1px solid #F6C5C9}
-.promo-badge.promo-last{background:var(--c-deal-bg);color:var(--c-deal-ink);border:1px solid #F5C29A}
-.promo-badge.promo-wellness{background:var(--c-success-bg);color:var(--c-success);border:1px solid #B6DCC2}
+.promo-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.01em;line-height:1.3;white-space:nowrap}
+/* Muted neutral chips for less-critical signals; only VIP retains brand color */
+.promo-badge.promo-top{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
+.promo-badge.promo-vip{background:#FFE8EA;color:#B40510;border:1px solid #F6C5C9;font-weight:800}
+.promo-badge.promo-last{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
+.promo-badge.promo-wellness{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
 
 /* Split view (list + map) — narrower list column means tighter card grid + hide overflow-prone content */
-.layout.with-map .hotel-card{grid-template-columns:minmax(180px,220px) minmax(0,1fr) minmax(160px,190px);min-height:170px}
+.layout.with-map .hotel-card{grid-template-columns:minmax(180px,220px) minmax(0,1fr) minmax(150px,180px);min-height:170px}
 .layout.with-map .hotel-img{min-height:170px}
 .layout.with-map .hotel-info{padding:10px 12px;gap:6px}
 .layout.with-map .hotel-info .facts{display:none}
 .layout.with-map .hotel-info .quote{display:none}
 .layout.with-map .hotel-info h3{font-size:15.5px}
+.layout.with-map .hotel-info .name-score-text{display:none}
+.layout.with-map .hotel-info .name-score-num{width:32px;height:32px;font-size:13px}
 .layout.with-map .hotel-price{padding:10px 12px}
-.layout.with-map .hotel-score .num{width:36px;height:36px;font-size:14px}
 .layout.with-map .hotel-bigprice{font-size:20px}
 .hotel-info .badges{display:flex;gap:6px;flex-wrap:wrap;padding-top:0}
 .badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;flex-shrink:0}
+/* Board (wyżywienie) keeps semantic color — primary spec for decision */
 .badge.board-br{background:var(--c-success-bg);color:var(--c-success)}
 .badge.board-hp{background:var(--c-deal-bg);color:var(--c-deal-ink)}
 .badge.board-ai{background:#F5EAFF;color:#6B21A8}
-.badge.cancel{background:var(--c-success-bg);color:var(--c-success)}
-.badge.szep{background:#EFF6FF;color:#1E40AF}
-.badge.noref{background:#FEF2F2;color:#991B1B}
+/* Refund / payment chips — neutral (no bg) with subtle semantic ink */
+.badge.cancel{background:transparent;color:var(--c-success);padding:3px 4px}
+.badge.noref{background:transparent;color:var(--ink-700);padding:3px 4px}
+.badge.szep{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
 .hotel-price{padding:12px 14px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;background:var(--surface-2);gap:6px;min-width:0}
-.hotel-score{display:flex;align-items:center;gap:8px;justify-content:flex-end}
-.hotel-score-text{text-align:right}
-.hotel-score-text .lbl{font-size:12.5px;color:var(--ink-900);font-weight:800;line-height:1.1}
-.hotel-score-text .cnt{font-size:10.5px;color:var(--ink-500);margin-top:1px}
-.hotel-score .num{width:40px;height:40px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:15.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
-.hotel-pricing{text-align:right;margin-top:auto}
+.hotel-pricing{text-align:right;margin-top:auto;display:flex;flex-direction:column;gap:2px}
 .hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:12.5px;display:inline-block;font-weight:500;margin-right:6px}
 .hotel-savings{display:inline-block;background:var(--c-deal-bg);color:var(--c-deal-ink);font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;letter-spacing:.01em;vertical-align:middle}
 .hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.015em;line-height:1.05;display:flex;align-items:baseline;gap:3px;justify-content:flex-end;margin-top:2px}
@@ -294,7 +308,9 @@ html[data-view="mobile"] .results-bar.scrolled{padding:4px 10px}
 html[data-view="mobile"] .results-bar.scrolled .summary-left{display:none}
 html[data-view="mobile"] .results-bar .summary-left{gap:6px;flex:1 1 100%;order:0}
 html[data-view="mobile"] .results-bar .summary-left .count{font-size:13px}
-html[data-view="mobile"] .results-bar .summary-left .cancel-stat{font-size:11px}
+html[data-view="mobile"] .results-bar .summary-left .cancel-stat{display:none}
+html[data-view="mobile"] .crumbs{display:none}
+html[data-view="mobile"] .disclosure{display:none}
 html[data-view="mobile"] .results-bar .right{width:100%;justify-content:space-between;gap:6px;order:1}
 html[data-view="mobile"] .results-bar select{font-size:12px;padding:5px 8px;flex:1;min-width:0}
 html[data-view="mobile"] .lm-toggle{margin-left:0;padding:2px}
@@ -307,6 +323,10 @@ html[data-view="mobile"] .layout.with-map .map-col{display:none}
 html[data-view="mobile"] .hotel-card{grid-template-columns:1fr;min-height:0;border-radius:var(--radius)}
 html[data-view="mobile"] .hotel-img{min-height:140px;height:140px}
 html[data-view="mobile"] .hotel-img .heart{width:28px;height:28px;font-size:13px;top:8px;left:8px}
+html[data-view="mobile"] .hotel-img .card-arrow{display:none}
+html[data-view="mobile"] .hotel-img .card-dots{bottom:6px;padding:3px 7px;gap:4px}
+html[data-view="mobile"] .hotel-img .card-dot{width:5px;height:5px}
+html[data-view="mobile"] .hotel-img{touch-action:pan-y}
 /* Mobile: hide desktop-only enrichments (would bloat card height).
    Image overlay labels show the same promo info compactly instead. */
 html[data-view="mobile"] .promo-badges{display:none}
@@ -319,27 +339,26 @@ html[data-view="mobile"] .hotel-img .discount{display:block;padding:2px 7px;font
 html[data-view="mobile"] .hotel-img .vip-eligible{display:block;padding:2px 6px;font-size:10px;bottom:8px;left:8px;letter-spacing:0}
 html[data-view="mobile"] .hotel-img-label{display:block;padding:2px 6px;font-size:10px;bottom:8px;right:8px}
 html[data-view="mobile"] .hotel-info{border-right:0;border-bottom:1px solid var(--line);padding:9px 12px;gap:3px}
-html[data-view="mobile"] .hotel-info .name-row{gap:6px}
-html[data-view="mobile"] .hotel-info h3{font-size:14.5px;white-space:normal;line-height:1.2;flex:1 1 auto}
-html[data-view="mobile"] .hotel-info .stars{font-size:11px;letter-spacing:.5px}
-html[data-view="mobile"] .hotel-info .location{font-size:11.5px;line-height:1.3}
-html[data-view="mobile"] .hotel-info .amenities{font-size:11px;line-height:1.4;margin-top:0}
+html[data-view="mobile"] .hotel-info .name-row{gap:8px;flex-wrap:nowrap;align-items:center}
+html[data-view="mobile"] .hotel-info .name-stars{gap:6px}
+html[data-view="mobile"] .hotel-info h3{font-size:15.5px;white-space:normal;line-height:1.2;flex:1 1 auto}
+html[data-view="mobile"] .hotel-info .stars{font-size:12px;letter-spacing:.5px}
+html[data-view="mobile"] .hotel-info .name-score-text{display:none}
+html[data-view="mobile"] .hotel-info .name-score-num{width:34px;height:34px;font-size:13.5px;border-radius:7px}
+html[data-view="mobile"] .hotel-info .location{font-size:13px;line-height:1.35}
+html[data-view="mobile"] .hotel-info .amenities{font-size:12px;line-height:1.4;margin-top:0}
 html[data-view="mobile"] .hotel-info .quote{display:none}
 html[data-view="mobile"] .hotel-info .badges{gap:4px;margin-top:3px}
-html[data-view="mobile"] .badge{font-size:9.5px;padding:2px 6px;line-height:1.35}
-html[data-view="mobile"] .hotel-price{padding:8px 12px;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface-2);text-align:left}
-html[data-view="mobile"] .hotel-score{order:1;justify-content:flex-start;flex-direction:row-reverse;gap:6px;flex:0 0 auto}
-html[data-view="mobile"] .hotel-score-text{text-align:left}
-html[data-view="mobile"] .hotel-score-text .lbl{font-size:11.5px;line-height:1.1}
-html[data-view="mobile"] .hotel-score-text .cnt{font-size:10px}
-html[data-view="mobile"] .hotel-score .num{width:32px;height:32px;font-size:13px}
-html[data-view="mobile"] .hotel-pricing{order:2;text-align:right;margin-top:0;flex:1 1 auto;min-width:0}
-html[data-view="mobile"] .hotel-strike{font-size:11.5px;display:inline-block}
-html[data-view="mobile"] .hotel-bigprice{justify-content:flex-end;font-size:18px;line-height:1}
-html[data-view="mobile"] .hotel-bigprice .ft{font-size:11px}
-html[data-view="mobile"] .hotel-priceunit{font-size:10.5px;margin-top:1px}
-html[data-view="mobile"] .hotel-tax{font-size:10px}
-html[data-view="mobile"] .hotel-cta{order:3;width:100%;flex-basis:100%;padding:8px 12px;font-size:13px;border-radius:8px}
+html[data-view="mobile"] .badge{font-size:11px;padding:3px 7px;line-height:1.35}
+html[data-view="mobile"] .hotel-price{padding:10px 12px;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:10px;background:var(--surface-2);text-align:left}
+html[data-view="mobile"] .hotel-pricing{text-align:left;margin-top:0;flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+html[data-view="mobile"] .hotel-bigprice{justify-content:flex-start}
+html[data-view="mobile"] .hotel-cta{order:initial;width:auto;flex-basis:auto;padding:10px 16px;font-size:13.5px;border-radius:8px;flex-shrink:0;min-height:44px}
+html[data-view="mobile"] .hotel-strike{font-size:12.5px;display:inline-block}
+html[data-view="mobile"] .hotel-bigprice{justify-content:flex-end;font-size:19px;line-height:1}
+html[data-view="mobile"] .hotel-bigprice .ft{font-size:12px}
+html[data-view="mobile"] .hotel-priceunit{font-size:11.5px;margin-top:1px}
+html[data-view="mobile"] .hotel-tax{font-size:11px}
 html[data-view="mobile"] .vip-list-teaser{flex-direction:column;text-align:center;gap:10px;padding:14px}
 html[data-view="mobile"] .vip-list-teaser .vip-word{font-size:36px}
 html[data-view="mobile"] .vip-list-teaser button{width:100%}
@@ -508,19 +527,54 @@ const BoardChip = ({ board, kind }) => {
   return <span style={{background:bg,color:fg,padding:'4px 9px',borderRadius:8,fontSize:12.5,fontWeight:700,display:'inline-flex',gap:5,alignItems:'center'}}>{icon} {board}</span>;
 };
 
-const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) => (
+const PHOTO_COUNT = 5;
+const hotelPhotos = (id, baseImg) =>
+  Array.from({length: PHOTO_COUNT}, (_, i) =>
+    i === 0 ? baseImg : `https://picsum.photos/seed/szhotel-${id}-${i+1}/600/400`);
+
+const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) => {
+  const [imgIdx, setImgIdx] = React.useState(0);
+  const imgs = React.useMemo(() => hotelPhotos(h.id, h.img), [h.id, h.img]);
+  const touchStart = React.useRef(null);
+  const goNext = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i+1) % PHOTO_COUNT); };
+  const goPrev = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i-1+PHOTO_COUNT) % PHOTO_COUNT); };
+  return (
   <div className={'hotel-card'+(highlight?' highlight':'')} onMouseEnter={onHover} onMouseLeave={onLeave} onClick={onClick}>
-    <div className="hotel-img">
-      <img src={h.img} alt={h.name} loading="lazy"/>
+    <div className="hotel-img"
+      onTouchStart={(e)=>{touchStart.current = e.touches[0].clientX}}
+      onTouchEnd={(e)=>{
+        if(touchStart.current==null) return;
+        const dx = e.changedTouches[0].clientX - touchStart.current;
+        if(Math.abs(dx) > 30){ dx<0 ? goNext() : goPrev(); }
+        touchStart.current = null;
+      }}>
+      <img src={imgs[imgIdx]} alt={h.name} loading="lazy"/>
       <button className={'heart'+(saved?' saved':'')} onClick={(e)=>{e.stopPropagation();onSave()}}>{saved?'❤':'♡'}</button>
       {h.discount>0 && <div className="discount">−{h.discount}%</div>}
       {h.vipEligible && <div className="vip-eligible">VIP −15%</div>}
       <div className="hotel-img-label">{h.city}</div>
+      <button className="card-arrow card-arrow-prev" onClick={goPrev} aria-label="Előző kép">‹</button>
+      <button className="card-arrow card-arrow-next" onClick={goNext} aria-label="Következő kép">›</button>
+      <div className="card-dots">
+        {imgs.map((_, i) => (
+          <button key={i} className={'card-dot'+(i===imgIdx?' active':'')}
+            onClick={(e)=>{e.stopPropagation(); setImgIdx(i)}} aria-label={`${i+1}. kép`}/>
+        ))}
+      </div>
     </div>
     <div className="hotel-info">
       <div className="name-row">
-        <h3>{h.name}</h3>
-        <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
+        <div className="name-stars">
+          <h3>{h.name}</h3>
+          <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
+        </div>
+        <div className="name-score">
+          <div className="name-score-text">
+            <div className="lbl">{h.scoreLbl}</div>
+            <div className="cnt">{fmt(h.reviews)} értékelés</div>
+          </div>
+          <div className="name-score-num">{h.score}</div>
+        </div>
       </div>
       <div className="location"><span className="pin">📍</span>{h.distance} · {h.city}</div>
       <div className="facts">
@@ -547,13 +601,6 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
       </div>
     </div>
     <div className="hotel-price">
-      <div className="hotel-score">
-        <div className="hotel-score-text">
-          <div className="lbl">{h.scoreLbl}</div>
-          <div className="cnt">{fmt(h.reviews)} értékelés</div>
-        </div>
-        <div className="num">{h.score}</div>
-      </div>
       <div className="hotel-pricing">
         {tw.loggedIn && h.vipEligible
           ? <React.Fragment>
@@ -573,10 +620,11 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
         <div className="hotel-tax">Adók és díjak benne</div>
         {tw.showUrgency && (h.id==='aurora' || h.id==='ensana') && <div style={{color:'var(--c-primary)',fontSize:11,fontWeight:800,marginTop:4}}>🔥 Csak 2 szoba ezen az áron</div>}
       </div>
-      <button className="hotel-cta">Megnézem →</button>
+      <button className="hotel-cta" onClick={(e)=>{e.stopPropagation(); onClick && onClick();}}>Megnézem →</button>
     </div>
   </div>
-);
+  );
+};
 
 const FilterGroup = ({ title, items, expanded=true, type='check' }) => {
   const [open, setOpen] = React.useState(expanded);
@@ -794,7 +842,7 @@ const Page = () => {
           ))}
         </div>
 
-        <div style={{padding:'6px 0 2px',fontSize:13,color:'var(--ink-500)'}}>
+        <div className="crumbs" style={{padding:'6px 0 2px',fontSize:13,color:'var(--ink-500)'}}>
           <a href="01-homepage.html">Főoldal</a> &rsaquo; <a href="#">Magyarország</a> &rsaquo; Balaton
         </div>
 

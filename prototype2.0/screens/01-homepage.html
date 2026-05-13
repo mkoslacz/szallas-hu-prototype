@@ -66,8 +66,9 @@ section.block{max-width:1200px;margin:0 auto;padding:48px 24px}
 section.block h2{font-size:26px;margin-bottom:16px}
 .block-sub{color:var(--ink-500);font-size:14px;margin-top:-12px;margin-bottom:18px}
 
-/* Sticky compact search bar — slides up + sticks to top once hero scrolls past */
-.search-pad-sticky{background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;position:sticky;top:0;z-index:30;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+/* Sticky compact search bar — hidden above viewport, slides down only after hero scrolls past */
+.search-pad-sticky{background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;position:fixed;top:0;left:0;right:0;z-index:30;box-shadow:0 2px 6px rgba(0,0,0,.06);transform:translateY(-100%);transition:transform .25s ease;pointer-events:none}
+.search-pad-sticky.visible{transform:translateY(0);pointer-events:auto}
 .search-pad-sticky .sps-inner{max-width:1100px;margin:0 auto;display:flex;background:#fff;align-items:stretch;border:1px solid var(--line-strong);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
 .search-pad-sticky .sps-cell{flex:1;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line);min-width:0}
 .search-pad-sticky .sps-cell:last-of-type{border-right:0}
@@ -418,7 +419,14 @@ const Featured = () => (
   </section>
 );
 
-const Page = () => (
+const Page = () => {
+  const [scrolled, setScrolled] = React.useState(false);
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 400);
+    window.addEventListener('scroll', onScroll, {passive:true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
   <React.Fragment>
     <div className="brandbar">
         <div className="brandbar-inner">
@@ -451,7 +459,7 @@ const Page = () => (
         </div>
       </div>
     <Hero/>
-    <div className="search-pad-sticky">
+    <div className={"search-pad-sticky"+(scrolled?" visible":"")}>
       <div className="sps-inner">
         <div className="sps-cell"><span className="lbl">Hová</span><span className="val">Balaton</span></div>
         <div className="sps-cell"><span className="lbl">Érkezés – Távozás</span><span className="val">jún. 11 – 13</span></div>
@@ -491,7 +499,8 @@ const Page = () => (
       </div>
     </footer>
   </React.Fragment>
-);
+  );
+};
 
 ReactDOM.createRoot(document.getElementById('root')).render(<Page/>);
   </script>
