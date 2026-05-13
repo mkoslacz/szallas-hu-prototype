@@ -29,15 +29,7 @@ button{font-family:inherit;cursor:pointer;font-weight:500}
 a{color:inherit;text-decoration:none}
 h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 
-.brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px}
-.brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
-.brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
-.brandbar-logo .dot{color:#FF5A00}
-.brandbar-logo{display:inline-flex;align-items:center;gap:8px}
-.logo-tag-master{position:relative;background:#fff;color:var(--c-primary);font-size:9.5px;font-weight:800;line-height:1.05;padding:5px 8px 6px;border-radius:999px;display:inline-flex;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(180,40,30,.25);white-space:nowrap}
-.logo-tag-master::after{content:"";position:absolute;left:-4px;bottom:3px;width:8px;height:8px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
 
-.brandbar-help{margin-left:auto;color:#fff;font-size:14px;display:flex;gap:14px;align-items:center}
 
 /* Stepper */
 .stepper{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}
@@ -119,7 +111,35 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 /* Footer */
 .footer{background:#0f1419;color:#cbd2da;padding:32px 24px 20px;margin-top:48px;font-size:12.5px;text-align:center}
 .footer-links a{color:#cbd2da;margin:0 12px}
-  </style>
+  
+/* === Shared brandbar (master library, mirror PDP) === */
+.brandbar{background:#D20000;border-bottom:1px solid #8c040d;height:60px;overflow:visible}
+.brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px;flex-wrap:nowrap;min-width:0;overflow:visible}
+.brandbar .brand-right{color:#fff;margin-left:auto;display:flex;gap:14px;align-items:center;font-size:14px}
+.brandbar .callcenter-trigger,.brandbar .account-btn,.brandbar .hamburger-trigger{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;backdrop-filter:blur(4px)}
+.brandbar .callcenter-trigger:hover,.brandbar .account-btn:hover,.brandbar .hamburger-trigger:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5);color:#fff}
+.brandbar .cc-ring{background:rgba(255,255,255,.18);color:#fff}
+.brandbar .account-btn:hover .cc-ring{background:#fff;color:var(--c-primary)}
+.brandbar .cc-lbl{color:rgba(255,255,255,.82)}
+.brandbar .cc-num,.brandbar .cc-chev{color:#fff}
+.logo-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0;white-space:nowrap;height:60px}
+.logo-word{font-family:'Inter',serif;font-size:26px;line-height:1;letter-spacing:-.5px;color:#fff;font-style:italic;font-weight:900;white-space:nowrap;flex-shrink:0}
+.logo-dot{color:#FF5A00}
+.logo-tag{position:relative;background:#fff;color:var(--c-primary);font-size:10px;font-weight:800;line-height:1.05;padding:6px 9px 7px;border-radius:999px;display:inline-flex;flex-direction:column;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.logo-tag::after{content:"";position:absolute;left:-5px;bottom:3px;width:10px;height:10px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
+.logo-tag span{white-space:nowrap}
+.callcenter{position:relative}
+.callcenter-trigger{display:inline-flex;align-items:center;gap:12px;padding:5px 18px 5px 5px;border-radius:999px;cursor:pointer;transition:all .15s;border:1px solid transparent;background:transparent}
+.cc-ring{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.cc-text{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+.cc-lbl{font-size:11.5px;margin-top:2px}
+.cc-num{font-size:15px;font-weight:800;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.cc-chev{font-size:14px;margin-left:6px}
+.account-btn{display:inline-flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;border-radius:999px;cursor:pointer;transition:all .15s;font-family:inherit;background:transparent;border:1px solid transparent}
+.hamburger{position:relative}
+.hamburger-trigger{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;font-size:18px}
+/* === end shared brandbar === */
+</style>
 </head>
 <body>
   <div id="root"></div>
@@ -183,10 +203,31 @@ const Page = () => {
     <React.Fragment>
       <div className="brandbar">
         <div className="brandbar-inner">
-          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu<span className="logo-tag-master">Úgy is lett!</span></a>
-          <div className="brandbar-help">
-            <span>🔒 Biztonságos foglalás</span>
-            <a href="tel:+36303442000">📞 +36 30 344 2000</a>
+          <a href="01-homepage.html" className="logo-brand" aria-label="Szallas.hu">
+            <span className="logo-word">Szállás<span className="logo-dot">.</span>hu</span>
+            <span className="logo-tag"><span>Úgy is</span><span>lett!</span></span>
+          </a>
+          <div className="brand-right">
+            <div className="callcenter">
+              <div className="callcenter-trigger" role="presentation">
+                <span className="cc-ring">📞</span>
+                <span className="cc-text">
+                  <span className="cc-num">+36 30 344 2000</span>
+                  <span className="cc-lbl">Ma 9:00–22:00</span>
+                </span>
+              </div>
+            </div>
+            <button className="account-btn" aria-label="Fiók">
+              <span className="cc-ring">👤</span>
+              <span className="cc-text">
+                <span className="cc-lbl">Üdv, vendég</span>
+                <span className="cc-num" style={{fontSize:14}}>Bejelentkezés</span>
+              </span>
+              <span className="cc-chev">▾</span>
+            </button>
+            <div className="hamburger">
+              <div className="hamburger-trigger" role="button" aria-label="Menu">≡</div>
+            </div>
           </div>
         </div>
       </div>
