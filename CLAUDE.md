@@ -27,8 +27,9 @@ prototype2.0/                       # The active prototype the team works in
   screens/
     index.html                      # Dashboard linking all 6 screens (plain HTML, no React)
     ds.html                         # Design-system bootstrap: tokens + shared React components reference
+    tweaks-overlay.js               # Vanilla-JS injector — adds Tweaks FAB + Mobile/Desktop toggle to every secondary screen
     01-homepage.html                # Homepage with hero + typeahead + categories + offers
-    02-listing-balaton.html         # Balaton listing: filters / list / Leaflet split-view map
+    02-listing-balaton.html         # Balaton listing: filters / list / Leaflet map (split or fullscreen)
     03-checkout.html                # Guest data form, 4-step stepper
     04-payment.html                 # Card / SZÉP / wallet / transfer, 3D Secure sim
     05-thankyou.html                # Confirmation, add-to-calendar, cross-sell, VIP teaser
@@ -51,19 +52,22 @@ docs/impl-guides/                   # Implementation guides generated from revie
 | `prototype2.0/Hotel Aurora Balaton - standalone.html` | PDP — source of truth for design tokens, shared component HTML, brandbar markup. Iterated via claude.ai/design. |
 | `prototype2.0/screens/ds.html` | Design-system reference. Tokens (`--c-primary`, `--ink-900`, radii, shadows) + shared React components (BrandBar, Footer, Tag, Switch, Icons `I`). Copy `<head>` + components into each new screen. |
 | `prototype2.0/screens/index.html` | Dashboard / table of contents — plain HTML, links to all 6 screens. |
-| `prototype2.0/screens/02-listing-balaton.html` | Largest secondary screen (~650 lines, 8 hooks). Drives the Leaflet split-view + 8 mock hotels. |
+| `prototype2.0/screens/02-listing-balaton.html` | Largest secondary screen (~800 lines). 8 mock hotels, Leaflet inline + 3-column fullscreen map (`FullscreenMap` component, `.filters-map-btn` opener). |
+| `prototype2.0/screens/tweaks-overlay.js` | Shared overlay loaded by all 5 secondary screens via `<script src>`. Injects Tweaks FAB + 17-toggle panel + Desktop/Mobile toggle. Vanilla DOM, no React. Toggle = `localStorage` write + `location.reload()`. |
 | `docs/ux-overhaul/plan.md` | Plain-Polish business plan: 21 steps in 4 waves, status of each. |
 | `.claude/launch.json` | Local Python static server config (port 9123). |
 
 ## Architecture
 
-Each `.html` file is **self-contained**: tokens inline as CSS custom properties, components inline as JSX inside `<script type="text/babel">`. There is no shared JS bundle — copy-paste is the reuse mechanism (intentional, see "Things That Look Wrong But Aren't").
+Each `.html` file is **self-contained for content**: tokens inline as CSS custom properties, components inline as JSX inside `<script type="text/babel">`. There is no shared JS bundle for content/structure — copy-paste is the reuse mechanism (intentional, see "Things That Look Wrong But Aren't"). The one exception is the dev-overlay (`tweaks-overlay.js`), which secondary screens load via a tag — content stays inline, overlay is shared.
 
-**Cross-screen state** is exchanged via `localStorage['szallas_tweaks']`. The PDP's Tweaks panel (bottom-right on the PDP) writes a JSON blob; all 5 secondary screens read it at module top:
+**Cross-screen state** is exchanged via `localStorage['szallas_tweaks']`. Writers: PDP's TweaksPanel (React) + the shared `tweaks-overlay.js` on secondary screens. All consumers read at module top:
 ```js
 const tw = (()=>{ try{ return JSON.parse(localStorage.getItem('szallas_tweaks'))||{}; }catch(e){ return {}; } })();
 ```
-Keys observed in use: `priceMode` (`total` / `nightly` / `per-person`), `loggedIn` (VIP discount), `urgency`, `showVipTeaser`, `showPriceAnchor`, edge-state toggles (`soldOut`, `noReviews`, `noPhotos`, `fewRates`), `loading`. Each screen also renders a "PDP tweaks aktív" pill bottom-left when any tweak is non-default.
+Keys: `priceMode` (`total` / `nightly` / `per-person`), `loggedIn` (VIP discount), `showUrgency`, `showVipTeaser`, `showPriceAnchor`, `scoreBadgePos` (PDP only), `bookingBarStyle`, edge states (`forceSoldOut`, `forceNoReviews`, `forceNoPhotosCat`, `forceFewRates`, `forceLoading`), `viewMode` (`desktop`/`mobile`). Toggles in the overlay don't try to re-render — they `location.reload()` so module-top reads pick up the new state.
+
+**Forced-mobile preview:** `tweaks-overlay.js` sets `html[data-view="mobile"]` based on `tweaks.viewMode`. The matching CSS constrains `body > *` to `max-width:375px` with dark surround (cf. lines around the `html[data-view="mobile"]` rule in the overlay). This is a *visual* simulation — actual `@media (max-width)` queries don't fire (window is still wide).
 
 **claude.ai/design handshake (PDP only):** the standalone PDP posts `__edit_mode_set_keys` and `__edit_mode_available` to `window.parent`. Do not break these — they let the Tweaks panel sync back to claude.ai/design when the artifact is opened there.
 
@@ -147,12 +151,17 @@ No version field, no CHANGELOG, no git tags. Status of the 21-step plan lives in
 - **Big PDP file:** opening `prototype2.0/Hotel Aurora Balaton - standalone.html` in any tool will be slow. Prefer `grep`/`sed -n` over loading it whole.
 - **Tweaks panel coupling:** the PDP's Tweaks panel both writes localStorage AND posts to `window.parent`. When iterating on the PDP outside claude.ai/design (e.g., in this repo), the postMessage simply no-ops — that's fine.
 - **Picsum image cycling:** different seed prefixes per screen are deliberate, so the same hotel doesn't show the same Picsum photo on homepage and listing — keeps the prototype "feeling fresh." Don't unify the prefix.
-- **Listing map disappears below 1100 px width** (CSS media query at line 69). That's the documented behavior — it's not a layout bug to fix.
+- **Listing map disappears below 1100 px width** (CSS media query). That's the documented behavior — not a layout bug to fix.
+- **CSS class clash with overlay:** listing's "List / List+map" segmented toggle uses class **`.lm-toggle`** (NOT `.view-toggle`). The overlay's bottom-left Desktop/Mobile toggle owns `.view-toggle`. If you reintroduce a same-named class anywhere in a secondary screen, position-fixed overlay rules will override and break the inline element.
+- **3-above-fold listing target:** the listing was tuned so 3 hotel cards fit in 900px viewport (first card at y≈292, card height 186). Adding padding to the search-pad, quick-chips, results-bar, or disclosure will break that. Measure before adding vertical space above `.list-col`.
+- **Tweaks toggle = reload:** `tweaks-overlay.js` does `location.reload()` on every toggle change so module-top reads pick up new state. Don't try to refactor to React state — the secondary pages each have their own React root, and re-rendering them from the overlay would need event plumbing not worth the complexity.
 
 ### Tool & Workflow Notes
-- **Run the prototype locally:** `python3 -m http.server 9123 --bind 127.0.0.1` from project root, then `http://127.0.0.1:9123/prototype2.0/screens/index.html`.
+- **Run the prototype locally:** `python3 -m http.server 9123 --bind 127.0.0.1` from project root, then `http://127.0.0.1:9123/prototype2.0/screens/index.html`. Configured via `.claude/launch.json`, so `mcp__Claude_Preview__preview_start` with name `static` will reuse it.
+- **In Claude Code, prefer Claude Preview MCP over Chrome MCP.** Chrome MCP blocks `file://`, `localhost:*`, and `claude.ai/*` for security. Preview MCP can hit `localhost:9123` and supports `preview_eval`, `preview_screenshot`, `preview_resize`. Note: `preview_screenshot` returns a full-page JPEG (long pages get visually compressed) — for above-fold verification, query `getBoundingClientRect()` via `preview_eval` instead.
 - **Iterating the PDP:** the canonical path is claude.ai/design (see [docs/ux-overhaul/00-kickstart.md](docs/ux-overhaul/00-kickstart.md)). Use Claude Code only for the 5 secondary screens, the dashboard, the docs, and tooling.
-- **Wave 4 (the 5 secondary screens) is what Claude Code typically touches.** Status: all 21 steps marked complete per the dashboard; ongoing work is polish + cross-screen consistency fixes (the most recent commits — `fb4fbe2`, `c8d199d`, `fa0f3b9` — are all polish on the listing/brandbar).
+- **Wave 4 (5 secondary screens) is what Claude Code typically touches.** All 21 plan steps complete; ongoing work is polish + cross-screen consistency fixes. Recent waves of polish: real Picsum images everywhere, brandbar parity with PDP (logo+`Úgy is lett!`+callcenter+account+hamburger), shared `tweaks-overlay.js` with 17 toggles + Mobile/Desktop preview, listing's fullscreen 3-column map (filters + mini-cards + Leaflet) replacing the floating FAB.
+- **Bulk-edit secondary screens:** the brandbar port and overlay injection were done with one-shot Python scripts iterating over `01-…html` through `05-…html`. When you need a shared change across the 5 screens, prefer that pattern over 5 sequential Edits.
 
 ## Environment & Setup
 - macOS, zsh, Python 3 available (used as the dev server).
