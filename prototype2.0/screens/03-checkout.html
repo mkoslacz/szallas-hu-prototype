@@ -80,11 +80,11 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .submit-bar .btn-primary{padding:14px 28px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;font-size:15px;cursor:pointer;box-shadow:var(--shadow-cta);transition:filter .12s}
 .submit-bar .btn-primary:hover{filter:brightness(1.05)}
 
-/* Collapsible secondary sections — link-style toggles to minimize visible form on first fold */
-.form-toggle-link{display:inline-flex;gap:6px;align-items:center;background:transparent;border:1px dashed var(--line-strong);border-radius:var(--radius);color:var(--c-primary);font-weight:700;cursor:pointer;font-size:13.5px;padding:10px 14px;font-family:inherit;text-align:left;margin-bottom:16px;width:100%;transition:all .12s}
-.form-toggle-link:hover{border-color:var(--c-primary);background:var(--c-success-bg);background:rgba(227,6,19,.04)}
-.form-hide-link{float:right;background:transparent;border:0;color:var(--c-primary);font-weight:600;cursor:pointer;font-size:12px;font-family:inherit;padding:0}
-.form-hide-link:hover{text-decoration:underline}
+/* Collapsible secondary sections — neutral link-style toggles to minimize visible form on first fold */
+.form-toggle-link{display:inline-flex;gap:6px;align-items:center;background:transparent;border:1px dashed var(--line-strong);border-radius:var(--radius);color:var(--ink-700);font-weight:700;cursor:pointer;font-size:13.5px;padding:10px 14px;font-family:inherit;text-align:left;margin-bottom:16px;width:100%;transition:all .12s}
+.form-toggle-link:hover{border-color:var(--ink-700);background:var(--surface-2);color:var(--ink-900)}
+.form-hide-link{float:right;background:transparent;border:0;color:var(--ink-700);font-weight:600;cursor:pointer;font-size:12px;font-family:inherit;padding:0}
+.form-hide-link:hover{text-decoration:underline;color:var(--ink-900)}
 
 /* Sticky checkout CTA — always visible above the fold regardless of scroll */
 .checkout-sticky-cta{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:50;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
@@ -194,6 +194,13 @@ html[data-view="mobile"] .summary .hotel-name{font-size:15.5px}
 html[data-view="mobile"] .summary .row{font-size:13px;padding:6px 0}
 html[data-view="mobile"] .summary .total .amt{font-size:21px}
 html[data-view="mobile"] .footer{padding:18px 14px 14px;text-align:center}
+
+/* === Global focus-visible ring (a11y) === */
+*:focus-visible{outline:2px solid var(--ink-900);outline-offset:2px;border-radius:3px}
+button:focus-visible,a:focus-visible{outline-offset:3px}
+.btn-primary:focus-visible,.btn-cta:focus-visible,.btn-search:focus-visible,.hotel-cta:focus-visible,.sps-btn:focus-visible{outline-color:#fff;outline-offset:-3px}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline-offset:0}
+
 </style>
 </head>
 <body>

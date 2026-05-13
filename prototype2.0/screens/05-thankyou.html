@@ -67,7 +67,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 
 .summary-grid{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:start}
 @media (max-width:600px){.summary-grid{grid-template-columns:1fr}}
-.summary-img{aspect-ratio:16/10;border-radius:var(--radius);background:linear-gradient(135deg,#dbe6ec,#a7c5d3)}
+.summary-img{aspect-ratio:16/10;border-radius:var(--radius);background:linear-gradient(135deg,#dbe6ec,#a7c5d3);background-size:cover;background-position:center}
 .summary-info .name{font-size:17px;font-weight:800;margin-bottom:6px}
 .summary-info .meta{display:grid;gap:6px;font-size:13.5px;color:var(--ink-700)}
 .summary-info .total{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end}
@@ -188,6 +188,13 @@ html[data-view="mobile"] .vip-teaser .word{font-size:40px}
 html[data-view="mobile"] .vip-teaser h3{font-size:16px}
 html[data-view="mobile"] .vip-teaser p{font-size:13px}
 html[data-view="mobile"] .footer{padding:18px 14px 14px;text-align:center}
+
+/* === Global focus-visible ring (a11y) === */
+*:focus-visible{outline:2px solid var(--ink-900);outline-offset:2px;border-radius:3px}
+button:focus-visible,a:focus-visible{outline-offset:3px}
+.btn-primary:focus-visible,.btn-cta:focus-visible,.btn-search:focus-visible,.hotel-cta:focus-visible,.sps-btn:focus-visible{outline-color:#fff;outline-offset:-3px}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline-offset:0}
+
 </style>
 </head>
 <body>
@@ -270,7 +277,7 @@ const Page = () => {
         <section className="card">
           <h2>A foglalásod részletei</h2>
           <div className="summary-grid">
-            <div className="summary-img"/>
+            <div className="summary-img" style={{backgroundImage:`url('https://picsum.photos/seed/szhotel-aurora-thankyou/480/300')`}}/>
             <div className="summary-info">
               <div className="name">Hotel Aurora Balaton ★★★★ <span style={{color:'var(--c-success)',fontSize:13,marginLeft:8}}>Kiváló 9.1</span></div>
               <div className="meta">
