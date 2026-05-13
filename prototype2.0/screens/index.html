@@ -48,6 +48,12 @@ h2{font-size:20px;font-weight:800;margin:32px 0 14px;letter-spacing:-.01em}
     <div class="legend">
       <b>User flow:</b> rozpocznij od <b>Strony głównej</b> → wpisz „Balaton" w wyszukiwarce → przejdź do <b>Listingu</b> → kliknij hotel → otwórz <b>Stronę hotelu (PDP)</b> → wybierz pokój → przejdź do <b>Koszyka</b> → <b>Płatności</b> → <b>Potwierdzenia</b>.
     </div>
+    <div class="legend" style="border-left-color:#1F7F3E;margin-top:14px">
+      <b>🎚 Tweaks synchronizacja:</b> Otwórz <b>PDP</b> i panel <b>Tweaks</b> (prawy-dolny róg). Zmiany tweaków (priceMode, loggedIn=VIP, urgency, showVipTeaser) są zapisywane do localStorage i widoczne na wszystkich pozostałych ekranach (listing/homepage/koszyk/płatność/thank you) jako odpowiednie dostosowania cen, wyświetlanych elementów + pill „PDP tweaks aktív" w lewym-dolnym rogu każdej strony.
+    </div>
+    <div class="legend" style="border-left-color:#6B7683;margin-top:14px">
+      <b>📦 Master library:</b> Strona hotelu (PDP) jest source-of-truth dla design tokenów (kolory, font, radii, shadows) oraz komponentów wspólnych (brandbar z „Úgy is lett!" tag, search bar, footer, score circle, meal pill, stepper). Pozostałe 5 ekranów importuje te same tokeny i wzorce HTML. W produkcyjnej aplikacji React te komponenty zostaną wyciągnięte jako shared modules (BrandBar, SearchBar, Footer, HotelCard, Stepper, MealPill itd.).
+    </div>
 
     <div class="flow-row">
       <a href="01-homepage.html">Strona główna</a> <span class="flow-arrow">→</span>

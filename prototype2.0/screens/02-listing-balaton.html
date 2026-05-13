@@ -38,6 +38,10 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-inner{max-width:1400px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
 .brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
 .brandbar-logo .dot{color:#FF5A00}
+.brandbar-logo{display:inline-flex;align-items:center;gap:8px}
+.logo-tag-master{position:relative;background:#fff;color:var(--c-primary);font-size:9.5px;font-weight:800;line-height:1.05;padding:5px 8px 6px;border-radius:999px;display:inline-flex;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(180,40,30,.25);white-space:nowrap}
+.logo-tag-master::after{content:"";position:absolute;left:-4px;bottom:3px;width:8px;height:8px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
+
 .brandbar-actions{margin-left:auto;display:flex;gap:10px;align-items:center;color:#fff;font-size:14px}
 .brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
 
@@ -85,6 +89,12 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .map-fab:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.3)}
 .map-fab .thumb{width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,#aac6d3,#7ba9bb);position:relative}
 .map-fab .thumb::after{content:'📍';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px}
+
+/* Tweaks indicator — small pill bottom-left shows which PDP tweaks are active */
+.tweaks-indicator{position:fixed;left:24px;bottom:24px;z-index:50;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:8px 14px;font-size:12px;color:var(--ink-700);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px;max-width:340px}
+.tweaks-indicator .lbl{font-weight:800;color:var(--ink-900);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.tweaks-indicator .chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:var(--c-success-bg);color:var(--c-success);font-weight:700;font-size:11px}
+.tweaks-indicator a{color:var(--c-primary);text-decoration:underline;font-size:11px;font-weight:600}
 
 /* Fullscreen map overlay */
 .map-fullscreen{position:fixed;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column}
@@ -189,6 +199,18 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
   <script type="text/babel">
 
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+// Read tweaks from localStorage (set by PDP TweaksPanel). Secondary screens react where applicable.
+const readTweaks = () => { try { return JSON.parse(localStorage.getItem('szallas_tweaks')) || {}; } catch(e){ return {}; } };
+const tw = readTweaks();
+const GUESTS = 2, NIGHTS = 1;
+const priceFor = (price, mode) => {
+  if (mode === 'nightly') return Math.round(price / NIGHTS);
+  if (mode === 'per-person') return Math.round(price / NIGHTS / GUESTS);
+  return price; // total (default)
+};
+const pmSuffix = (mode) => mode === 'nightly' ? '/éj' : mode === 'per-person' ? '/fő/éj' : '2 fő · 1 éj';
+const VIP_DISCOUNT = 0.85; // 15% off when logged in
 
 // Picsum photos seeded with hotel id for deterministic images (resort/landscape photos)
 const photo = (seed, w=600, h=400) => `https://picsum.photos/seed/szhotel-${seed}/${w}/${h}`;
@@ -341,10 +363,20 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
         <div className="num">{h.score}</div>
       </div>
       <div className="hotel-pricing">
-        {h.original>0 && <span className="hotel-strike">{fmt(h.original)} Ft</span>}
-        <div className="hotel-bigprice">{fmt(h.price)}<span className="ft">Ft</span></div>
-        <div className="hotel-priceunit">2 fő · 1 éj</div>
+        {tw.loggedIn && h.vipEligible
+          ? <React.Fragment>
+              <span className="hotel-strike">{fmt(priceFor(h.price, tw.priceMode))} Ft</span>
+              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)}<span className="ft">Ft</span></div>
+              <div className="hotel-priceunit" style={{color:'#6B21A8',fontWeight:700}}>VIP −15% · {pmSuffix(tw.priceMode)}</div>
+            </React.Fragment>
+          : <React.Fragment>
+              {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-strike">{fmt(priceFor(h.original, tw.priceMode))} Ft</span>}
+              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode))}<span className="ft">Ft</span></div>
+              <div className="hotel-priceunit">{pmSuffix(tw.priceMode)}</div>
+            </React.Fragment>
+        }
         <div className="hotel-tax">Adók és díjak benne</div>
+        {tw.showUrgency && (h.id==='aurora' || h.id==='ensana') && <div style={{color:'var(--c-primary)',fontSize:11,fontWeight:800,marginTop:4}}>🔥 Csak 2 szoba ezen az áron</div>}
       </div>
       <button className="hotel-cta">Megnézem →</button>
     </div>
@@ -421,18 +453,27 @@ const Page = () => {
   const [view, setView] = React.useState('list'); // 'list' | 'split'
   const [fsMap, setFsMap] = React.useState(false);
 
-  // Insert VIP teaser after 3rd hotel for conversion
+  // Insert VIP teaser after 3rd hotel for conversion (hidden if PDP tweak shows it off OR user already logged in)
+  const showVipTeaser = tw.showVipTeaser !== false && !tw.loggedIn;
   const items = [];
   HOTELS.forEach((h, idx) => {
     items.push({ kind:'hotel', h });
-    if (idx === 2) items.push({ kind:'vip-teaser' });
+    if (idx === 2 && showVipTeaser) items.push({ kind:'vip-teaser' });
   });
+
+  // List of active tweaks for the indicator pill
+  const activeTweakChips = [];
+  if (tw.priceMode && tw.priceMode !== 'total') activeTweakChips.push(`price: ${tw.priceMode}`);
+  if (tw.loggedIn) activeTweakChips.push('VIP −15%');
+  if (tw.showUrgency) activeTweakChips.push('urgency');
+  if (!tw.showPriceAnchor && tw.showPriceAnchor !== undefined) activeTweakChips.push('no strike');
+  if (tw.showVipTeaser === false) activeTweakChips.push('VIP teaser off');
 
   return (
     <React.Fragment>
       <div className="brandbar">
         <div className="brandbar-inner">
-          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu<span className="logo-tag-master">Úgy is lett!</span></a>
           <div className="brandbar-actions">
             <a href="#">HUF</a>
             <a href="#">Magyar</a>
@@ -531,6 +572,14 @@ const Page = () => {
         <button className="map-fab" onClick={()=>setFsMap(true)}>
           <span className="thumb"/> Térkép · {HOTELS.length} találat
         </button>
+      )}
+
+      {activeTweakChips.length > 0 && (
+        <div className="tweaks-indicator">
+          <span className="lbl">PDP tweaks aktív:</span>
+          {activeTweakChips.map((c,i)=><span key={i} className="chip">{c}</span>)}
+          <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">változtatás →</a>
+        </div>
       )}
 
       {fsMap && (

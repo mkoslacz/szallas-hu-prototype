@@ -35,6 +35,10 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:26px;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
 .brandbar-logo .tag{background:#fff;color:var(--c-primary);font-size:11px;padding:3px 8px;border-radius:10px;font-style:normal;font-weight:800;transform:rotate(-6deg)}
 .brandbar-logo .dot{color:#FF5A00}
+.brandbar-logo{display:inline-flex;align-items:center;gap:8px}
+.logo-tag-master{position:relative;background:#fff;color:var(--c-primary);font-size:9.5px;font-weight:800;line-height:1.05;padding:5px 8px 6px;border-radius:999px;display:inline-flex;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(180,40,30,.25);white-space:nowrap}
+.logo-tag-master::after{content:"";position:absolute;left:-4px;bottom:3px;width:8px;height:8px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
+
 .brandbar-actions{margin-left:auto;display:flex;gap:10px;align-items:center;color:#fff;font-size:14px}
 .brandbar-actions a{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
 .brandbar-actions .belepek{background:#fff;color:var(--c-primary);font-weight:700}
@@ -127,6 +131,12 @@ section.block h2{font-size:26px;margin-bottom:16px}
 @media (max-width:1000px){.featured-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:600px){.featured-grid{grid-template-columns:1fr}}
 
+/* Tweaks indicator */
+.tweaks-indicator{position:fixed;left:24px;bottom:24px;z-index:50;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:8px 14px;font-size:12px;color:var(--ink-700);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px;max-width:340px}
+.tweaks-indicator .lbl{font-weight:800;color:var(--ink-900);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.tweaks-indicator .chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:var(--c-success-bg);color:var(--c-success);font-weight:700;font-size:11px}
+.tweaks-indicator a{color:var(--c-primary);text-decoration:underline;font-size:11px;font-weight:600}
+
 /* Footer */
 .footer{background:#0f1419;color:#cbd2da;padding:48px 24px 24px;margin-top:48px}
 .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
@@ -146,6 +156,15 @@ section.block h2{font-size:26px;margin-bottom:16px}
 
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
 const photo = (seed, w=600, h=400) => `https://picsum.photos/seed/szhomepage-${seed}/${w}/${h}`;
+
+// Read PDP-saved tweaks
+const tw = (()=>{ try{ return JSON.parse(localStorage.getItem('szallas_tweaks'))||{}; }catch(e){ return {}; } })();
+const priceFor = (p, mode) => mode==='nightly' ? p : mode==='per-person' ? Math.round(p/2) : p; // top offers are /fő/éj by default, so 'total' would *2
+const pmSuffix = (mode) => mode==='nightly' ? '/éj' : mode==='total' ? '2 fő · 1 éj' : '/fő/éj';
+const activeTweakChips = [];
+if (tw.priceMode && tw.priceMode !== 'total') activeTweakChips.push(`price: ${tw.priceMode}`);
+if (tw.loggedIn) activeTweakChips.push('VIP −15%');
+if (tw.showVipTeaser === false) activeTweakChips.push('VIP teaser off');
 
 const CATEGORIES = [
   { id:'pentecost', lbl:'Pünkösdi hosszú hétvége', img: photo('pentecost', 400, 460) },
@@ -264,8 +283,11 @@ const TopOffers = () => (
           <div className="offer-info">
             <h3>{o.name}</h3>
             <div className="city">{o.city}</div>
-            <div className="offer-price">{fmt(o.price)} <span className="ft">Ft</span></div>
-            <div className="offer-priceunit">/fő/éj · Tartalmazza az adókat és díjakat</div>
+            <div className="offer-price">
+              {tw.loggedIn && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.price, tw.priceMode))} Ft</span>}
+              {fmt(priceFor(o.price, tw.priceMode) * (tw.loggedIn?0.85:1))} <span className="ft">Ft</span>
+            </div>
+            <div className="offer-priceunit">{pmSuffix(tw.priceMode||'per-person')} · {tw.loggedIn?'VIP −15% · ':''}Tartalmazza az adókat és díjakat</div>
           </div>
         </a>
       ))}
@@ -273,7 +295,7 @@ const TopOffers = () => (
   </section>
 );
 
-const VipBanner = () => (
+const VipBanner = () => (tw.showVipTeaser === false || tw.loggedIn) ? null : (
   <section className="block">
     <div className="vip-banner">
       <div className="vip-word">VIP</div>
@@ -324,10 +346,11 @@ const Featured = () => (
             <h3>{o.name}</h3>
             <div className="city">{o.city}</div>
             <div className="offer-price">
-              {o.original && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(o.original)} Ft</span>}
-              {fmt(o.price)} <span className="ft">Ft</span>
+              {tw.loggedIn
+                ? <React.Fragment><span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.price, tw.priceMode))} Ft</span>{fmt(priceFor(o.price, tw.priceMode)*0.85)} <span className="ft">Ft</span></React.Fragment>
+                : <React.Fragment>{o.original && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.original, tw.priceMode))} Ft</span>}{fmt(priceFor(o.price, tw.priceMode))} <span className="ft">Ft</span></React.Fragment>}
             </div>
-            <div className="offer-priceunit">/fő/éj · Tartalmazza az adókat és díjakat</div>
+            <div className="offer-priceunit">{pmSuffix(tw.priceMode||'per-person')} · {tw.loggedIn?'VIP −15% · ':''}Tartalmazza az adókat és díjakat</div>
           </div>
         </a>
       ))}
@@ -355,6 +378,14 @@ const Page = () => (
     <Inspirations/>
     <MobileBanner/>
     <Featured/>
+
+    {activeTweakChips.length > 0 && (
+      <div className="tweaks-indicator">
+        <span className="lbl">PDP tweaks aktív:</span>
+        {activeTweakChips.map((c,i)=><span key={i} className="chip">{c}</span>)}
+        <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">változtatás →</a>
+      </div>
+    )}
 
     <footer className="footer">
       <div className="footer-inner">

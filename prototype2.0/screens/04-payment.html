@@ -32,6 +32,10 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
 .brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
 .brandbar-logo .dot{color:#FF5A00}
+.brandbar-logo{display:inline-flex;align-items:center;gap:8px}
+.logo-tag-master{position:relative;background:#fff;color:var(--c-primary);font-size:9.5px;font-weight:800;line-height:1.05;padding:5px 8px 6px;border-radius:999px;display:inline-flex;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(180,40,30,.25);white-space:nowrap}
+.logo-tag-master::after{content:"";position:absolute;left:-4px;bottom:3px;width:8px;height:8px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
+
 .brandbar-help{margin-left:auto;color:#fff;font-size:14px;display:flex;gap:14px;align-items:center}
 
 .stepper{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}
@@ -126,6 +130,11 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .threed-spinner{margin:18px auto;width:32px;height:32px;border:3px solid var(--surface-3);border-top-color:var(--c-primary);border-radius:50%;animation:tspin 0.8s linear infinite}
 @keyframes tspin{to{transform:rotate(360deg)}}
 
+.tweaks-indicator{position:fixed;left:24px;bottom:24px;z-index:50;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:8px 14px;font-size:12px;color:var(--ink-700);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px;max-width:340px}
+.tweaks-indicator .lbl{font-weight:800;color:var(--ink-900);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.tweaks-indicator .chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:var(--c-success-bg);color:var(--c-success);font-weight:700;font-size:11px}
+.tweaks-indicator a{color:var(--c-primary);text-decoration:underline;font-size:11px;font-weight:600}
+
 .footer{background:#0f1419;color:#cbd2da;padding:32px 24px 20px;margin-top:48px;font-size:12.5px;text-align:center}
 .footer a{color:#cbd2da;margin:0 12px}
   </style>
@@ -135,6 +144,12 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
   <script type="text/babel">
 
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
+
+// Read PDP tweaks
+const tw = (()=>{ try{ return JSON.parse(localStorage.getItem('szallas_tweaks'))||{}; }catch(e){ return {}; } })();
+const activeTweakChips = [];
+if (tw.priceMode && tw.priceMode !== 'total') activeTweakChips.push(`price: ${tw.priceMode}`);
+if (tw.loggedIn) activeTweakChips.push('VIP −15%');
 
 const Page = () => {
   const [method, setMethod] = React.useState('card');
@@ -162,15 +177,17 @@ const Page = () => {
     }
   };
 
-  const total = 38600;
-  const onlinePart = 37056;
+  const onlinePartBase = 37056;
   const ifa = 1544;
+  const vipOff = tw.loggedIn ? Math.round(onlinePartBase * 0.15) : 0;
+  const onlinePart = onlinePartBase - vipOff;
+  const total = onlinePart + ifa;
 
   return (
     <React.Fragment>
       <div className="brandbar">
         <div className="brandbar-inner">
-          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu<span className="logo-tag-master">Úgy is lett!</span></a>
           <div className="brandbar-help">
             <span>🔒 PCI DSS Level 1 · 256-bit SSL</span>
             <a href="tel:+36303442000">📞 +36 30 344 2000</a>
@@ -356,8 +373,8 @@ const Page = () => {
               <div className="split">
                 <h4>Most fizetsz / Később fizetsz</h4>
                 <div className="pt-row highlight">
-                  <span><b>Most online</b></span>
-                  <span className="amt" style={{color:'var(--c-cta)'}}>{fmt(onlinePart)} Ft</span>
+                  <span><b>Most online</b>{tw.loggedIn && <small style={{display:'block',color:'#6B21A8',fontWeight:700,marginTop:2}}>VIP −15% kedvezménnyel</small>}</span>
+                  <span className="amt" style={{color:'var(--c-cta)'}}>{tw.loggedIn && <span style={{textDecoration:'line-through',color:'var(--ink-400)',marginRight:6,fontSize:12,fontWeight:500}}>{fmt(onlinePartBase)}</span>}{fmt(onlinePart)} Ft</span>
                 </div>
                 <div className="pt-row">
                   <span>Később a hotelben (IFA)</span>
@@ -394,6 +411,14 @@ const Page = () => {
         <a>Adatvédelem</a><a>Felhasználási feltételek</a><a href="tel:+36303442000">+36 30 344 2000</a>
         <div style={{marginTop:8}}>© 2008–2026 Szallas.hu · 🔒 100% SSL</div>
       </footer>
+
+      {activeTweakChips.length > 0 && (
+        <div className="tweaks-indicator">
+          <span className="lbl">PDP tweaks aktív:</span>
+          {activeTweakChips.map((c,i)=><span key={i} className="chip">{c}</span>)}
+          <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">változtatás →</a>
+        </div>
+      )}
     </React.Fragment>
   );
 };

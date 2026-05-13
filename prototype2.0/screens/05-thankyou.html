@@ -34,6 +34,10 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .brandbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center}
 .brandbar-logo{color:#fff;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-.5px}
 .brandbar-logo .dot{color:#FF5A00}
+.brandbar-logo{display:inline-flex;align-items:center;gap:8px}
+.logo-tag-master{position:relative;background:#fff;color:var(--c-primary);font-size:9.5px;font-weight:800;line-height:1.05;padding:5px 8px 6px;border-radius:999px;display:inline-flex;text-align:center;letter-spacing:.01em;transform:rotate(-6deg);box-shadow:0 2px 6px rgba(180,40,30,.25);white-space:nowrap}
+.logo-tag-master::after{content:"";position:absolute;left:-4px;bottom:3px;width:8px;height:8px;background:#fff;border-radius:2px;transform:rotate(45deg);clip-path:polygon(0 0, 100% 100%, 0 100%)}
+
 
 .stepper{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}
 .stepper-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px}
@@ -114,6 +118,11 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .vip-teaser p{font-size:13.5px;color:var(--ink-700);margin-bottom:12px;line-height:1.5}
 .vip-teaser button{padding:10px 20px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;cursor:pointer}
 
+.tweaks-indicator{position:fixed;left:24px;bottom:24px;z-index:50;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:8px 14px;font-size:12px;color:var(--ink-700);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px;max-width:340px}
+.tweaks-indicator .lbl{font-weight:800;color:var(--ink-900);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.tweaks-indicator .chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:var(--c-success-bg);color:var(--c-success);font-weight:700;font-size:11px}
+.tweaks-indicator a{color:var(--c-primary);text-decoration:underline;font-size:11px;font-weight:600}
+
 .footer{background:#0f1419;color:#cbd2da;padding:32px 24px 20px;margin-top:48px;font-size:12.5px;text-align:center}
 .footer a{color:#cbd2da;margin:0 12px}
   </style>
@@ -125,6 +134,12 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 const fmt = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n));
 const REF = 'SZALLAS-2026-A4F7K2';
 const EMAIL = 'mateusz@example.com';
+
+// PDP tweaks
+const tw = (()=>{ try{ return JSON.parse(localStorage.getItem('szallas_tweaks'))||{}; }catch(e){ return {}; } })();
+const activeTweakChips = [];
+if (tw.priceMode && tw.priceMode !== 'total') activeTweakChips.push(`price: ${tw.priceMode}`);
+if (tw.loggedIn) activeTweakChips.push('VIP −15% applied');
 
 const Page = () => {
   const [copied, setCopied] = React.useState(false);
@@ -142,7 +157,7 @@ const Page = () => {
     <React.Fragment>
       <div className="brandbar">
         <div className="brandbar-inner">
-          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu</a>
+          <a href="01-homepage.html" className="brandbar-logo">Szallas<span className="dot">.</span>hu<span className="logo-tag-master">Úgy is lett!</span></a>
         </div>
       </div>
 
@@ -288,14 +303,26 @@ const Page = () => {
           </div>
         </section>
 
-        <section className="vip-teaser">
-          <div className="word">VIP</div>
-          <div className="body">
-            <h3>Regisztrálj a Szallas.hu VIP programra</h3>
-            <p>Kapj <b>5% kedvezményt</b> a következő foglalásodra + exkluzív ajánlatok, 10–20% VIP-árak a partner-szálláshelyeken.</p>
-            <button>Regisztrálok</button>
-          </div>
-        </section>
+        {!tw.loggedIn && (
+          <section className="vip-teaser">
+            <div className="word">VIP</div>
+            <div className="body">
+              <h3>Regisztrálj a Szallas.hu VIP programra</h3>
+              <p>Kapj <b>5% kedvezményt</b> a következő foglalásodra + exkluzív ajánlatok, 10–20% VIP-árak a partner-szálláshelyeken.</p>
+              <button>Regisztrálok</button>
+            </div>
+          </section>
+        )}
+        {tw.loggedIn && (
+          <section className="vip-teaser" style={{background:'linear-gradient(135deg,#F5EAFF,#FFE8EA)'}}>
+            <div className="word" style={{color:'#6B21A8'}}>VIP</div>
+            <div className="body">
+              <h3>Köszönjük, hogy VIP tag vagy! 💜</h3>
+              <p>Ezt a foglalást már <b>VIP −15% kedvezménnyel</b> végeztük. Következő foglalásnál is jár 10–20% kedvezmény a partner-szálláshelyeken.</p>
+              <button>VIP profilom</button>
+            </div>
+          </section>
+        )}
 
         <p style={{fontSize:12,color:'var(--ink-500)',textAlign:'center',marginTop:24,lineHeight:1.6}}>
           Adataidat a foglalás teljesítéséhez használjuk fel. <a href="#" style={{color:'var(--c-primary)',textDecoration:'underline'}}>Hogyan kezeljük az adataidat?</a>
@@ -306,6 +333,14 @@ const Page = () => {
         <a href="01-homepage.html">Főoldal</a><a>Adatvédelem</a><a href="tel:+36303442000">+36 30 344 2000</a>
         <div style={{marginTop:8}}>© 2008–2026 Szallas.hu · 🔒 100% SSL</div>
       </footer>
+
+      {activeTweakChips.length > 0 && (
+        <div className="tweaks-indicator">
+          <span className="lbl">PDP tweaks aktív:</span>
+          {activeTweakChips.map((c,i)=><span key={i} className="chip">{c}</span>)}
+          <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">változtatás →</a>
+        </div>
+      )}
     </React.Fragment>
   );
 };
