@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,78 +37,83 @@ h2{font-size:20px;font-weight:800;margin:32px 0 14px;letter-spacing:-.01em}
 .tag.todo{background:#FFE8EA;color:#E30613}
 .legend{padding:14px 18px;background:#fff;border-left:3px solid #E30613;border-radius:0 14px 14px 0;font-size:13.5px;color:#394654;line-height:1.55;margin-bottom:24px}
 .legend b{color:#1F2A36}
+.note{margin-top:24px;padding:12px 16px;background:#FFF4E5;border-left:3px solid #E85A00;border-radius:0 10px 10px 0;font-size:12.5px;color:#6B4A1F;line-height:1.5}
   </style>
 </head>
 <body>
   <div class="brandbar"><a href="#">Szallas<span class="dot">.</span>hu</a></div>
   <div class="page">
     <h1>Szallas.hu UX prototype</h1>
-    <p class="sub">Dashboard wszystkich ekranów (Plan: 21 kroków · zrealizowane: 21/21). Każdy ekran otwiera się w pełnym widoku.</p>
+    <p class="sub">Dashboard for all screens (Plan: 21 steps · completed: 21/21). Each screen opens in full view.</p>
 
-    <div class="legend">
-      <b>User flow:</b> rozpocznij od <b>Strony głównej</b> → wpisz „Balaton" w wyszukiwarce → przejdź do <b>Listingu</b> → kliknij hotel → otwórz <b>Stronę hotelu (PDP)</b> → wybierz pokój → przejdź do <b>Koszyka</b> → <b>Płatności</b> → <b>Potwierdzenia</b>.
+    <div class="note">
+      <b>Note:</b> The prototype UI is in <b>Hungarian</b> (the product targets Hungary). This dashboard and the Tweaks panel are in English for stakeholder review. If your browser auto-translates the Hungarian screens, disable translation to see the intended copy.
+    </div>
+
+    <div class="legend" style="margin-top:24px">
+      <b>User flow:</b> start at the <b>Homepage</b> → type "Balaton" in the search bar → continue to the <b>Listing</b> → click a hotel → open the <b>Hotel page (PDP)</b> → pick a room → continue to <b>Checkout</b> → <b>Payment</b> → <b>Confirmation</b>.
     </div>
     <div class="legend" style="border-left-color:#1F7F3E;margin-top:14px">
-      <b>🎚 Tweaks synchronizacja:</b> Otwórz <b>PDP</b> i panel <b>Tweaks</b> (prawy-dolny róg). Zmiany tweaków (priceMode, loggedIn=VIP, urgency, showVipTeaser) są zapisywane do localStorage i widoczne na wszystkich pozostałych ekranach (listing/homepage/koszyk/płatność/thank you) jako odpowiednie dostosowania cen, wyświetlanych elementów + pill „PDP tweaks aktív" w lewym-dolnym rogu każdej strony.
+      <b>🎚 Tweaks sync:</b> Open the <b>PDP</b> and the <b>Tweaks</b> panel (bottom-right). Tweak changes (priceMode, loggedIn=VIP, urgency, showVipTeaser) are stored in localStorage and reflected on every other screen (listing / homepage / checkout / payment / thank-you) as the corresponding price &amp; element adjustments, plus a "PDP tweaks aktív" pill in the bottom-left of every page.
     </div>
     <div class="legend" style="border-left-color:#6B7683;margin-top:14px">
-      <b>📦 Master library:</b> Strona hotelu (PDP) jest source-of-truth dla design tokenów (kolory, font, radii, shadows) oraz komponentów wspólnych (brandbar z „Úgy is lett!" tag, search bar, footer, score circle, meal pill, stepper). Pozostałe 5 ekranów importuje te same tokeny i wzorce HTML. W produkcyjnej aplikacji React te komponenty zostaną wyciągnięte jako shared modules (BrandBar, SearchBar, Footer, HotelCard, Stepper, MealPill itd.).
+      <b>📦 Master library:</b> The hotel page (PDP) is the source of truth for design tokens (colors, font, radii, shadows) and shared components (brandbar with the "Úgy is lett!" tag, search bar, footer, score circle, meal pill, stepper). The other 5 screens import the same tokens and HTML patterns. In a production React app these will be extracted as shared modules (BrandBar, SearchBar, Footer, HotelCard, Stepper, MealPill, etc.).
     </div>
 
     <div class="flow-row">
-      <a href="01-homepage.html">Strona główna</a> <span class="flow-arrow">→</span>
+      <a href="01-homepage.html">Homepage</a> <span class="flow-arrow">→</span>
       <a href="02-listing-balaton.html">Listing</a> <span class="flow-arrow">→</span>
-      <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">Strona hotelu (PDP)</a> <span class="flow-arrow">→</span>
-      <a href="03-checkout.html">Koszyk</a> <span class="flow-arrow">→</span>
-      <a href="04-payment.html">Płatność</a> <span class="flow-arrow">→</span>
-      <a href="05-thankyou.html">Potwierdzenie</a>
+      <a href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">Hotel page (PDP)</a> <span class="flow-arrow">→</span>
+      <a href="03-checkout.html">Checkout</a> <span class="flow-arrow">→</span>
+      <a href="04-payment.html">Payment</a> <span class="flow-arrow">→</span>
+      <a href="05-thankyou.html">Confirmation</a>
     </div>
 
-    <h2>Pełna ścieżka zakupu</h2>
+    <h2>Full booking path</h2>
     <div class="grid">
       <a class="card alt1" href="01-homepage.html">
         <div class="thumb">01</div>
-        <div class="body"><h3>Strona główna<span class="tag">live</span></h3><p>Hero z wyszukiwarką, kategorie, top oferty, VIP banner, typeahead z thumbnailami.</p></div>
+        <div class="body"><h3>Homepage<span class="tag">live</span></h3><p>Hero with search, categories, top offers, VIP banner, typeahead with thumbnails.</p></div>
       </a>
       <a class="card alt2" href="02-listing-balaton.html">
         <div class="thumb">02</div>
-        <div class="body"><h3>Listing — Balaton<span class="tag">live</span></h3><p>3-kolumnowy layout: filtry, lista, split-view mapy Leaflet z markerami z ceną. Disclosure prowizji.</p></div>
+        <div class="body"><h3>Listing — Balaton<span class="tag">live</span></h3><p>3-column layout: filters, list, Leaflet split-view map with priced markers. Commission disclosure.</p></div>
       </a>
       <a class="card alt3" href="../Hotel%20Aurora%20Balaton%20-%20standalone.html">
         <div class="thumb">03</div>
-        <div class="body"><h3>Strona hotelu (PDP)<span class="tag">live</span></h3><p>Hotel Aurora Balaton — pełna iteracja: hero, IFA, pokoje z meal-pillami, opinie z filtrami, realna mapa, mobilne.</p></div>
+        <div class="body"><h3>Hotel page (PDP)<span class="tag">live</span></h3><p>Hotel Aurora Balaton — full iteration: hero, IFA, rooms with meal pills, reviews with filters, real map, mobile view.</p></div>
       </a>
       <a class="card alt4" href="03-checkout.html">
         <div class="thumb">04</div>
-        <div class="body"><h3>Koszyk — dane gościa<span class="tag">live</span></h3><p>4-etapowy stepper, formularz z walidacją inline, pole na kupon PRZED rezerwacją, sticky podsumowanie.</p></div>
+        <div class="body"><h3>Checkout — guest data<span class="tag">live</span></h3><p>4-step stepper, form with inline validation, coupon field BEFORE booking, sticky summary.</p></div>
       </a>
       <a class="card alt5" href="04-payment.html">
         <div class="thumb">05</div>
-        <div class="body"><h3>Płatność<span class="tag">live</span></h3><p>4 metody (karta · SZÉP · Apple/Google Pay · przelew), symulacja 3D Secure, stan błędu „karta odrzucona".</p></div>
+        <div class="body"><h3>Payment<span class="tag">live</span></h3><p>4 methods (card · SZÉP · Apple/Google Pay · transfer), 3D Secure simulation, "card declined" error state.</p></div>
       </a>
       <a class="card alt6" href="05-thankyou.html">
         <div class="thumb">06</div>
-        <div class="body"><h3>Potwierdzenie<span class="tag">live</span></h3><p>Animowany zielony checkmark, kopiowanie numeru rezerwacji, add-to-calendar, SMS reminder, cross-sell, VIP teaser.</p></div>
+        <div class="body"><h3>Confirmation<span class="tag">live</span></h3><p>Animated green checkmark, booking-number copy, add-to-calendar, SMS reminder, cross-sell, VIP teaser.</p></div>
       </a>
     </div>
 
-    <h2>System designu &amp; referencje</h2>
+    <h2>Design system &amp; references</h2>
     <div class="grid">
       <a class="card" href="ds.html">
         <div class="thumb">DS</div>
-        <div class="body"><h3>Design system (ds.html)</h3><p>Tokens (kolory, fonty, radii), komponenty wspólne (BrandBar, Footer, search, stepper, tags). Source-of-truth dla wszystkich ekranów.</p></div>
+        <div class="body"><h3>Design system (ds.html)</h3><p>Tokens (colors, fonts, radii), shared components (BrandBar, Footer, search, stepper, tags). Source of truth for all screens.</p></div>
       </a>
       <a class="card" href="../Hotel%20Aurora%20Balaton%20-%20standalone.html?test=tweaks">
         <div class="thumb">QA</div>
-        <div class="body"><h3>QA edge states (Tweaks)</h3><p>Otwórz panel Tweaks (prawy-dolny róg na PDP) i wypróbuj: sold-out, no-reviews, no-photos, few-rates, loading skeleton.</p></div>
+        <div class="body"><h3>QA edge states (Tweaks)</h3><p>Open the Tweaks panel (bottom-right on the PDP) and try: sold-out, no-reviews, no-photos, few-rates, loading skeleton.</p></div>
       </a>
       <a class="card" href="../../docs/ux-overhaul/plan.md">
         <div class="thumb">📋</div>
-        <div class="body"><h3>Plan implementacji</h3><p>21 kroków po ludzku, source-of-truth dla biznesu. Status: wszystkie kroki ukończone.</p></div>
+        <div class="body"><h3>Implementation plan</h3><p>21 steps in plain language, source of truth for the business. Status: all steps completed. (Document in Polish.)</p></div>
       </a>
     </div>
 
-    <p style="margin-top:48px;color:#A1A8B3;font-size:12.5px;text-align:center">Prototyp wizualny. Wszystkie ceny, daty, opinie i hotele to mock-data. Nie połączony z prawdziwym backendem Szallas.hu.</p>
+    <p style="margin-top:48px;color:#A1A8B3;font-size:12.5px;text-align:center">Visual prototype. All prices, dates, reviews and hotels are mock data. Not connected to a real Szallas.hu backend.</p>
   </div>
 </body>
 </html>
