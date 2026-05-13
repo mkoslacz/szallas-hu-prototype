@@ -90,17 +90,59 @@ section.block h2{font-size:26px;margin-bottom:16px}
 .offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 @media (max-width:1000px){.offers-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:600px){.offers-grid{grid-template-columns:1fr}}
-.offer-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:box-shadow .15s, transform .15s;display:flex;flex-direction:column}
-.offer-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.offer-img{aspect-ratio:16/10;position:relative;background:#dbe6ec center/cover}
-.offer-score{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14px;display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
-.offer-heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700)}
-.offer-info{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
-.offer-info h3{font-size:16px;color:var(--info)}
-.offer-info .city{font-size:12.5px;color:var(--ink-500)}
-.offer-price{margin-top:auto;font-size:22px;font-weight:900;color:var(--c-cta);font-family:var(--font-ui)}
-.offer-price .ft{font-size:13px;color:var(--ink-700);font-weight:600}
-.offer-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:-2px}
+/* Hotel cards — synced visual with 02-listing-balaton.html, keep in sync */
+/* Hotel cards — generous size with rich info / readable typography */
+.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:1fr;overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:0}
+.hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
+.hotel-card.highlight{box-shadow:0 0 0 3px var(--ink-900);border-color:var(--ink-900)}
+.hotel-img{position:relative;background-size:cover;background-position:center;min-height:180px;aspect-ratio:16/10}
+.hotel-img img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.hotel-img .heart{position:absolute;top:10px;left:10px;width:36px;height:36px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:3;font-size:16px;line-height:1}
+.hotel-img .heart.saved{color:var(--c-primary)}
+/* Photo carousel — desktop arrows (visible on card hover/focus), mobile swipe via touch handlers */
+.hotel-img .card-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:0;color:var(--ink-900);font-size:22px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;opacity:0;transition:opacity .15s, background .15s;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.hotel-card:hover .hotel-img .card-arrow,
+.hotel-card:focus-within .hotel-img .card-arrow{opacity:1}
+.hotel-img .card-arrow:hover{background:#fff}
+.hotel-img .card-arrow-prev{left:10px}
+.hotel-img .card-arrow-next{right:10px}
+.hotel-img .card-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;padding:4px 8px;background:rgba(0,0,0,.32);border-radius:999px;backdrop-filter:blur(2px)}
+.hotel-img .card-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);border:0;padding:0;cursor:pointer;transition:background .15s, transform .15s}
+.hotel-img .card-dot.active{background:#fff;transform:scale(1.2)}
+.hotel-img .card-dot:hover{background:rgba(255,255,255,.85)}
+/* Image overlay labels — hidden by default (info shown in promo-badges + location row).
+   Restored on mobile where promo-badges are hidden to keep cards compact. */
+.hotel-img .discount,
+.hotel-img .vip-eligible,
+.hotel-img-label{display:none}
+.hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800;z-index:2}
+.hotel-img .vip-eligible{position:absolute;bottom:10px;left:10px;background:rgba(110,46,229,.94);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;z-index:2;letter-spacing:.02em}
+.hotel-img-label{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;z-index:2}
+.hotel-info{padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0;border-right:0;border-bottom:1px solid var(--line)}
+.hotel-info .name-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+.hotel-info .name-stars{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0;flex-wrap:wrap}
+.hotel-info h3{font-size:16.5px;color:var(--info);font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;letter-spacing:-.01em}
+.hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:12px;flex-shrink:0}
+.hotel-info .stars .superior{color:var(--info);font-size:11px;margin-left:4px;font-weight:600}
+.hotel-info .name-score{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
+.hotel-info .name-score-text{text-align:right;line-height:1.1;display:flex;flex-direction:column}
+.hotel-info .name-score-text .lbl{font-size:12px;color:var(--ink-900);font-weight:800}
+.hotel-info .name-score-text .cnt{font-size:10.5px;color:var(--ink-500);margin-top:1px;font-weight:500}
+.hotel-info .name-score-num{width:38px;height:38px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.hotel-info .location{font-size:12.5px;color:var(--ink-700);font-weight:500}
+.hotel-info .location .pin{color:var(--ink-400);margin-right:3px}
+.hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:12.5px;margin-top:1px}
+.hotel-info .facts{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11.5px;color:var(--ink-700);margin-top:1px}
+.hotel-info .facts span{display:inline-flex;align-items:center;gap:3px}
+.hotel-info .facts svg, .hotel-info .facts .ico{color:var(--c-success);font-weight:800;flex-shrink:0}
+.hotel-info .quote{font-size:12.5px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:6px 10px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-overflow:ellipsis}
+.hotel-info .promo-badges{display:flex;flex-wrap:wrap;gap:5px}
+.promo-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.01em;line-height:1.3;white-space:nowrap}
+/* Muted neutral chips for less-critical signals; only VIP retains brand color */
+.promo-badge.promo-top{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
+.promo-badge.promo-vip{background:#FFE8EA;color:#B40510;border:1px solid #F6C5C9;font-weight:800}
+.promo-badge.promo-last{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
+.promo-badge.promo-wellness{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
 
 /* VIP banner */
 .vip-banner{background:linear-gradient(135deg,#FFE8EA 0%,#FFF1E6 100%);border-radius:var(--radius-xl);padding:28px 32px;display:flex;gap:24px;align-items:center;border:1px solid var(--primary-soft, #FFE8EA)}
@@ -197,8 +239,6 @@ html[data-view="mobile"] .cat-row{grid-template-columns:repeat(2,1fr);gap:8px}
 html[data-view="mobile"] .cat-tile{padding:10px;font-size:12.5px}
 html[data-view="mobile"] .offers-grid{grid-template-columns:1fr;gap:12px}
 html[data-view="mobile"] .featured-grid{grid-template-columns:1fr;gap:12px}
-html[data-view="mobile"] .offer-info h3{font-size:15px}
-html[data-view="mobile"] .offer-price{font-size:19px}
 html[data-view="mobile"] .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:140px 140px 140px;gap:8px}
 html[data-view="mobile"] .mosaic > *:nth-child(1),
 html[data-view="mobile"] .mosaic > *:nth-child(4){grid-row:auto}
@@ -229,6 +269,103 @@ const photo = (seed, w=600, h=400) => `https://picsum.photos/seed/szhomepage-${s
 const tw = (()=>{ try{ return JSON.parse(localStorage.getItem('szallas_tweaks'))||{}; }catch(e){ return {}; } })();
 const priceFor = (p, mode) => mode==='nightly' ? p : mode==='per-person' ? Math.round(p/2) : p; // top offers are /fő/éj by default, so 'total' would *2
 const pmSuffix = (mode) => mode==='nightly' ? '/éj' : mode==='total' ? '2 fő · 1 éj' : '/fő/éj';
+const VIP_DISCOUNT = 0.85;
+
+// --- HotelCard (synced visual + behaviour with 02-listing-balaton.html — keep in sync) ---
+const PHOTO_COUNT = 5;
+const hotelPhotos = (id, baseImg) =>
+  Array.from({length: PHOTO_COUNT}, (_, i) =>
+    i === 0 ? baseImg : `https://picsum.photos/seed/szhotel-${id}-${i+1}/600/400`);
+
+const HotelCard = ({ h, saved, onSave, onClick }) => {
+  const [imgIdx, setImgIdx] = React.useState(0);
+  const imgs = React.useMemo(() => hotelPhotos(h.id, h.img), [h.id, h.img]);
+  const touchStart = React.useRef(null);
+  const goNext = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i+1) % PHOTO_COUNT); };
+  const goPrev = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i-1+PHOTO_COUNT) % PHOTO_COUNT); };
+  return (
+  <div className="hotel-card"
+    role="link" tabIndex={0}
+    aria-label={`${h.name}, ${h.stars} csillag, értékelés ${h.score} ${h.scoreLbl}, ${fmt(priceFor(h.price, tw.priceMode))} Ft`}
+    onClick={onClick}
+    onKeyDown={(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); onClick && onClick(); } }}>
+    <div className="hotel-img"
+      onTouchStart={(e)=>{touchStart.current = e.touches[0].clientX}}
+      onTouchEnd={(e)=>{
+        if(touchStart.current==null) return;
+        const dx = e.changedTouches[0].clientX - touchStart.current;
+        if(Math.abs(dx) > 30){ dx<0 ? goNext() : goPrev(); }
+        touchStart.current = null;
+      }}>
+      <img src={imgs[imgIdx]} alt={h.name} loading="lazy"/>
+      <button className={'heart'+(saved?' saved':'')}
+        aria-label={saved ? 'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}
+        aria-pressed={saved}
+        onClick={(e)=>{e.stopPropagation(); onSave && onSave();}}>{saved?'❤':'♡'}</button>
+      {h.discount>0 && <div className="discount">−{h.discount}%</div>}
+      {h.vipEligible && <div className="vip-eligible">VIP −15%</div>}
+      <div className="hotel-img-label">{h.city}</div>
+      <button className="card-arrow card-arrow-prev" onClick={goPrev} aria-label="Előző kép">‹</button>
+      <button className="card-arrow card-arrow-next" onClick={goNext} aria-label="Következő kép">›</button>
+      <div className="card-dots">
+        {imgs.map((_, i) => (
+          <button key={i} className={'card-dot'+(i===imgIdx?' active':'')}
+            onClick={(e)=>{e.stopPropagation(); setImgIdx(i)}} aria-label={`${i+1}. kép`}/>
+        ))}
+      </div>
+    </div>
+    <div className="hotel-info">
+      <div className="name-row">
+        <div className="name-stars">
+          <h3>{h.name}</h3>
+          <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
+        </div>
+        <div className="name-score">
+          <div className="name-score-text">
+            <div className="lbl">{h.scoreLbl}</div>
+            <div className="cnt">{fmt(h.reviews)} értékelés</div>
+          </div>
+          <div className="name-score-num">{h.score}</div>
+        </div>
+      </div>
+      <div className="location"><span className="pin">📍</span>{h.distance} · {h.city}</div>
+      <div className="promo-badges">
+        {h.score >= 9.3 && <span className="promo-badge promo-top">🔥 Top választás</span>}
+        {h.vipEligible && <span className="promo-badge promo-vip">🎖 VIP klub −15%</span>}
+        {h.discount > 0 && <span className="promo-badge promo-last">⚡ Last minute akció</span>}
+        {h.wellness && <span className="promo-badge promo-wellness">🎫 Wellness ajándékba</span>}
+      </div>
+      <div className="badges">
+        <span className={'badge board-'+(h.boardKind==='allinc'?'ai':h.boardKind==='halfboard'?'hp':'br')}>
+          {h.boardKind==='allinc'?'🥂':h.boardKind==='halfboard'?'🍽️':'🍳'} {h.board}
+        </span>
+        {h.refundable
+          ? <span className="badge cancel">↩️ Ingyenes lemondás {h.cancelUntil}-ig</span>
+          : <span className="badge noref">🔒 Nem visszatéríthető</span>}
+        <span className="badge szep">💳 SZÉP-kártya</span>
+      </div>
+    </div>
+    <div className="hotel-price">
+      <div className="hotel-pricing">
+        {tw.loggedIn && h.vipEligible
+          ? <React.Fragment>
+              <span className="hotel-strike">{fmt(priceFor(h.price, tw.priceMode))} Ft</span>
+              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)}<span className="ft">Ft</span></div>
+              <div className="hotel-priceunit" style={{color:'#6B21A8',fontWeight:700}}>VIP −15% · {pmSuffix(tw.priceMode||'per-person')}</div>
+            </React.Fragment>
+          : <React.Fragment>
+              {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-strike">{fmt(priceFor(h.original, tw.priceMode))} Ft</span>}
+              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode))}<span className="ft">Ft</span></div>
+              <div className="hotel-priceunit">{pmSuffix(tw.priceMode||'per-person')}</div>
+            </React.Fragment>
+        }
+        <div className="hotel-tax">Tartalmazza az adókat és díjakat</div>
+      </div>
+      <button className="hotel-cta" onClick={(e)=>{e.stopPropagation(); onClick && onClick();}}>Megnézem →</button>
+    </div>
+  </div>
+  );
+};
 const activeTweakChips = [];
 if (tw.priceMode && tw.priceMode !== 'total') activeTweakChips.push(`price: ${tw.priceMode}`);
 if (tw.loggedIn) activeTweakChips.push('VIP −15%');
@@ -245,22 +382,44 @@ const CATEGORIES = [
   { id:'wood-houses', lbl:'Faházak', img: photo('wood-houses', 400, 460) }
 ];
 
+// Helper for default fields shared across enriched data
+const scoreLblOf = (s) => s>=9.3 ? 'Kiváló' : s>=8.5 ? 'Nagyon jó' : 'Jó';
+const _quotes = [
+  '"Csodálatos hely és nagyon barátságos személyzet." — Eszter K.',
+  '"Tökéletes hétvégi pihenés. Visszamegyünk!" — Balázs T.',
+  '"Az ár-érték arány kiváló, ajánlom mindenkinek." — Nikolett S.',
+  '"A wellness részleg fantasztikus." — Andrea P.',
+  '"Modern és tiszta szobák, jó konyha." — Tamás K.'
+];
+
 const TOP_OFFERS = [
-  { name:'Hotel Vécsecity Hernádvécse', city:'Hernádvécse', score:9.3, price:24673, img: photo('vecsecity', 600, 400) },
-  { name:'Hotel Aquarell Cegléd', city:'Cegléd', score:9.1, price:22576, img: photo('aquarell', 600, 400) },
-  { name:'Bellevue Hotel Esztergom', city:'Esztergom', score:8.6, price:21863, img: photo('bellevue', 600, 400) },
-  { name:'Ensana Thermal Sárvár', city:'Sárvár', score:9.5, price:25490, img: photo('ensana-sarvar', 600, 400) },
-  { name:'Wellness Hotel Gyula', city:'Gyula', score:9.5, price:33193, img: photo('gyula', 600, 400) },
-  { name:'Hotel Szieszta Sopron', city:'Sopron', score:9.4, price:30545, img: photo('szieszta', 600, 400) }
+  { id:'vecsecity', name:'Hotel Vécsecity Hernádvécse', city:'Hernádvécse', stars:4, score:9.3, scoreLbl:scoreLblOf(9.3), reviews:1340, price:24673, original:0, discount:0, img: photo('vecsecity', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'A főtér mellett', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 8', topQuote:_quotes[0], wellness:false },
+  { id:'aquarell', name:'Hotel Aquarell Cegléd', city:'Cegléd', stars:4, score:9.1, scoreLbl:scoreLblOf(9.1), reviews:2210, price:22576, original:0, discount:0, img: photo('aquarell', 600, 400),
+    board:'Félpanzió az árban', boardKind:'halfboard', distance:'500 m a fürdőtől', amenities:['📶','🅿️','❄️'], vipEligible:false, refundable:true, cancelUntil:'jún. 7', topQuote:_quotes[1], wellness:true },
+  { id:'bellevue', name:'Bellevue Hotel Esztergom', city:'Esztergom', stars:3, score:8.6, scoreLbl:scoreLblOf(8.6), reviews:830, price:21863, original:0, discount:0, img: photo('bellevue', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'Dunaparti panoráma', amenities:['📶','🅿️'], vipEligible:false, refundable:true, cancelUntil:'jún. 6', topQuote:_quotes[2], wellness:false },
+  { id:'ensana-sarvar', name:'Ensana Thermal Sárvár', city:'Sárvár', stars:4, score:9.5, scoreLbl:scoreLblOf(9.5), reviews:3580, price:25490, original:0, discount:0, img: photo('ensana-sarvar', 600, 400),
+    board:'All inclusive ellátással', boardKind:'allinc', distance:'A gyógyfürdő mellett', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 7', topQuote:_quotes[3], wellness:true },
+  { id:'gyula', name:'Wellness Hotel Gyula', city:'Gyula', stars:4, score:9.5, scoreLbl:scoreLblOf(9.5), reviews:2890, price:33193, original:0, discount:0, img: photo('gyula', 600, 400),
+    board:'Félpanzió az árban', boardKind:'halfboard', distance:'A vár közelében', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 8', topQuote:_quotes[4], wellness:true },
+  { id:'szieszta', name:'Hotel Szieszta Sopron', city:'Sopron', stars:3, superior:true, score:9.4, scoreLbl:scoreLblOf(9.4), reviews:1610, price:30545, original:0, discount:0, img: photo('szieszta', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'600 m a belvárostól', amenities:['📶','🅿️','❄️'], vipEligible:false, refundable:false, cancelUntil:null, topQuote:_quotes[0], wellness:false }
 ];
 
 const FEATURED = [
-  { name:'Hotel Aurora Balaton', city:'Siófok', score:9.1, price:38600, original:42400, img: photo('aurora-featured', 600, 400), link:'../Hotel%20Aurora%20Balaton%20-%20standalone.html' },
-  { name:'Hotel Európa Fit', city:'Hévíz', score:9.5, price:41120, img: photo('europa-fit', 600, 400) },
-  { name:'Hotel Romantik Eger', city:'Eger', score:9.4, price:16000, img: photo('romantik-eger', 600, 400) },
-  { name:'Tisza-tó Apartmanpark', city:'Kisköre', score:8.8, price:18500, img: photo('tisza-to', 600, 400) },
-  { name:'Erzsébet Park Hotel', city:'Parádfürdő', score:9.4, price:35200, img: photo('erzsebet-park', 600, 400) },
-  { name:'Aventinus Hotel', city:'Nyíregyháza', score:9.2, price:28400, img: photo('aventinus', 600, 400) }
+  { id:'aurora', name:'Hotel Aurora Balaton', city:'Siófok', stars:4, score:9.1, scoreLbl:scoreLblOf(9.1), reviews:1247, price:38600, original:42400, discount:9, img: photo('aurora-featured', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'120 m a parttól', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 8', topQuote:_quotes[0], wellness:true, link:'../Hotel%20Aurora%20Balaton%20-%20standalone.html' },
+  { id:'europa-fit', name:'Hotel Európa Fit', city:'Hévíz', stars:4, superior:true, score:9.5, scoreLbl:scoreLblOf(9.5), reviews:2105, price:41120, original:0, discount:0, img: photo('europa-fit', 600, 400),
+    board:'Félpanzió az árban', boardKind:'halfboard', distance:'1 km a tóhoz', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 7', topQuote:_quotes[3], wellness:true },
+  { id:'romantik-eger', name:'Hotel Romantik Eger', city:'Eger', stars:3, score:9.4, scoreLbl:scoreLblOf(9.4), reviews:780, price:16000, original:0, discount:0, img: photo('romantik-eger', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'A főtér közelében', amenities:['📶','❄️'], vipEligible:false, refundable:true, cancelUntil:'jún. 9', topQuote:_quotes[2], wellness:false },
+  { id:'tisza-to', name:'Tisza-tó Apartmanpark', city:'Kisköre', stars:3, score:8.8, scoreLbl:scoreLblOf(8.8), reviews:540, price:18500, original:0, discount:0, img: photo('tisza-to', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'A tó partján', amenities:['📶','🅿️'], vipEligible:false, refundable:true, cancelUntil:'jún. 8', topQuote:_quotes[1], wellness:false },
+  { id:'erzsebet-park', name:'Erzsébet Park Hotel', city:'Parádfürdő', stars:4, score:9.4, scoreLbl:scoreLblOf(9.4), reviews:1880, price:35200, original:0, discount:0, img: photo('erzsebet-park', 600, 400),
+    board:'Félpanzió az árban', boardKind:'halfboard', distance:'A park közepén', amenities:['📶','🅿️','❄️'], vipEligible:true, refundable:true, cancelUntil:'jún. 8', topQuote:_quotes[4], wellness:true },
+  { id:'aventinus', name:'Aventinus Hotel', city:'Nyíregyháza', stars:4, score:9.2, scoreLbl:scoreLblOf(9.2), reviews:1290, price:28400, original:0, discount:0, img: photo('aventinus', 600, 400),
+    board:'Reggeli az árban', boardKind:'breakfast', distance:'A belvárosban', amenities:['📶','🅿️','❄️'], vipEligible:false, refundable:true, cancelUntil:'jún. 7', topQuote:_quotes[0], wellness:false }
 ];
 
 const HERO_IMG = photo('homepage-hero', 1600, 700);
@@ -338,30 +497,23 @@ const Categories = () => (
   </section>
 );
 
-const TopOffers = () => (
+const TopOffers = () => {
+  const [savedSet, setSavedSet] = React.useState({});
+  const toggle = (id) => setSavedSet(s => ({...s, [id]: !s[id]}));
+  return (
   <section className="block">
     <h2>Top ajánlatok</h2>
     <div className="offers-grid">
       {TOP_OFFERS.map(o => (
-        <a key={o.name} href="../Hotel%20Aurora%20Balaton%20-%20standalone.html" className="offer-card">
-          <div className="offer-img" style={{backgroundImage:`url(${o.img})`}}>
-            <div className="offer-score">{o.score}</div>
-            <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
-          </div>
-          <div className="offer-info">
-            <h3>{o.name}</h3>
-            <div className="city">{o.city}</div>
-            <div className="offer-price">
-              {tw.loggedIn && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.price, tw.priceMode))} Ft</span>}
-              {fmt(priceFor(o.price, tw.priceMode) * (tw.loggedIn?0.85:1))} <span className="ft">Ft</span>
-            </div>
-            <div className="offer-priceunit">{pmSuffix(tw.priceMode||'per-person')} · {tw.loggedIn?'VIP −15% · ':''}Tartalmazza az adókat és díjakat</div>
-          </div>
-        </a>
+        <HotelCard key={o.id} h={o}
+          saved={!!savedSet[o.id]}
+          onSave={()=>toggle(o.id)}
+          onClick={()=>{ window.location.href='../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
       ))}
     </div>
   </section>
-);
+  );
+};
 
 const VipBanner = () => (tw.showVipTeaser === false || tw.loggedIn) ? null : (
   <section className="block">
@@ -400,31 +552,23 @@ const MobileBanner = () => (
   </section>
 );
 
-const Featured = () => (
+const Featured = () => {
+  const [savedSet, setSavedSet] = React.useState({});
+  const toggle = (id) => setSavedSet(s => ({...s, [id]: !s[id]}));
+  return (
   <section className="block">
     <h2>Kiemelt ajánlataink</h2>
     <div className="featured-grid">
       {FEATURED.map(o => (
-        <a key={o.name} href={o.link || '../Hotel%20Aurora%20Balaton%20-%20standalone.html'} className="offer-card">
-          <div className="offer-img" style={{backgroundImage:`url(${o.img})`}}>
-            <div className="offer-score">{o.score}</div>
-            <button className="offer-heart" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>♡</button>
-          </div>
-          <div className="offer-info">
-            <h3>{o.name}</h3>
-            <div className="city">{o.city}</div>
-            <div className="offer-price">
-              {tw.loggedIn
-                ? <React.Fragment><span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.price, tw.priceMode))} Ft</span>{fmt(priceFor(o.price, tw.priceMode)*0.85)} <span className="ft">Ft</span></React.Fragment>
-                : <React.Fragment>{o.original && <span style={{textDecoration:'line-through',fontSize:13,color:'var(--ink-400)',marginRight:8,fontWeight:600}}>{fmt(priceFor(o.original, tw.priceMode))} Ft</span>}{fmt(priceFor(o.price, tw.priceMode))} <span className="ft">Ft</span></React.Fragment>}
-            </div>
-            <div className="offer-priceunit">{pmSuffix(tw.priceMode||'per-person')} · {tw.loggedIn?'VIP −15% · ':''}Tartalmazza az adókat és díjakat</div>
-          </div>
-        </a>
+        <HotelCard key={o.id} h={o}
+          saved={!!savedSet[o.id]}
+          onSave={()=>toggle(o.id)}
+          onClick={()=>{ window.location.href = o.link || '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
       ))}
     </div>
   </section>
-);
+  );
+};
 
 const Page = () => {
   const [scrolled, setScrolled] = React.useState(false);
