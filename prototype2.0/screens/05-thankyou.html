@@ -146,6 +146,48 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hamburger{position:relative}
 .hamburger-trigger{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;font-size:18px}
 /* === end shared brandbar === */
+
+/* === MOBILE OVERRIDES === */
+html[data-view="mobile"] .stepper{padding:10px 10px}
+html[data-view="mobile"] .stepper-inner{gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+html[data-view="mobile"] .step{font-size:11px;gap:6px;flex-shrink:0}
+html[data-view="mobile"] .step span{display:none}
+html[data-view="mobile"] .step.active span{display:inline}
+html[data-view="mobile"] .step-num{width:26px;height:26px;font-size:12px}
+html[data-view="mobile"] .step-line{min-width:14px;flex:1 0 14px}
+html[data-view="mobile"] .page{padding:18px 12px 24px}
+html[data-view="mobile"] .hero{padding:28px 18px 24px;border-radius:var(--radius-lg);margin-bottom:18px}
+html[data-view="mobile"] .checkmark{width:64px;height:64px;margin-bottom:14px}
+html[data-view="mobile"] .checkmark svg{width:36px;height:36px}
+html[data-view="mobile"] .hero h1{font-size:23px;margin-bottom:8px;line-height:1.2}
+html[data-view="mobile"] .hero p.sub{font-size:13px;line-height:1.45}
+html[data-view="mobile"] .ref-card{flex-direction:column;align-items:stretch;gap:10px;padding:14px 16px;margin-top:18px}
+html[data-view="mobile"] .ref-card .val{font-size:15px}
+html[data-view="mobile"] .ref-card button{margin-left:0;width:100%}
+html[data-view="mobile"] .card{padding:16px 14px;margin-bottom:14px;border-radius:var(--radius)}
+html[data-view="mobile"] .card h2{font-size:16px;margin-bottom:12px}
+html[data-view="mobile"] .summary-grid{grid-template-columns:1fr;gap:12px}
+html[data-view="mobile"] .summary-info .name{font-size:15.5px}
+html[data-view="mobile"] .summary-info .meta{font-size:12.5px;gap:5px}
+html[data-view="mobile"] .summary-info .total b{font-size:18px}
+html[data-view="mobile"] .next-grid{grid-template-columns:1fr;gap:10px}
+html[data-view="mobile"] .next-tile{padding:14px 14px}
+html[data-view="mobile"] .next-tile .ico{font-size:20px}
+html[data-view="mobile"] .next-tile .ttl{font-size:13.5px}
+html[data-view="mobile"] .next-tile .sub{font-size:12px}
+html[data-view="mobile"] .cal-row{flex-direction:column;gap:8px}
+html[data-view="mobile"] .cal-btn{width:100%;justify-content:center;padding:11px 14px}
+html[data-view="mobile"] .sms-row{font-size:12.5px;padding:12px 14px}
+html[data-view="mobile"] .sms-input-row{flex-direction:column;align-items:stretch;gap:8px}
+html[data-view="mobile"] .sms-input-row button{width:100%;padding:11px}
+html[data-view="mobile"] .cross-grid{grid-template-columns:1fr 1fr;gap:10px}
+html[data-view="mobile"] .cross-info .ttl{font-size:12.5px}
+html[data-view="mobile"] .cross-info .price{font-size:11.5px}
+html[data-view="mobile"] .vip-teaser{flex-direction:column;text-align:center;gap:12px;padding:20px 18px}
+html[data-view="mobile"] .vip-teaser .word{font-size:40px}
+html[data-view="mobile"] .vip-teaser h3{font-size:16px}
+html[data-view="mobile"] .vip-teaser p{font-size:13px}
+html[data-view="mobile"] .footer{padding:18px 14px 14px;text-align:center}
 </style>
 </head>
 <body>

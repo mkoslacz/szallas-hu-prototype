@@ -37,7 +37,15 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 
 
 /* Persistent search — pas pod brand bar */
-.search-pad{background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;position:sticky;top:0;z-index:30}
+.search-pad{background:#fff;border-bottom:1px solid var(--line);padding:8px 24px;position:sticky;top:0;z-index:30}
+.search-pad-row{display:flex;align-items:stretch;gap:12px;max-width:1100px;margin:0 auto}
+.search-pad-row .search-bar{flex:1;max-width:none;margin:0}
+/* Slide-in toolbar — lm-toggle + sort enter the sticky bar from the right on scroll */
+.search-pad .search-pad-actions{display:none;align-items:center;gap:10px}
+.search-pad.scrolled .search-pad-actions{display:flex;animation:slide-in .25s ease both}
+@keyframes slide-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.search-pad-actions .lm-toggle{margin-left:0}
+.search-pad-actions .sticky-sort{padding:7px 10px;border:1px solid var(--line-strong);border-radius:var(--radius);background:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
 .search-bar{display:flex;max-width:1100px;margin:0 auto;background:#fff;border-radius:var(--radius-lg);align-items:stretch;border:1px solid var(--line-strong);box-shadow:var(--shadow-sm)}
 .search-bar > .field-cell{flex:1;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;border-right:1px solid var(--line);min-width:0}
 .search-bar > .field-cell:last-of-type{border-right:0}
@@ -47,19 +55,19 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .search-bar > .btn-search:hover{background:var(--c-primary-hover)}
 
 /* Quick-filter chips */
-.quick-chips{display:flex;gap:6px;padding:8px 0 4px;overflow-x:auto;flex-wrap:nowrap}
+.quick-chips{display:flex;gap:6px;padding:6px 0 2px;overflow-x:auto;flex-wrap:nowrap}
 .quick-chips button{flex:0 0 auto;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink-700);font-weight:600;white-space:nowrap}
 .quick-chips button:hover{border-color:var(--c-primary);color:var(--c-primary)}
 .quick-chips button.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
 
 /* Page layout 3 cols */
 .page{max-width:1400px;margin:0 auto;padding:0 24px}
-.title-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin:8px 0 4px}
+.title-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin:4px 0 2px}
 .title-row h1{font-size:28px}
 .title-row .counter{color:var(--ink-500);font-size:14px}
 .title-row .counter a{color:var(--c-primary);font-weight:600;margin-left:8px;text-decoration:underline}
 
-.disclosure{font-size:11.5px;color:var(--ink-500);margin:4px 0 12px;line-height:1.5}
+.disclosure{font-size:10.5px;color:var(--ink-500);margin:2px 0 6px;line-height:1.4}
 .disclosure a{color:var(--c-primary);text-decoration:underline}
 
 /* Default: single-column list (filters left, list right, no map) */
@@ -99,7 +107,9 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .map-fs-filters .fl-group{padding:12px 14px}
 .map-fs-filters .fl-title{font-size:12.5px}
 .map-fs-list{background:#fff;border-right:1px solid var(--line);overflow-y:auto;padding:10px 12px}
-.map-fs-list-header{font-size:12.5px;color:var(--ink-500);padding:6px 4px 10px;font-weight:600}
+.map-fs-list-header{font-size:12.5px;color:var(--ink-500);padding:6px 4px 10px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.list-collapse-btn{background:transparent;border:0;color:var(--c-primary);font-size:11.5px;font-weight:700;cursor:pointer;padding:2px 6px;font-family:inherit;border-radius:6px}
+.list-collapse-btn:hover{background:var(--surface-2)}
 .mini-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:8px;display:grid;grid-template-columns:80px 1fr;gap:10px;cursor:pointer;margin-bottom:8px;transition:border-color .15s, box-shadow .15s}
 .mini-card:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm)}
 .mini-card.active{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(227,6,19,.15)}
@@ -116,7 +126,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .map-fs-mapcol{position:relative;background:#dbe6ec}
 .map-fs-mapcol .map-col{position:absolute !important;inset:0 !important;height:100% !important;max-height:none !important;top:0 !important;border-radius:0}
 
-/* Compact results row — destination/dates already in search bar above, no need to repeat */
+/* Compact results row — desktop: normal flow; mobile: sticky (overridden below) */
 .results-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;flex-wrap:wrap}
 .results-bar .summary-left{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-500)}
 .results-bar .summary-left .count{color:var(--ink-900);font-weight:800;font-size:15px}
@@ -144,28 +154,54 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .fl-row input[type="checkbox"]{accent-color:var(--c-primary);flex-shrink:0}
 .fl-row .cnt{color:var(--ink-400);font-size:12.5px}
 
-/* Hotel cards — Booking-style compact, 3 fit in 900px viewport */
-.list-col{display:flex;flex-direction:column;gap:10px;min-width:0}
-.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(200px,240px) minmax(0,1fr) minmax(170px,200px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:172px}
+/* Hotel cards — generous size with rich info / readable typography */
+.list-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(240px,280px) minmax(0,1fr) minmax(190px,220px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:180px}
 .hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
 .hotel-card.highlight{box-shadow:0 0 0 3px var(--c-primary);border-color:var(--c-primary)}
-.hotel-img{position:relative;background-size:cover;background-position:center;min-height:172px}
+.hotel-img{position:relative;background-size:cover;background-position:center;min-height:180px}
 .hotel-img img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .hotel-img .heart{position:absolute;top:10px;left:10px;width:34px;height:34px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:2;font-size:15px;line-height:1}
 .hotel-img .heart.saved{color:var(--c-primary)}
+/* Image overlay labels — hidden by default (info shown in promo-badges + location row).
+   Restored on mobile where promo-badges are hidden to keep cards compact. */
+.hotel-img .discount,
+.hotel-img .vip-eligible,
+.hotel-img-label{display:none}
 .hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800;z-index:2}
 .hotel-img .vip-eligible{position:absolute;bottom:10px;left:10px;background:rgba(110,46,229,.94);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;z-index:2;letter-spacing:.02em}
 .hotel-img-label{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;z-index:2}
-.hotel-info{padding:14px 16px 14px 18px;display:flex;flex-direction:column;gap:6px;min-width:0;border-right:1px solid var(--line)}
+.hotel-info{padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0;border-right:1px solid var(--line)}
 .hotel-info .name-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.hotel-info h3{font-size:16px;color:var(--info);font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.hotel-info h3{font-size:16.5px;color:var(--info);font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;letter-spacing:-.01em}
 .hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:12px;flex-shrink:0}
 .hotel-info .stars .superior{color:var(--info);font-size:11px;margin-left:4px;font-weight:600}
-.hotel-info .location{font-size:12.5px;color:var(--ink-700)}
+.hotel-info .location{font-size:12.5px;color:var(--ink-700);font-weight:500}
 .hotel-info .location .pin{color:var(--ink-400);margin-right:3px}
-.hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:13px;margin-top:1px}
-.hotel-info .quote{font-size:12px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:6px 10px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-overflow:ellipsis}
-.hotel-info .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:12.5px;margin-top:1px}
+.hotel-info .facts{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11.5px;color:var(--ink-700);margin-top:1px}
+.hotel-info .facts span{display:inline-flex;align-items:center;gap:3px}
+.hotel-info .facts svg, .hotel-info .facts .ico{color:var(--c-success);font-weight:800;flex-shrink:0}
+.hotel-info .quote{font-size:11.5px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:5px 9px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-overflow:ellipsis}
+.hotel-info .promo-badges{display:flex;flex-wrap:wrap;gap:5px}
+.promo-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.01em;line-height:1.3;white-space:nowrap}
+/* Palette reduced to 2 families: red/orange (deals & promos) + green (perks) — no purple */
+.promo-badge.promo-top{background:var(--c-deal-bg);color:var(--c-deal-ink);border:1px solid #F5C29A}
+.promo-badge.promo-vip{background:#FFE8EA;color:#B40510;border:1px solid #F6C5C9}
+.promo-badge.promo-last{background:var(--c-deal-bg);color:var(--c-deal-ink);border:1px solid #F5C29A}
+.promo-badge.promo-wellness{background:var(--c-success-bg);color:var(--c-success);border:1px solid #B6DCC2}
+
+/* Split view (list + map) — narrower list column means tighter card grid + hide overflow-prone content */
+.layout.with-map .hotel-card{grid-template-columns:minmax(180px,220px) minmax(0,1fr) minmax(160px,190px);min-height:170px}
+.layout.with-map .hotel-img{min-height:170px}
+.layout.with-map .hotel-info{padding:10px 12px;gap:6px}
+.layout.with-map .hotel-info .facts{display:none}
+.layout.with-map .hotel-info .quote{display:none}
+.layout.with-map .hotel-info h3{font-size:15.5px}
+.layout.with-map .hotel-price{padding:10px 12px}
+.layout.with-map .hotel-score .num{width:36px;height:36px;font-size:14px}
+.layout.with-map .hotel-bigprice{font-size:20px}
+.hotel-info .badges{display:flex;gap:6px;flex-wrap:wrap;padding-top:0}
 .badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;flex-shrink:0}
 .badge.board-br{background:var(--c-success-bg);color:var(--c-success)}
 .badge.board-hp{background:var(--c-deal-bg);color:var(--c-deal-ink)}
@@ -173,19 +209,21 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .badge.cancel{background:var(--c-success-bg);color:var(--c-success)}
 .badge.szep{background:#EFF6FF;color:#1E40AF}
 .badge.noref{background:#FEF2F2;color:#991B1B}
-.hotel-price{padding:14px 16px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;background:var(--surface-2);gap:8px;min-width:0}
+.hotel-price{padding:12px 14px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;background:var(--surface-2);gap:6px;min-width:0}
 .hotel-score{display:flex;align-items:center;gap:8px;justify-content:flex-end}
 .hotel-score-text{text-align:right}
 .hotel-score-text .lbl{font-size:12.5px;color:var(--ink-900);font-weight:800;line-height:1.1}
-.hotel-score-text .cnt{font-size:10.5px;color:var(--ink-500)}
-.hotel-score .num{width:38px;height:38px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.hotel-score-text .cnt{font-size:10.5px;color:var(--ink-500);margin-top:1px}
+.hotel-score .num{width:40px;height:40px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:15.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
 .hotel-pricing{text-align:right;margin-top:auto}
-.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:13px;display:block}
-.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.01em;line-height:1.1;display:flex;align-items:baseline;gap:3px;justify-content:flex-end}
-.hotel-bigprice .ft{font-size:13px;color:var(--ink-700);font-weight:600}
-.hotel-priceunit{font-size:11.5px;color:var(--ink-500);margin-top:1px}
-.hotel-tax{font-size:11px;color:var(--ink-500)}
-.hotel-cta{display:block;width:100%;padding:9px 14px;background:var(--c-primary);color:#fff;border:0;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;transition:all .15s;text-align:center}
+.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:12.5px;display:inline-block;font-weight:500;margin-right:6px}
+.hotel-savings{display:inline-block;background:var(--c-deal-bg);color:var(--c-deal-ink);font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;letter-spacing:.01em;vertical-align:middle}
+.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:22px;font-family:var(--font-ui);letter-spacing:-.015em;line-height:1.05;display:flex;align-items:baseline;gap:3px;justify-content:flex-end;margin-top:2px}
+.hotel-bigprice .ft{font-size:13px;color:var(--ink-700);font-weight:700}
+.hotel-priceunit{font-size:11px;color:var(--ink-500);margin-top:1px}
+.hotel-pernight{font-size:11px;color:var(--ink-700);margin-top:1px;font-weight:600}
+.hotel-tax{font-size:10.5px;color:var(--ink-500);margin-top:1px}
+.hotel-cta{display:block;width:100%;padding:9px 12px;background:var(--c-primary);color:#fff;border:0;border-radius:8px;font-weight:800;font-size:13.5px;cursor:pointer;transition:all .15s;text-align:center}
 .hotel-cta:hover{background:var(--c-primary-hover)}
 @media (max-width:900px){.hotel-card{grid-template-columns:1fr}.hotel-img{min-height:180px}.hotel-price{align-items:flex-start;text-align:left}.hotel-info{border-right:0;border-bottom:1px solid var(--line)}.hotel-bigprice{justify-content:flex-start}.hotel-pricing{text-align:left}}
 
@@ -233,6 +271,108 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hamburger{position:relative}
 .hamburger-trigger{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;font-size:18px}
 /* === end shared brandbar === */
+
+/* === MOBILE OVERRIDES === */
+html[data-view="mobile"] .search-pad{padding:6px 10px;position:sticky;top:0;z-index:30}
+/* Mobile: slide-in toolbar not used — mobile has its own sticky results-bar */
+html[data-view="mobile"] .search-pad .search-pad-actions,
+html[data-view="mobile"] .search-pad.scrolled .search-pad-actions{display:none}
+html[data-view="mobile"] .search-pad-row{flex-direction:column;gap:0}
+html[data-view="mobile"] .search-bar{flex-direction:row;flex-wrap:wrap;border-radius:var(--radius);overflow:hidden;align-items:stretch}
+html[data-view="mobile"] .search-bar > .field-cell{flex:1 1 33%;border-right:1px solid var(--line);border-bottom:0;padding:5px 8px;min-width:0}
+html[data-view="mobile"] .search-bar > .field-cell:last-of-type{border-right:0}
+html[data-view="mobile"] .search-bar > .field-cell .lbl{font-size:8.5px;letter-spacing:.04em}
+html[data-view="mobile"] .search-bar > .field-cell .val{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25;margin-top:1px}
+html[data-view="mobile"] .search-bar > .btn-search{flex-basis:100%;border-radius:0 0 var(--radius) var(--radius);width:100%;padding:9px 12px;justify-content:center;font-size:13px;border-top:1px solid #b40510}
+html[data-view="mobile"] .page{padding:0 10px}
+html[data-view="mobile"] .title-row h1{font-size:19px}
+html[data-view="mobile"] .quick-chips{padding:8px 0 6px}
+html[data-view="mobile"] .quick-chips button{font-size:11.5px;padding:5px 10px}
+/* Mobile sticky toolbar — Szűrők / Lista+Mapa / Sort always visible while scrolling */
+html[data-view="mobile"] .results-bar{padding:6px 10px;gap:6px;position:sticky;top:80px;z-index:20;background:#F5F6F8;margin:0 -10px;border-bottom:1px solid var(--line);box-shadow:0 4px 8px -8px rgba(0,0,0,.18);transition:padding .15s ease}
+html[data-view="mobile"] .results-bar.scrolled{padding:4px 10px}
+html[data-view="mobile"] .results-bar.scrolled .summary-left{display:none}
+html[data-view="mobile"] .results-bar .summary-left{gap:6px;flex:1 1 100%;order:0}
+html[data-view="mobile"] .results-bar .summary-left .count{font-size:13px}
+html[data-view="mobile"] .results-bar .summary-left .cancel-stat{font-size:11px}
+html[data-view="mobile"] .results-bar .right{width:100%;justify-content:space-between;gap:6px;order:1}
+html[data-view="mobile"] .results-bar select{font-size:12px;padding:5px 8px;flex:1;min-width:0}
+html[data-view="mobile"] .lm-toggle{margin-left:0;padding:2px}
+html[data-view="mobile"] .lm-toggle button{padding:5px 9px;font-size:11.5px}
+html[data-view="mobile"] .disclosure{font-size:10.5px;margin:2px 0 8px}
+html[data-view="mobile"] .layout{grid-template-columns:1fr;gap:10px}
+html[data-view="mobile"] .layout.with-map{grid-template-columns:1fr}
+html[data-view="mobile"] .filters-col{display:none}
+html[data-view="mobile"] .layout.with-map .map-col{display:none}
+html[data-view="mobile"] .hotel-card{grid-template-columns:1fr;min-height:0;border-radius:var(--radius)}
+html[data-view="mobile"] .hotel-img{min-height:140px;height:140px}
+html[data-view="mobile"] .hotel-img .heart{width:28px;height:28px;font-size:13px;top:8px;left:8px}
+/* Mobile: hide desktop-only enrichments (would bloat card height).
+   Image overlay labels show the same promo info compactly instead. */
+html[data-view="mobile"] .promo-badges{display:none}
+html[data-view="mobile"] .hotel-info .facts{display:none}
+html[data-view="mobile"] .hotel-pernight{display:none}
+html[data-view="mobile"] .hotel-tax{display:none}
+html[data-view="mobile"] .hotel-savings{display:none}
+html[data-view="mobile"] .hotel-strike{display:block;margin-right:0}
+html[data-view="mobile"] .hotel-img .discount{display:block;padding:2px 7px;font-size:11px;top:8px;right:8px}
+html[data-view="mobile"] .hotel-img .vip-eligible{display:block;padding:2px 6px;font-size:10px;bottom:8px;left:8px;letter-spacing:0}
+html[data-view="mobile"] .hotel-img-label{display:block;padding:2px 6px;font-size:10px;bottom:8px;right:8px}
+html[data-view="mobile"] .hotel-info{border-right:0;border-bottom:1px solid var(--line);padding:9px 12px;gap:3px}
+html[data-view="mobile"] .hotel-info .name-row{gap:6px}
+html[data-view="mobile"] .hotel-info h3{font-size:14.5px;white-space:normal;line-height:1.2;flex:1 1 auto}
+html[data-view="mobile"] .hotel-info .stars{font-size:11px;letter-spacing:.5px}
+html[data-view="mobile"] .hotel-info .location{font-size:11.5px;line-height:1.3}
+html[data-view="mobile"] .hotel-info .amenities{font-size:11px;line-height:1.4;margin-top:0}
+html[data-view="mobile"] .hotel-info .quote{display:none}
+html[data-view="mobile"] .hotel-info .badges{gap:4px;margin-top:3px}
+html[data-view="mobile"] .badge{font-size:9.5px;padding:2px 6px;line-height:1.35}
+html[data-view="mobile"] .hotel-price{padding:8px 12px;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface-2);text-align:left}
+html[data-view="mobile"] .hotel-score{order:1;justify-content:flex-start;flex-direction:row-reverse;gap:6px;flex:0 0 auto}
+html[data-view="mobile"] .hotel-score-text{text-align:left}
+html[data-view="mobile"] .hotel-score-text .lbl{font-size:11.5px;line-height:1.1}
+html[data-view="mobile"] .hotel-score-text .cnt{font-size:10px}
+html[data-view="mobile"] .hotel-score .num{width:32px;height:32px;font-size:13px}
+html[data-view="mobile"] .hotel-pricing{order:2;text-align:right;margin-top:0;flex:1 1 auto;min-width:0}
+html[data-view="mobile"] .hotel-strike{font-size:11.5px;display:inline-block}
+html[data-view="mobile"] .hotel-bigprice{justify-content:flex-end;font-size:18px;line-height:1}
+html[data-view="mobile"] .hotel-bigprice .ft{font-size:11px}
+html[data-view="mobile"] .hotel-priceunit{font-size:10.5px;margin-top:1px}
+html[data-view="mobile"] .hotel-tax{font-size:10px}
+html[data-view="mobile"] .hotel-cta{order:3;width:100%;flex-basis:100%;padding:8px 12px;font-size:13px;border-radius:8px}
+html[data-view="mobile"] .vip-list-teaser{flex-direction:column;text-align:center;gap:10px;padding:14px}
+html[data-view="mobile"] .vip-list-teaser .vip-word{font-size:36px}
+html[data-view="mobile"] .vip-list-teaser button{width:100%}
+/* Fullscreen map — constrain to 375px column, stack map + list vertically */
+html[data-view="mobile"] .map-fullscreen{inset:auto;top:0;left:50%;transform:translateX(-50%);width:375px;max-width:100%;height:100vh;border-left:1px solid #b8bec7;border-right:1px solid #b8bec7;box-shadow:0 0 40px rgba(0,0,0,.35);z-index:300}
+html[data-view="mobile"] .map-fs-top{padding:10px 12px;gap:6px}
+html[data-view="mobile"] .map-fs-top h2{font-size:13px;line-height:1.2}
+html[data-view="mobile"] .map-fs-close{padding:6px 10px;font-size:12px}
+html[data-view="mobile"] .map-fs-body{display:grid;grid-template-columns:1fr;grid-template-rows:220px 1fr;overflow:hidden;transition:grid-template-rows .25s ease}
+html[data-view="mobile"] .map-fs-body.list-collapsed{grid-template-rows:44px 1fr}
+html[data-view="mobile"] .map-fs-filters{display:none}
+html[data-view="mobile"] .map-fs-list{grid-row:1;grid-column:1;border-right:0;border-bottom:1px solid var(--line);padding:8px 10px;max-height:none;overflow-y:auto}
+html[data-view="mobile"] .map-fs-list-header{position:sticky;top:0;background:#fff;padding:6px 4px 8px;margin:-8px -10px 4px;padding-left:14px;padding-right:14px;z-index:2;border-bottom:1px solid var(--line)}
+html[data-view="mobile"] .map-fs-body.list-collapsed .map-fs-list{padding-top:0;padding-bottom:0;overflow:hidden}
+html[data-view="mobile"] .map-fs-body.list-collapsed .map-fs-list-header{margin:0;border-bottom:0;padding:10px 14px}
+html[data-view="mobile"] .map-fs-mapcol{grid-row:2;grid-column:1;height:auto}
+
+/* Mobile filters button — pill in results-bar, hidden on desktop */
+.mobile-filter-btn{display:none}
+html[data-view="mobile"] .mobile-filter-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:#fff;border:1px solid var(--line-strong);border-radius:999px;color:var(--ink-700);font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
+html[data-view="mobile"] .mobile-filter-btn:hover{border-color:var(--c-primary);color:var(--c-primary)}
+
+/* Mobile filters drawer — full-height panel inside mobile column */
+.mobile-filters-drawer{display:none}
+html[data-view="mobile"] .mobile-filters-drawer{display:flex;flex-direction:column;position:fixed;top:0;left:50%;transform:translateX(-50%);width:375px;max-width:100%;height:100vh;background:#fff;z-index:300;border-left:1px solid #b8bec7;border-right:1px solid #b8bec7;box-shadow:0 0 40px rgba(0,0,0,.35)}
+html[data-view="mobile"] .mfd-top{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+html[data-view="mobile"] .mfd-top h3{font-size:16px}
+html[data-view="mobile"] .mfd-close{background:transparent;border:0;font-size:18px;cursor:pointer;padding:4px 10px;color:var(--ink-700);font-weight:600}
+html[data-view="mobile"] .mfd-body{flex:1;overflow-y:auto}
+html[data-view="mobile"] .mfd-body .fl-group{padding:14px 16px;border-bottom:1px solid var(--line)}
+html[data-view="mobile"] .mfd-bottom{padding:12px 14px;border-top:1px solid var(--line);background:#fff;display:flex;gap:8px;flex-shrink:0}
+html[data-view="mobile"] .mfd-reset{flex:0 0 auto;padding:12px 14px;background:transparent;border:1px solid var(--line-strong);border-radius:8px;font-weight:700;color:var(--ink-700);cursor:pointer;font-size:13px}
+html[data-view="mobile"] .mfd-apply{flex:1;padding:12px;background:var(--c-primary);color:#fff;border:0;border-radius:8px;font-weight:800;font-size:14px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -383,8 +523,19 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
         <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
       </div>
       <div className="location"><span className="pin">📍</span>{h.distance} · {h.city}</div>
-      <div className="amenities">{h.amenities.slice(0,7).join(' · ')}</div>
+      <div className="facts">
+        {h.amenities.includes('📶') && <span><span className="ico">✓</span>Wi-Fi az árban</span>}
+        {h.amenities.includes('🅿️') && <span><span className="ico">✓</span>Ingyenes parkolás</span>}
+        {h.wellness && <span><span className="ico">✓</span>Wellness részleg</span>}
+        {h.amenities.includes('❄️') && <span><span className="ico">✓</span>Klíma</span>}
+      </div>
       <div className="quote">{h.topQuote}</div>
+      <div className="promo-badges">
+        {h.score >= 9.3 && <span className="promo-badge promo-top">🔥 Top választás</span>}
+        {h.vipEligible && <span className="promo-badge promo-vip">🎖 VIP klub −15%</span>}
+        {h.discount > 0 && <span className="promo-badge promo-last">⚡ Last minute akció</span>}
+        {h.wellness && <span className="promo-badge promo-wellness">🎫 Wellness ajándékba</span>}
+      </div>
       <div className="badges">
         <span className={'badge board-'+(h.boardKind==='allinc'?'ai':h.boardKind==='halfboard'?'hp':'br')}>
           {h.boardKind==='allinc'?'🥂':h.boardKind==='halfboard'?'🍽️':'🍳'} {h.board}
@@ -407,15 +558,18 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
         {tw.loggedIn && h.vipEligible
           ? <React.Fragment>
               <span className="hotel-strike">{fmt(priceFor(h.price, tw.priceMode))} Ft</span>
+              <span className="hotel-savings">VIP −{fmt(priceFor(h.price, tw.priceMode) - priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)} Ft</span>
               <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)}<span className="ft">Ft</span></div>
               <div className="hotel-priceunit" style={{color:'#6B21A8',fontWeight:700}}>VIP −15% · {pmSuffix(tw.priceMode)}</div>
             </React.Fragment>
           : <React.Fragment>
               {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-strike">{fmt(priceFor(h.original, tw.priceMode))} Ft</span>}
+              {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-savings">Megtakarítás {fmt(priceFor(h.original-h.price, tw.priceMode))} Ft</span>}
               <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode))}<span className="ft">Ft</span></div>
               <div className="hotel-priceunit">{pmSuffix(tw.priceMode)}</div>
             </React.Fragment>
         }
+        {tw.priceMode !== 'nightly' && tw.priceMode !== 'per-person' && <div className="hotel-pernight">≈ {fmt(Math.round(h.price/2))} Ft / éj</div>}
         <div className="hotel-tax">Adók és díjak benne</div>
         {tw.showUrgency && (h.id==='aurora' || h.id==='ensana') && <div style={{color:'var(--c-primary)',fontSize:11,fontWeight:800,marginTop:4}}>🔥 Csak 2 szoba ezen az áron</div>}
       </div>
@@ -507,38 +661,44 @@ const MiniCard = ({ h, active, saved, onHover, onSave, onClick }) => (
   </div>
 );
 
-const FullscreenMap = ({ hotels, activeId, setActive, saved, setSaved, onClose }) => (
-  <div className="map-fullscreen">
-    <div className="map-fs-top">
-      <h2>🗺 Balaton szálláshelyek térképen — {hotels.length} találat</h2>
-      <button className="map-fs-close" onClick={onClose}>✕ Bezárás</button>
-    </div>
-    <div className="map-fs-body">
-      <aside className="map-fs-filters">
-        <FilterGroup title="Kedvezmények" items={FILTERS.discounts}/>
-        <FilterGroup title="Legnépszerűbb" items={FILTERS.popular}/>
-        <FilterGroup title="Ellátás" items={FILTERS.board}/>
-        <FilterGroup title="Távolság a parttól" items={FILTERS.beach}/>
-      </aside>
-      <div className="map-fs-list">
-        <div className="map-fs-list-header">
-          {activeId ? <span>Kiválasztott szálláshely:</span> : <span>{hotels.length} találat a térképen</span>}
+const FullscreenMap = ({ hotels, activeId, setActive, saved, setSaved, onClose }) => {
+  const [listCollapsed, setListCollapsed] = React.useState(false);
+  return (
+    <div className="map-fullscreen">
+      <div className="map-fs-top">
+        <h2>🗺 Balaton szálláshelyek térképen — {hotels.length} találat</h2>
+        <button className="map-fs-close" onClick={onClose}>✕ Bezárás</button>
+      </div>
+      <div className={"map-fs-body"+(listCollapsed?" list-collapsed":"")}>
+        <aside className="map-fs-filters">
+          <FilterGroup title="Kedvezmények" items={FILTERS.discounts}/>
+          <FilterGroup title="Legnépszerűbb" items={FILTERS.popular}/>
+          <FilterGroup title="Ellátás" items={FILTERS.board}/>
+          <FilterGroup title="Távolság a parttól" items={FILTERS.beach}/>
+        </aside>
+        <div className="map-fs-list">
+          <div className="map-fs-list-header">
+            <span>{activeId ? 'Kiválasztott szálláshely:' : hotels.length+' találat a térképen'}</span>
+            <button className="list-collapse-btn" onClick={()=>setListCollapsed(!listCollapsed)} aria-label={listCollapsed?'Mutasd a listát':'Rejtsd a listát'}>
+              {listCollapsed ? '▾ Mutasd a listát' : '▴ Rejtsd a listát'}
+            </button>
+          </div>
+          {!listCollapsed && hotels.map(h => (
+            <MiniCard key={h.id} h={h}
+              active={activeId===h.id}
+              saved={!!saved[h.id]}
+              onHover={()=>setActive(h.id)}
+              onSave={()=>setSaved({...saved, [h.id]:!saved[h.id]})}
+              onClick={()=>{ setActive(h.id); window.location.href = '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
+          ))}
         </div>
-        {hotels.map(h => (
-          <MiniCard key={h.id} h={h}
-            active={activeId===h.id}
-            saved={!!saved[h.id]}
-            onHover={()=>setActive(h.id)}
-            onSave={()=>setSaved({...saved, [h.id]:!saved[h.id]})}
-            onClick={()=>{ setActive(h.id); window.location.href = '../Hotel%20Aurora%20Balaton%20-%20standalone.html'; }}/>
-        ))}
-      </div>
-      <div className="map-fs-mapcol">
-        <MapView hotels={hotels} activeId={activeId} onMarkerClick={setActive}/>
+        <div className="map-fs-mapcol">
+          <MapView hotels={hotels} activeId={activeId} onMarkerClick={setActive}/>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Page = () => {
   const [active, setActive] = React.useState(null);
@@ -546,6 +706,15 @@ const Page = () => {
   const [activeChip, setActiveChip] = React.useState(null);
   const [view, setView] = React.useState('list'); // 'list' | 'split'
   const [fsMap, setFsMap] = React.useState(false);
+  const [mobileFilters, setMobileFilters] = React.useState(false);
+  const [scrolled, setScrolled] = React.useState(false);
+  const isMobilePreview = tw.viewMode === 'mobile';
+
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, {passive:true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Insert VIP teaser after 3rd hotel for conversion (hidden if PDP tweak shows it off OR user already logged in)
   const showVipTeaser = tw.showVipTeaser !== false && !tw.loggedIn;
@@ -595,12 +764,26 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className="search-pad">
-        <div className="search-bar">
-          <div className="field-cell"><span className="lbl">Hová</span><span className="val">Balaton</span></div>
-          <div className="field-cell"><span className="lbl">Mikor</span><span className="val">jún. 11 – 13</span></div>
-          <div className="field-cell"><span className="lbl">Vendégek</span><span className="val">2 felnőtt · 1 szoba</span></div>
-          <button className="btn-search">🔍 Keresés</button>
+      <div className={"search-pad"+(scrolled?" scrolled":"")}>
+        <div className="search-pad-row">
+          <div className="search-bar">
+            <div className="field-cell"><span className="lbl">Hová</span><span className="val">Balaton</span></div>
+            <div className="field-cell"><span className="lbl">Mikor</span><span className="val">jún. 11 – 13</span></div>
+            <div className="field-cell"><span className="lbl">Vendégek</span><span className="val">2 felnőtt · 1 szoba</span></div>
+            <button className="btn-search">🔍 Keresés</button>
+          </div>
+          <div className="search-pad-actions">
+            <div className="lm-toggle">
+              <button className={view==='list'?'on':''} onClick={()=>setView('list')}>☰ Lista</button>
+              <button className={view==='split'?'on':''} onClick={()=>{ if (isMobilePreview) { setFsMap(true); } else { setView('split'); } }}>🗺 Térkép</button>
+            </div>
+            <select className="sticky-sort">
+              <option>Ajánlásunk szerint</option>
+              <option>Legolcsóbb</option>
+              <option>Legmagasabb pontszám</option>
+              <option>Legközelebb a parthoz</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -615,15 +798,16 @@ const Page = () => {
           <a href="01-homepage.html">Főoldal</a> &rsaquo; <a href="#">Magyarország</a> &rsaquo; Balaton
         </div>
 
-        <div className="results-bar">
+        <div className={'results-bar'+(scrolled?' scrolled':'')}>
           <div className="summary-left">
             <span className="count">Balaton · 5 167 találat</span>
             <span className="cancel-stat">✓ Ingyenes lemondás 73%-nál</span>
           </div>
           <div className="right">
+            <button className="mobile-filter-btn" onClick={()=>setMobileFilters(true)}>🎚 Szűrők</button>
             <div className="lm-toggle">
               <button className={view==='list'?'on':''} onClick={()=>setView('list')}>☰ Lista</button>
-              <button className={view==='split'?'on':''} onClick={()=>setView('split')}>🗺 Lista + térkép</button>
+              <button className={view==='split'?'on':''} onClick={()=>{ if (isMobilePreview) { setFsMap(true); } else { setView('split'); } }}>🗺 Lista + térkép</button>
             </div>
             <select>
               <option>Ajánlásunk szerint</option>
@@ -698,6 +882,27 @@ const Page = () => {
           setSaved={setSaved}
           onClose={()=>setFsMap(false)}
         />
+      )}
+
+      {mobileFilters && (
+        <div className="mobile-filters-drawer">
+          <div className="mfd-top">
+            <h3>🎚 Szűrők</h3>
+            <button className="mfd-close" onClick={()=>setMobileFilters(false)} aria-label="Bezárás">✕</button>
+          </div>
+          <div className="mfd-body">
+            <FilterGroup title="Kedvezmények" items={FILTERS.discounts}/>
+            <FilterGroup title="Legnépszerűbb szűrők" items={FILTERS.popular}/>
+            <FilterGroup title="SZÉP kártyás fizetés" items={FILTERS.szep}/>
+            <FilterGroup title="Ellátás" items={FILTERS.board}/>
+            <FilterGroup title="Szállástípus" items={FILTERS.type}/>
+            <FilterGroup title="Távolság a parttól" items={FILTERS.beach}/>
+          </div>
+          <div className="mfd-bottom">
+            <button className="mfd-reset" onClick={()=>setMobileFilters(false)}>Visszaállítás</button>
+            <button className="mfd-apply" onClick={()=>setMobileFilters(false)}>Megtekintem (5 167)</button>
+          </div>
+        </div>
       )}
 
       <footer className="footer">

@@ -80,6 +80,29 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .submit-bar .btn-primary{padding:14px 28px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;font-size:15px;cursor:pointer;box-shadow:var(--shadow-cta);transition:filter .12s}
 .submit-bar .btn-primary:hover{filter:brightness(1.05)}
 
+/* Collapsible secondary sections — link-style toggles to minimize visible form on first fold */
+.form-toggle-link{display:inline-flex;gap:6px;align-items:center;background:transparent;border:1px dashed var(--line-strong);border-radius:var(--radius);color:var(--c-primary);font-weight:700;cursor:pointer;font-size:13.5px;padding:10px 14px;font-family:inherit;text-align:left;margin-bottom:16px;width:100%;transition:all .12s}
+.form-toggle-link:hover{border-color:var(--c-primary);background:var(--c-success-bg);background:rgba(227,6,19,.04)}
+.form-hide-link{float:right;background:transparent;border:0;color:var(--c-primary);font-weight:600;cursor:pointer;font-size:12px;font-family:inherit;padding:0}
+.form-hide-link:hover{text-decoration:underline}
+
+/* Sticky checkout CTA — always visible above the fold regardless of scroll */
+.checkout-sticky-cta{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:50;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.checkout-sticky-cta .csc-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 24px}
+.checkout-sticky-cta .csc-total{display:flex;flex-direction:column;gap:1px}
+.checkout-sticky-cta .csc-lbl{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.checkout-sticky-cta .csc-amt{font-size:20px;color:var(--c-cta);font-weight:900;letter-spacing:-.01em}
+.checkout-sticky-cta .csc-btn{padding:13px 28px;background:var(--c-cta);color:#fff;border:0;border-radius:var(--radius);font-weight:800;font-size:15px;cursor:pointer;box-shadow:var(--shadow-cta);transition:filter .12s;display:inline-flex;align-items:center;gap:6px}
+.checkout-sticky-cta .csc-btn:hover{filter:brightness(1.05)}
+/* Body needs bottom padding so content isn't hidden behind sticky CTA */
+body{padding-bottom:76px}
+
+/* Mobile: constrain sticky CTA to 375px column, lift above floating overlay FABs */
+html[data-view="mobile"] .checkout-sticky-cta{left:50%;transform:translateX(-50%);right:auto;width:375px;max-width:100%;bottom:0}
+html[data-view="mobile"] .checkout-sticky-cta .csc-inner{padding:10px 14px}
+html[data-view="mobile"] .checkout-sticky-cta .csc-amt{font-size:17px}
+html[data-view="mobile"] .checkout-sticky-cta .csc-btn{padding:11px 18px;font-size:14px}
+
 /* Summary sidebar */
 .summary{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:24px}
 .summary-img{aspect-ratio:16/9;background:linear-gradient(135deg,#dbe6ec,#a7c5d3);position:relative}
@@ -139,6 +162,38 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hamburger{position:relative}
 .hamburger-trigger{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;font-size:18px}
 /* === end shared brandbar === */
+
+/* === MOBILE OVERRIDES === */
+html[data-view="mobile"] .stepper{padding:10px 10px}
+html[data-view="mobile"] .stepper-inner{gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+html[data-view="mobile"] .step{font-size:11px;gap:6px;flex-shrink:0}
+html[data-view="mobile"] .step span{display:none}
+html[data-view="mobile"] .step.active span{display:inline}
+html[data-view="mobile"] .step-num{width:26px;height:26px;font-size:12px}
+html[data-view="mobile"] .step-line{min-width:14px;flex:1 0 14px}
+html[data-view="mobile"] .page{padding:14px 10px}
+html[data-view="mobile"] .layout{grid-template-columns:1fr;gap:14px}
+html[data-view="mobile"] .form-col{padding:18px 16px}
+html[data-view="mobile"] .form-col h1{font-size:21px}
+html[data-view="mobile"] .form-col > p.sub{font-size:13px;margin-bottom:18px}
+html[data-view="mobile"] .field-group{margin-bottom:18px}
+html[data-view="mobile"] .field-group > h3{font-size:14px;margin-bottom:10px}
+html[data-view="mobile"] .field-grid{grid-template-columns:1fr;gap:12px}
+html[data-view="mobile"] .field input,
+html[data-view="mobile"] .field select,
+html[data-view="mobile"] .field textarea{padding:11px 12px;font-size:14px}
+html[data-view="mobile"] .field-phone select{min-width:80px}
+html[data-view="mobile"] .coupon-row{flex-direction:column;align-items:stretch;gap:10px}
+html[data-view="mobile"] .coupon-row button{width:100%}
+html[data-view="mobile"] .trust-strip{flex-direction:column;gap:8px;padding:12px 14px;font-size:12px}
+html[data-view="mobile"] .submit-bar{justify-content:stretch}
+html[data-view="mobile"] .submit-bar .btn-primary{width:100%;padding:14px 18px;font-size:15px;text-align:center}
+html[data-view="mobile"] .summary{position:static;border-radius:var(--radius)}
+html[data-view="mobile"] .summary-body{padding:14px 16px}
+html[data-view="mobile"] .summary .hotel-name{font-size:15.5px}
+html[data-view="mobile"] .summary .row{font-size:13px;padding:6px 0}
+html[data-view="mobile"] .summary .total .amt{font-size:21px}
+html[data-view="mobile"] .footer{padding:18px 14px 14px;text-align:center}
 </style>
 </head>
 <body>
@@ -159,6 +214,9 @@ const Page = () => {
   const [coupon, setCoupon] = React.useState('');
   const [couponApplied, setCouponApplied] = React.useState(null);
   const [submitted, setSubmitted] = React.useState(false);
+  const [showAddress, setShowAddress] = React.useState(false);
+  const [showNote, setShowNote] = React.useState(false);
+  const [showCoupon, setShowCoupon] = React.useState(false);
 
   const update = (k,v) => setForm({...form, [k]:v});
   const validate = () => {
@@ -285,62 +343,70 @@ const Page = () => {
               </div>
             </div>
 
-            <div className="field-group">
-              <h3>Cím</h3>
-              <div className="field-grid">
-                <div className="field">
-                  <label className="field-label">Ország</label>
-                  <select value={form.country} onChange={(e)=>update('country',e.target.value)}>
-                    <option value="HU">Magyarország</option>
-                    <option value="DE">Németország</option>
-                    <option value="AT">Ausztria</option>
-                    <option value="PL">Lengyelország</option>
-                  </select>
-                </div>
-                <div className={'field'+(submitted&&errors.postal?' error':'')}>
-                  <label className="field-label">Irányítószám *</label>
-                  <input value={form.postal} onChange={(e)=>{ const v=e.target.value; update('postal',v); if(v.length===4 && !form.city) update('city','Budapest'); }} placeholder="pl. 1051"/>
-                  {submitted && errors.postal && <div className="field-error">{errors.postal}</div>}
-                </div>
-                <div className={'field'+(submitted&&errors.city?' error':'')}>
-                  <label className="field-label">Település *</label>
-                  <input value={form.city} onChange={(e)=>update('city',e.target.value)}/>
-                  {submitted && errors.city && <div className="field-error">{errors.city}</div>}
-                </div>
-                <div className={'field'+(submitted&&errors.street?' error':'')}>
-                  <label className="field-label">Utca, házszám *</label>
-                  <input value={form.street} onChange={(e)=>update('street',e.target.value)}/>
-                  {submitted && errors.street && <div className="field-error">{errors.street}</div>}
+            {!showAddress ? (
+              <button className="form-toggle-link" onClick={()=>setShowAddress(true)}>+ Számlázási cím megadása</button>
+            ) : (
+              <div className="field-group">
+                <h3>Cím <button className="form-hide-link" onClick={()=>setShowAddress(false)}>– Elrejtés</button></h3>
+                <div className="field-grid">
+                  <div className="field">
+                    <label className="field-label">Ország</label>
+                    <select value={form.country} onChange={(e)=>update('country',e.target.value)}>
+                      <option value="HU">Magyarország</option>
+                      <option value="DE">Németország</option>
+                      <option value="AT">Ausztria</option>
+                      <option value="PL">Lengyelország</option>
+                    </select>
+                  </div>
+                  <div className={'field'+(submitted&&errors.postal?' error':'')}>
+                    <label className="field-label">Irányítószám *</label>
+                    <input value={form.postal} onChange={(e)=>{ const v=e.target.value; update('postal',v); if(v.length===4 && !form.city) update('city','Budapest'); }} placeholder="pl. 1051"/>
+                    {submitted && errors.postal && <div className="field-error">{errors.postal}</div>}
+                  </div>
+                  <div className={'field'+(submitted&&errors.city?' error':'')}>
+                    <label className="field-label">Település *</label>
+                    <input value={form.city} onChange={(e)=>update('city',e.target.value)}/>
+                    {submitted && errors.city && <div className="field-error">{errors.city}</div>}
+                  </div>
+                  <div className={'field'+(submitted&&errors.street?' error':'')}>
+                    <label className="field-label">Utca, házszám *</label>
+                    <input value={form.street} onChange={(e)=>update('street',e.target.value)}/>
+                    {submitted && errors.street && <div className="field-error">{errors.street}</div>}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="field-group">
-              <h3>Speciális kérések</h3>
-              <div className="field">
-                <label className="field-label">Megjegyzés (nem kötelező)</label>
-                <textarea rows="3" value={form.note} onChange={(e)=>update('note',e.target.value)} placeholder="pl. Korai check-in, plusz kispárna…"/>
-              </div>
-              <div className="warning-box">
-                <span>⚠️</span>
-                <div>Ez a szálláshely nincs felkészülve kisállatok fogadására.</div>
-              </div>
-            </div>
-
-            <div className="field-group">
-              <h3>Akciós kód</h3>
-              <div className="coupon-row">
+            {!showNote ? (
+              <button className="form-toggle-link" onClick={()=>setShowNote(true)}>+ Speciális kérés hozzáadása</button>
+            ) : (
+              <div className="field-group">
+                <h3>Speciális kérések <button className="form-hide-link" onClick={()=>setShowNote(false)}>– Elrejtés</button></h3>
                 <div className="field">
-                  <label className="field-label">Promóciós kód</label>
-                  <input value={coupon} onChange={(e)=>setCoupon(e.target.value)} placeholder="pl. SZALLAS10"/>
+                  <label className="field-label">Megjegyzés (nem kötelező)</label>
+                  <textarea rows="3" value={form.note} onChange={(e)=>update('note',e.target.value)} placeholder="pl. Korai check-in, plusz kispárna…"/>
                 </div>
-                <button onClick={applyCoupon}>Beváltás</button>
               </div>
-              {couponApplied && couponApplied.invalid && <div className="field-error" style={{marginTop:6}}>Ismeretlen kód</div>}
-              {couponApplied && couponApplied.pct && (
-                <div className="coupon-applied">✓ Kupon "{couponApplied.code}" alkalmazva — {couponApplied.pct}% kedvezmény ({fmt(couponApplied.off)} Ft)</div>
-              )}
-            </div>
+            )}
+
+            {!showCoupon ? (
+              <button className="form-toggle-link" onClick={()=>setShowCoupon(true)}>+ Akciós kód</button>
+            ) : (
+              <div className="field-group">
+                <h3>Akciós kód <button className="form-hide-link" onClick={()=>setShowCoupon(false)}>– Elrejtés</button></h3>
+                <div className="coupon-row">
+                  <div className="field">
+                    <label className="field-label">Promóciós kód</label>
+                    <input value={coupon} onChange={(e)=>setCoupon(e.target.value)} placeholder="pl. SZALLAS10"/>
+                  </div>
+                  <button onClick={applyCoupon}>Beváltás</button>
+                </div>
+                {couponApplied && couponApplied.invalid && <div className="field-error" style={{marginTop:6}}>Ismeretlen kód</div>}
+                {couponApplied && couponApplied.pct && (
+                  <div className="coupon-applied">✓ Kupon "{couponApplied.code}" alkalmazva — {couponApplied.pct}% kedvezmény ({fmt(couponApplied.off)} Ft)</div>
+                )}
+              </div>
+            )}
 
             <div className="trust-strip">
               <span>🔒 256-bit SSL</span>
@@ -365,9 +431,6 @@ const Page = () => {
               {submitted && errors.gdpr && <div className="field-error" style={{marginLeft:26}}>{errors.gdpr}</div>}
             </div>
 
-            <div className="submit-bar">
-              <button className="btn-primary" onClick={onSubmit}>Foglalás elküldése →</button>
-            </div>
           </div>
 
           <aside className="summary">
@@ -419,6 +482,16 @@ const Page = () => {
               <div className="cancel-policy">✓ Ingyenes lemondás 2026.06.08-ig</div>
             </div>
           </aside>
+        </div>
+      </div>
+
+      <div className="checkout-sticky-cta">
+        <div className="csc-inner">
+          <div className="csc-total">
+            <span className="csc-lbl">Teljes ár</span>
+            <span className="csc-amt">{fmt(total)} Ft</span>
+          </div>
+          <button className="csc-btn" onClick={onSubmit}>Foglalás elküldése →</button>
         </div>
       </div>
 

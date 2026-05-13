@@ -42,10 +42,44 @@
 .view-toggle button{background:transparent;border:0;padding:8px 14px;border-radius:999px;font-size:12.5px;color:#394654;font-weight:600;display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-family:inherit}
 .view-toggle button.on{background:#E30613;color:#fff}
 
-/* Forced mobile preview wrap */
-html[data-view="mobile"] body{background:#1a1f2a;min-height:100vh;padding-top:20px}
-html[data-view="mobile"] body > *:not(.tweaks-fab):not(.tweaks-panel):not(.view-toggle):not(.tweaks-indicator):not(.map-fullscreen){max-width:375px;margin:0 auto;border-left:1px solid #2a3340;border-right:1px solid #2a3340}
+/* Forced mobile preview wrap — light gray surround like a phone in a soft frame.
+   Matches PDP mobile body bg (--surface-2 #F5F6F8) for visual consistency between screens. */
+html[data-view="mobile"] body{background:#F5F6F8;min-height:100vh;padding-top:20px;padding-bottom:80px}
+html[data-view="mobile"] body > *:not(.tweaks-fab):not(.tweaks-panel):not(.view-toggle):not(.tweaks-indicator):not(.map-fullscreen):not(.mobile-filters-drawer){max-width:375px;margin-left:auto;margin-right:auto;box-shadow:0 0 0 1px #c9ced6}
 html[data-view="mobile"] body{display:block}
+
+/* === Mobile brandbar (compact: hide call-center text, hide account text, icons only) === */
+html[data-view="mobile"] .brandbar{height:52px}
+html[data-view="mobile"] .brandbar-inner{padding:0 10px;gap:6px;height:52px}
+html[data-view="mobile"] .logo-brand{height:52px;gap:6px}
+html[data-view="mobile"] .logo-word{font-size:19px}
+html[data-view="mobile"] .logo-tag{font-size:8px;padding:3px 6px 4px;line-height:1.02;transform:rotate(-6deg) translateY(1px)}
+html[data-view="mobile"] .brandbar .brand-right{gap:4px}
+html[data-view="mobile"] .brandbar .callcenter-trigger,
+html[data-view="mobile"] .brandbar .account-btn{padding:3px;gap:0}
+html[data-view="mobile"] .brandbar .callcenter-trigger .cc-text,
+html[data-view="mobile"] .brandbar .account-btn .cc-text,
+html[data-view="mobile"] .brandbar .account-btn .cc-chev{display:none}
+html[data-view="mobile"] .brandbar .callcenter-trigger .cc-ring,
+html[data-view="mobile"] .brandbar .account-btn .cc-ring{width:32px;height:32px;font-size:14px}
+html[data-view="mobile"] .brandbar .hamburger-trigger{width:34px;height:34px;font-size:16px}
+
+/* === Mobile footer (2 columns, smaller) === */
+html[data-view="mobile"] .footer{padding:24px 14px 16px;margin-top:28px}
+html[data-view="mobile"] .footer-inner{grid-template-columns:1fr 1fr;gap:14px}
+html[data-view="mobile"] .footer h5{font-size:11.5px;margin-bottom:8px}
+html[data-view="mobile"] .footer ul{font-size:12.5px;gap:5px}
+html[data-view="mobile"] .footer-bottom{flex-direction:column;text-align:center;gap:10px;align-items:center;margin-top:20px;padding-top:14px}
+html[data-view="mobile"] .footer-trust{gap:8px;justify-content:center}
+html[data-view="mobile"] .footer-trust-badge{font-size:10.5px;padding:4px 8px}
+
+/* Hide PDP-tweaks indicator on mobile — overlaps view-toggle + clutters small screen */
+html[data-view="mobile"] .tweaks-indicator{display:none}
+
+/* Shift Tweaks FAB and view-toggle inwards a bit so they don't hug the very edge */
+html[data-view="mobile"] .tweaks-fab{padding:9px 14px;font-size:12px}
+html[data-view="mobile"] .view-toggle{padding:3px}
+html[data-view="mobile"] .view-toggle button{padding:6px 12px;font-size:11.5px}
 `;
   const styleEl = document.createElement('style');
   styleEl.id = 'tweaks-overlay-styles';
