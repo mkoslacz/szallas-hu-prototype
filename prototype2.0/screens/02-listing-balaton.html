@@ -164,7 +164,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
    Body stack: name+stars → location → score+reviews → optional VIP signup pill →
    price block (right-aligned: strike+info+−X% pill, big red price, green perks). */
 .list-col{display:flex;flex-direction:column;gap:10px;min-width:0}
-.hotel-card{background:#fff;border:0;border-radius:var(--radius-lg);display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;padding:14px;overflow:visible;cursor:pointer;transition:background .15s, box-shadow .15s;min-height:0}
+.hotel-card{background:#fff;border:0;border-radius:var(--radius-lg);display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;padding:14px;overflow:visible;cursor:pointer;transition:background .15s, box-shadow .15s;min-height:0}
 .hotel-card:hover{background:var(--surface-2);box-shadow:var(--shadow-sm)}
 .hotel-card.highlight{box-shadow:0 0 0 3px var(--ink-900)}
 .hotel-img{position:relative;border-radius:var(--radius-lg);overflow:hidden;background:var(--surface-3);background-size:cover;background-position:center;min-height:240px}
@@ -208,8 +208,8 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .perks .perk{font-size:13px;color:var(--c-success);font-weight:600;line-height:1.35}
 
 /* Split view (list + map) — narrower list column means tighter image + drop signup */
-.layout.with-map .hotel-card{grid-template-columns:200px minmax(0,1fr);padding:10px;gap:12px}
-.layout.with-map .hotel-img{min-height:200px}
+.layout.with-map .hotel-card{grid-template-columns:240px minmax(0,1fr);padding:10px;gap:12px}
+.layout.with-map .hotel-img{min-height:220px}
 .layout.with-map .hotel-body h3{font-size:17px}
 .layout.with-map .hotel-body .score-num{min-width:34px;height:34px;font-size:13px}
 .layout.with-map .vip-signup{display:none}
@@ -217,7 +217,7 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .layout.with-map .campaign-badge{padding:4px 10px;font-size:11.5px;top:10px;left:10px}
 
 /* Narrow desktop fallback — when viewport < 900px but not mobile-toggled */
-@media (max-width:900px){.hotel-card{grid-template-columns:220px minmax(0,1fr);padding:10px;gap:12px}.hotel-img{min-height:200px}.hotel-body h3{font-size:17px}}
+@media (max-width:900px){.hotel-card{grid-template-columns:260px minmax(0,1fr);padding:10px;gap:12px}.hotel-img{min-height:220px}.hotel-body h3{font-size:17px}}
 
 /* Map column */
 .map-col{position:sticky;top:84px;height:calc(100vh - 100px);border-radius:var(--radius-lg);overflow:hidden;background:#dbe6ec;box-shadow:var(--shadow-sm)}
@@ -310,12 +310,12 @@ html[data-view="mobile"] .layout.with-map .map-col{display:none}
 html[data-view="mobile"] .list-col{gap:8px}
 /* Mobile: same canonical layout, just tighter spacing + narrower image */
 html[data-view="mobile"] .hotel-card{
-  grid-template-columns:130px minmax(0,1fr);
+  grid-template-columns:170px minmax(0,1fr);
   gap:10px;
   padding:10px;
   border-radius:var(--radius);
 }
-html[data-view="mobile"] .hotel-img{min-height:200px;touch-action:pan-y}
+html[data-view="mobile"] .hotel-img{min-height:220px;touch-action:pan-y}
 html[data-view="mobile"] .campaign-badge{padding:4px 9px;font-size:10.5px;top:8px;left:8px;border-radius:5px}
 html[data-view="mobile"] .hotel-img .heart{width:28px;height:28px;font-size:13px;top:6px;right:6px}
 html[data-view="mobile"] .hotel-body{gap:4px;padding:0}
