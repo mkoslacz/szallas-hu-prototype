@@ -191,10 +191,11 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .hotel-body .score-num{min-width:38px;height:38px;padding:0 8px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
 .hotel-body .score-count{font-size:13.5px;color:var(--ink-700);font-weight:500}
 
-/* VIP signup CTA-like pill (only when !loggedIn && vipEligible) */
-.vip-signup{display:inline-flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:13.5px;font-weight:700;color:var(--ink-900);cursor:pointer;align-self:flex-start;text-align:left;margin-top:6px;transition:background .15s, border-color .15s}
+/* VIP signup CTA-like pill (only when !loggedIn && vipEligible) — borderless, 1 line */
+.vip-signup{display:inline-flex;align-items:center;gap:10px;background:var(--surface-2);border:0;border-radius:10px;padding:10px 16px;font-size:13.5px;font-weight:700;color:var(--ink-900);cursor:pointer;align-self:flex-start;text-align:left;margin-top:6px;white-space:nowrap;transition:background .15s}
 .vip-signup .flag{color:var(--c-primary);font-size:14px;line-height:1}
-.vip-signup:hover{background:#ECEEF2;border-color:var(--line-strong)}
+.vip-signup .vs-short{display:none}
+.vip-signup:hover{background:#ECEEF2}
 
 /* Price block — right-aligned column at the bottom of body */
 .price-block{margin-top:auto;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:4px;padding-top:8px}
@@ -325,8 +326,11 @@ html[data-view="mobile"] .hotel-body .location{font-size:12.5px;line-height:1.3}
 html[data-view="mobile"] .hotel-body .score-row{margin-top:3px;gap:8px}
 html[data-view="mobile"] .hotel-body .score-num{min-width:32px;height:32px;font-size:13px;padding:0 7px;border-radius:6px}
 html[data-view="mobile"] .hotel-body .score-count{font-size:12.5px}
-html[data-view="mobile"] .vip-signup{padding:7px 11px;font-size:12px;gap:7px;border-radius:7px;margin-top:5px}
+html[data-view="mobile"] .vip-signup{padding:8px 12px;font-size:12px;gap:7px;border-radius:8px;margin-top:5px}
 html[data-view="mobile"] .vip-signup .flag{font-size:13px}
+/* Mobile body is too narrow for the full Hungarian text — swap to a short label */
+html[data-view="mobile"] .vip-signup .vs-full{display:none}
+html[data-view="mobile"] .vip-signup .vs-short{display:inline}
 html[data-view="mobile"] .price-block{padding-top:6px;gap:3px}
 html[data-view="mobile"] .strike-row{gap:6px}
 html[data-view="mobile"] .strike-row .strike{font-size:12px}
@@ -570,7 +574,8 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
       {showVipSignup && (
         <button className="vip-signup" onClick={(e)=>e.stopPropagation()}>
           <span className="flag">🚩</span>
-          <span>Lépj be VIP kedvezményért</span>
+          <span className="vs-full">Lépj be VIP kedvezményért</span>
+          <span className="vs-short">VIP −15% feloldása</span>
         </button>
       )}
       <div className="price-block">
