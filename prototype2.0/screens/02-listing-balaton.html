@@ -159,93 +159,65 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .fl-row input[type="checkbox"]{accent-color:var(--c-primary);flex-shrink:0}
 .fl-row .cnt{color:var(--ink-400);font-size:12.5px}
 
-/* Hotel cards — generous size with rich info / readable typography */
-.list-col{display:flex;flex-direction:column;gap:12px;min-width:0}
-.hotel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);display:grid;grid-template-columns:minmax(240px,280px) minmax(0,1fr) minmax(190px,220px);overflow:hidden;transition:box-shadow .15s, border-color .15s;cursor:pointer;min-height:180px}
-.hotel-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
-.hotel-card.highlight{box-shadow:0 0 0 3px var(--ink-900);border-color:var(--ink-900)}
-.hotel-img{position:relative;background-size:cover;background-position:center;min-height:180px}
+/* ===== Hotel card — canonical reference design =====
+   Layout: image left (rounded), single content body right.
+   Body stack: name+stars → location → score+reviews → optional VIP signup pill →
+   price block (right-aligned: strike+info+−X% pill, big red price, green perks). */
+.list-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.hotel-card{background:#fff;border:0;border-radius:var(--radius-lg);display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;padding:14px;overflow:visible;cursor:pointer;transition:background .15s, box-shadow .15s;min-height:0}
+.hotel-card:hover{background:var(--surface-2);box-shadow:var(--shadow-sm)}
+.hotel-card.highlight{box-shadow:0 0 0 3px var(--ink-900)}
+.hotel-img{position:relative;border-radius:var(--radius-lg);overflow:hidden;background:var(--surface-3);background-size:cover;background-position:center;min-height:240px}
 .hotel-img img{display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.hotel-img .heart{position:absolute;top:10px;left:10px;width:36px;height:36px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:3;font-size:16px;line-height:1}
+.hotel-img .heart{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(255,255,255,.92);border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-700);z-index:3;font-size:16px;line-height:1}
 .hotel-img .heart.saved{color:var(--c-primary)}
-/* Photo carousel — desktop arrows (visible on card hover/focus), mobile swipe via touch handlers */
-.hotel-img .card-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);border:0;color:var(--ink-900);font-size:22px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;opacity:0;transition:opacity .15s, background .15s;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.hotel-card:hover .hotel-img .card-arrow,
-.hotel-card:focus-within .hotel-img .card-arrow{opacity:1}
-.hotel-img .card-arrow:hover{background:#fff}
-.hotel-img .card-arrow-prev{left:10px}
-.hotel-img .card-arrow-next{right:10px}
-.hotel-img .card-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;padding:4px 8px;background:rgba(0,0,0,.32);border-radius:999px;backdrop-filter:blur(2px)}
-.hotel-img .card-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);border:0;padding:0;cursor:pointer;transition:background .15s, transform .15s}
-.hotel-img .card-dot.active{background:#fff;transform:scale(1.2)}
-.hotel-img .card-dot:hover{background:rgba(255,255,255,.85)}
-/* Image overlay labels — hidden by default (info shown in promo-badges + location row).
-   Restored on mobile where promo-badges are hidden to keep cards compact. */
-.hotel-img .discount,
-.hotel-img .vip-eligible,
-.hotel-img-label{display:none}
-.hotel-img .discount{position:absolute;top:10px;right:10px;background:var(--c-cta);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800;z-index:2}
-.hotel-img .vip-eligible{position:absolute;bottom:10px;left:10px;background:rgba(110,46,229,.94);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;z-index:2;letter-spacing:.02em}
-.hotel-img-label{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;z-index:2}
-.hotel-info{padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0;border-right:1px solid var(--line)}
-.hotel-info .name-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
-.hotel-info .name-stars{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0;flex-wrap:wrap}
-.hotel-info h3{font-size:16.5px;color:var(--info);font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;letter-spacing:-.01em}
-.hotel-info .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:12px;flex-shrink:0}
-.hotel-info .stars .superior{color:var(--info);font-size:11px;margin-left:4px;font-weight:600}
-.hotel-info .name-score{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
-.hotel-info .name-score-text{text-align:right;line-height:1.1;display:flex;flex-direction:column}
-.hotel-info .name-score-text .lbl{font-size:12px;color:var(--ink-900);font-weight:800}
-.hotel-info .name-score-text .cnt{font-size:10.5px;color:var(--ink-500);margin-top:1px;font-weight:500}
-.hotel-info .name-score-num{width:38px;height:38px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
-.hotel-info .location{font-size:12.5px;color:var(--ink-700);font-weight:500}
-.hotel-info .location .pin{color:var(--ink-400);margin-right:3px}
-.hotel-info .amenities{display:flex;gap:8px;flex-wrap:wrap;color:var(--ink-500);font-size:12.5px;margin-top:1px}
-.hotel-info .facts{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11.5px;color:var(--ink-700);margin-top:1px}
-.hotel-info .facts span{display:inline-flex;align-items:center;gap:3px}
-.hotel-info .facts svg, .hotel-info .facts .ico{color:var(--c-success);font-weight:800;flex-shrink:0}
-.hotel-info .quote{font-size:12.5px;color:var(--ink-700);font-style:italic;background:var(--surface-2);padding:6px 10px;border-radius:6px;border-left:2px solid var(--c-success);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-overflow:ellipsis}
-.hotel-info .promo-badges{display:flex;flex-wrap:wrap;gap:5px}
-.promo-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.01em;line-height:1.3;white-space:nowrap}
-/* Muted neutral chips for less-critical signals; only VIP retains brand color */
-.promo-badge.promo-top{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
-.promo-badge.promo-vip{background:#FFE8EA;color:#B40510;border:1px solid #F6C5C9;font-weight:800}
-.promo-badge.promo-last{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
-.promo-badge.promo-wellness{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
+.hotel-img .heart:hover{background:#fff}
+/* Single campaign badge — top-left, themed by signal (VIP > top-score > deal > city) */
+.campaign-badge{position:absolute;top:12px;left:12px;padding:6px 12px;border-radius:6px;font-size:12.5px;font-weight:700;color:#fff;letter-spacing:.01em;z-index:3;line-height:1.2;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.campaign-badge.cb-vip{background:#6E2EE5}
+.campaign-badge.cb-top{background:#0E8F8F}
+.campaign-badge.cb-deal{background:var(--c-cta)}
+.campaign-badge.cb-city{background:rgba(0,0,0,.72)}
+/* Drop carousel chrome + the old multiple-overlay labels — campaign-badge replaces all of them */
+.hotel-img .discount,.hotel-img .vip-eligible,.hotel-img-label,.hotel-img .card-arrow,.hotel-img .card-dots{display:none}
 
-/* Split view (list + map) — narrower list column means tighter card grid + hide overflow-prone content */
-.layout.with-map .hotel-card{grid-template-columns:minmax(180px,220px) minmax(0,1fr) minmax(150px,180px);min-height:170px}
-.layout.with-map .hotel-img{min-height:170px}
-.layout.with-map .hotel-info{padding:10px 12px;gap:6px}
-.layout.with-map .hotel-info .facts{display:none}
-.layout.with-map .hotel-info .quote{display:none}
-.layout.with-map .hotel-info h3{font-size:15.5px}
-.layout.with-map .hotel-info .name-score-text{display:none}
-.layout.with-map .hotel-info .name-score-num{width:32px;height:32px;font-size:13px}
-.layout.with-map .hotel-price{padding:10px 12px}
-.layout.with-map .hotel-bigprice{font-size:20px}
-.hotel-info .badges{display:flex;gap:6px;flex-wrap:wrap;padding-top:0}
-.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;flex-shrink:0}
-/* Board (wyżywienie) keeps semantic color — primary spec for decision */
-.badge.board-br{background:var(--c-success-bg);color:var(--c-success)}
-.badge.board-hp{background:var(--c-deal-bg);color:var(--c-deal-ink)}
-.badge.board-ai{background:#F5EAFF;color:#6B21A8}
-/* Refund / payment chips — neutral (no bg) with subtle semantic ink */
-.badge.cancel{background:transparent;color:var(--c-success);padding:3px 4px}
-.badge.noref{background:transparent;color:var(--ink-700);padding:3px 4px}
-.badge.szep{background:var(--surface-2);color:var(--ink-700);border:1px solid var(--line)}
-.hotel-price{padding:12px 14px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;background:var(--surface-2);gap:6px;min-width:0}
-.hotel-pricing{text-align:right;margin-top:auto;display:flex;flex-direction:column;gap:2px}
-.hotel-strike{text-decoration:line-through;color:var(--ink-400);font-size:12.5px;display:inline-block;font-weight:500;margin-right:6px}
-.hotel-savings{display:inline-block;background:var(--c-deal-bg);color:var(--c-deal-ink);font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;letter-spacing:.01em;vertical-align:middle}
-.hotel-bigprice{color:var(--c-cta);font-weight:900;font-size:28px;font-family:var(--font-ui);letter-spacing:-.015em;line-height:1.05;display:flex;align-items:baseline;gap:4px;justify-content:flex-end;margin-top:2px}
-.hotel-bigprice .ft{font-size:15px;color:var(--ink-700);font-weight:700}
-.hotel-priceunit{font-size:11px;color:var(--ink-500);margin-top:1px}
-.hotel-pernight{font-size:11px;color:var(--ink-700);margin-top:1px;font-weight:600}
-.hotel-tax{font-size:10.5px;color:var(--ink-500);margin-top:1px}
-.hotel-cta{display:block;width:100%;padding:9px 12px;background:var(--c-primary);color:#fff;border:0;border-radius:8px;font-weight:800;font-size:13.5px;cursor:pointer;transition:all .15s;text-align:center}
-.hotel-cta:hover{background:var(--c-primary-hover)}
-@media (max-width:900px){.hotel-card{grid-template-columns:1fr}.hotel-img{min-height:180px}.hotel-price{align-items:flex-start;text-align:left}.hotel-info{border-right:0;border-bottom:1px solid var(--line)}.hotel-bigprice{justify-content:flex-start}.hotel-pricing{text-align:left}}
+/* Body — single column with everything stacked */
+.hotel-body{display:flex;flex-direction:column;gap:6px;padding:2px 4px 4px 0;min-width:0}
+.hotel-body h3{margin:0;font-size:19px;font-weight:800;color:var(--ink-900);line-height:1.25;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.hotel-body h3 .stars{color:var(--c-warn-low);letter-spacing:1px;font-size:.7em;font-weight:600;margin-left:6px;vertical-align:.18em;white-space:nowrap}
+.hotel-body h3 .stars .superior{color:var(--info);font-size:.78em;margin-left:4px;font-weight:600}
+.hotel-body .location{font-size:14px;color:var(--ink-500);line-height:1.4}
+.hotel-body .score-row{display:inline-flex;align-items:center;gap:10px;margin-top:6px;align-self:flex-start}
+.hotel-body .score-num{min-width:38px;height:38px;padding:0 8px;border-radius:8px;background:var(--c-success);color:#fff;font-weight:800;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+.hotel-body .score-count{font-size:13.5px;color:var(--ink-700);font-weight:500}
+
+/* VIP signup CTA-like pill (only when !loggedIn && vipEligible) */
+.vip-signup{display:inline-flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:13.5px;font-weight:700;color:var(--ink-900);cursor:pointer;align-self:flex-start;text-align:left;margin-top:6px;transition:background .15s, border-color .15s}
+.vip-signup .flag{color:var(--c-primary);font-size:14px;line-height:1}
+.vip-signup:hover{background:#ECEEF2;border-color:var(--line-strong)}
+
+/* Price block — right-aligned column at the bottom of body */
+.price-block{margin-top:auto;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:4px;padding-top:8px}
+.strike-row{display:inline-flex;align-items:center;gap:8px}
+.strike-row .strike{text-decoration:line-through;color:var(--ink-400);font-size:13.5px;font-weight:500}
+.strike-row .info-icon{font-size:13px;color:var(--ink-400);cursor:help;line-height:1;border:1px solid var(--ink-300);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center}
+.strike-row .discount-pill{background:var(--c-primary);color:#fff;font-weight:800;font-size:12.5px;padding:3px 9px;border-radius:6px}
+.big-price{color:var(--c-primary);font-weight:900;font-size:30px;font-family:var(--font-ui);letter-spacing:-.02em;line-height:1.05;display:inline-flex;align-items:baseline;gap:4px}
+.big-price .ft{font-size:16px;color:var(--c-primary);font-weight:700}
+.perks{display:flex;flex-direction:column;gap:2px;align-items:flex-end;margin-top:2px}
+.perks .perk{font-size:13px;color:var(--c-success);font-weight:600;line-height:1.35}
+
+/* Split view (list + map) — narrower list column means tighter image + drop signup */
+.layout.with-map .hotel-card{grid-template-columns:200px minmax(0,1fr);padding:10px;gap:12px}
+.layout.with-map .hotel-img{min-height:200px}
+.layout.with-map .hotel-body h3{font-size:17px}
+.layout.with-map .hotel-body .score-num{min-width:34px;height:34px;font-size:13px}
+.layout.with-map .vip-signup{display:none}
+.layout.with-map .big-price{font-size:25px}
+.layout.with-map .campaign-badge{padding:4px 10px;font-size:11.5px;top:10px;left:10px}
+
+/* Narrow desktop fallback — when viewport < 900px but not mobile-toggled */
+@media (max-width:900px){.hotel-card{grid-template-columns:220px minmax(0,1fr);padding:10px;gap:12px}.hotel-img{min-height:200px}.hotel-body h3{font-size:17px}}
 
 /* Map column */
 .map-col{position:sticky;top:84px;height:calc(100vh - 100px);border-radius:var(--radius-lg);overflow:hidden;background:#dbe6ec;box-shadow:var(--shadow-sm)}
@@ -335,81 +307,34 @@ html[data-view="mobile"] .layout{grid-template-columns:1fr;gap:10px}
 html[data-view="mobile"] .layout.with-map{grid-template-columns:1fr}
 html[data-view="mobile"] .filters-col{display:none}
 html[data-view="mobile"] .layout.with-map .map-col{display:none}
-html[data-view="mobile"] .list-col{gap:10px}
-/* Booking-style horizontal mobile card: image LEFT (full height), info top-right, price bottom-right.
-   Tuned so 3 cards fit in the first viewport above the results bar. */
+html[data-view="mobile"] .list-col{gap:8px}
+/* Mobile: same canonical layout, just tighter spacing + narrower image */
 html[data-view="mobile"] .hotel-card{
-  grid-template-columns:128px minmax(0,1fr);
-  grid-template-rows:1fr auto;
-  min-height:0;
-  height:150px;
+  grid-template-columns:130px minmax(0,1fr);
+  gap:10px;
+  padding:10px;
   border-radius:var(--radius);
-  border:1px solid var(--line-strong);
-  box-shadow:0 2px 8px rgba(31,42,54,.06);
 }
-html[data-view="mobile"] .hotel-img{
-  grid-column:1;
-  grid-row:1 / span 2;
-  min-height:0;
-  height:100%;
-  touch-action:pan-y;
-}
-html[data-view="mobile"] .hotel-img .heart{width:26px;height:26px;font-size:12px;top:6px;left:6px}
-html[data-view="mobile"] .hotel-img .card-arrow{display:none}
-html[data-view="mobile"] .hotel-img .card-dots{display:none}
-html[data-view="mobile"] .hotel-img .discount{display:block;padding:2px 6px;font-size:10.5px;top:6px;right:6px;border-radius:6px;font-weight:800}
-html[data-view="mobile"] .hotel-img .vip-eligible{display:block;padding:1px 5px;font-size:9.5px;bottom:6px;left:6px;letter-spacing:0;border-radius:5px;font-weight:800}
-html[data-view="mobile"] .hotel-img-label{display:block;padding:1px 5px;font-size:9.5px;bottom:6px;right:6px;border-radius:5px}
-/* Hide every desktop-only enrichment that would inflate card height */
-html[data-view="mobile"] .promo-badges{display:none}
-html[data-view="mobile"] .hotel-info .facts{display:none}
-html[data-view="mobile"] .hotel-info .quote{display:none}
-html[data-view="mobile"] .hotel-info .amenities{display:none}
-html[data-view="mobile"] .hotel-pernight{display:none}
-html[data-view="mobile"] .hotel-tax{display:none}
-html[data-view="mobile"] .hotel-savings{display:none}
-/* Right column row 1 — info */
-html[data-view="mobile"] .hotel-info{
-  grid-column:2;
-  grid-row:1;
-  border-right:0;
-  border-bottom:0;
-  padding:8px 10px 2px;
-  gap:2px;
-  min-width:0;
-  overflow:hidden;
-}
-html[data-view="mobile"] .hotel-info .name-row{gap:6px;flex-wrap:nowrap;align-items:flex-start}
-html[data-view="mobile"] .hotel-info .name-stars{gap:4px 6px;align-items:baseline;flex-wrap:wrap;min-width:0;flex:1 1 auto}
-html[data-view="mobile"] .hotel-info h3{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15;flex:1 1 100%;min-width:0}
-html[data-view="mobile"] .hotel-info .stars{font-size:10px;letter-spacing:.3px;flex-shrink:0;line-height:1}
-html[data-view="mobile"] .hotel-info .name-score-text{display:none}
-html[data-view="mobile"] .hotel-info .name-score-num{width:30px;height:30px;font-size:12.5px;border-radius:6px;flex-shrink:0}
-html[data-view="mobile"] .hotel-info .location{font-size:11.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-html[data-view="mobile"] .hotel-info .badges{gap:4px;margin-top:3px;flex-wrap:nowrap;overflow:hidden}
-/* Only the board chip fits on a 232px right column — hide the rest */
-html[data-view="mobile"] .hotel-info .badges > :nth-child(n+2){display:none}
-html[data-view="mobile"] .badge{font-size:10.5px;padding:2px 6px;line-height:1.3;white-space:nowrap}
-/* Right column row 2 — price + CTA inline */
-html[data-view="mobile"] .hotel-price{
-  grid-column:2;
-  grid-row:2;
-  background:transparent;
-  border-top:1px solid var(--line);
-  padding:6px 10px 8px;
-  flex-direction:row;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:nowrap;
-  gap:8px;
-  text-align:left;
-}
-html[data-view="mobile"] .hotel-pricing{text-align:left;margin-top:0;flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:0}
-html[data-view="mobile"] .hotel-strike{display:inline-block;font-size:11px;color:var(--ink-400);line-height:1.1;margin-right:0}
-html[data-view="mobile"] .hotel-bigprice{justify-content:flex-start;font-size:19px;line-height:1;gap:3px}
-html[data-view="mobile"] .hotel-bigprice .ft{font-size:11.5px}
-html[data-view="mobile"] .hotel-priceunit{font-size:10px;color:var(--ink-500);margin-top:0;line-height:1.2}
-html[data-view="mobile"] .hotel-cta{order:initial;width:auto;flex-basis:auto;padding:8px 14px;font-size:12.5px;border-radius:7px;flex-shrink:0;min-height:36px}
+html[data-view="mobile"] .hotel-img{min-height:200px;touch-action:pan-y}
+html[data-view="mobile"] .campaign-badge{padding:4px 9px;font-size:10.5px;top:8px;left:8px;border-radius:5px}
+html[data-view="mobile"] .hotel-img .heart{width:28px;height:28px;font-size:13px;top:6px;right:6px}
+html[data-view="mobile"] .hotel-body{gap:4px;padding:0}
+html[data-view="mobile"] .hotel-body h3{font-size:15.5px;line-height:1.2;-webkit-line-clamp:2}
+html[data-view="mobile"] .hotel-body h3 .stars{font-size:.65em;margin-left:4px}
+html[data-view="mobile"] .hotel-body .location{font-size:12.5px;line-height:1.3}
+html[data-view="mobile"] .hotel-body .score-row{margin-top:3px;gap:8px}
+html[data-view="mobile"] .hotel-body .score-num{min-width:32px;height:32px;font-size:13px;padding:0 7px;border-radius:6px}
+html[data-view="mobile"] .hotel-body .score-count{font-size:12.5px}
+html[data-view="mobile"] .vip-signup{padding:7px 11px;font-size:12px;gap:7px;border-radius:7px;margin-top:5px}
+html[data-view="mobile"] .vip-signup .flag{font-size:13px}
+html[data-view="mobile"] .price-block{padding-top:6px;gap:3px}
+html[data-view="mobile"] .strike-row{gap:6px}
+html[data-view="mobile"] .strike-row .strike{font-size:12px}
+html[data-view="mobile"] .strike-row .info-icon{font-size:11px;width:14px;height:14px}
+html[data-view="mobile"] .strike-row .discount-pill{font-size:11px;padding:2px 7px;border-radius:5px}
+html[data-view="mobile"] .big-price{font-size:23px;gap:3px}
+html[data-view="mobile"] .big-price .ft{font-size:13px}
+html[data-view="mobile"] .perks .perk{font-size:11.5px}
 html[data-view="mobile"] .vip-list-teaser{flex-direction:column;text-align:center;gap:10px;padding:14px}
 html[data-view="mobile"] .vip-list-teaser .vip-word{font-size:36px}
 html[data-view="mobile"] .vip-list-teaser button{width:100%}
@@ -596,10 +521,27 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
   const touchStart = React.useRef(null);
   const goNext = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i+1) % PHOTO_COUNT); };
   const goPrev = (e) => { if(e) e.stopPropagation(); setImgIdx(i => (i-1+PHOTO_COUNT) % PHOTO_COUNT); };
+  // Single campaign badge picks the strongest signal: VIP eligibility → top score → deal → city fallback
+  const campaignBadge = h.vipEligible
+    ? { lbl: 'VIP klub', cls: 'cb-vip' }
+    : h.score >= 9.3
+      ? { lbl: 'Top választás', cls: 'cb-top' }
+      : h.discount > 0
+        ? { lbl: 'Last minute', cls: 'cb-deal' }
+        : { lbl: h.city, cls: 'cb-city' };
+  const isVipApplied = tw.loggedIn && h.vipEligible;
+  const showVipSignup = !tw.loggedIn && h.vipEligible;
+  const basePrice = priceFor(h.price, tw.priceMode);
+  const displayedPrice = isVipApplied ? Math.round(basePrice * VIP_DISCOUNT) : basePrice;
+  const displayedStrike = isVipApplied
+    ? basePrice
+    : (tw.showPriceAnchor !== false && h.original > 0 ? priceFor(h.original, tw.priceMode) : null);
+  const displayedDiscountPct = isVipApplied ? 15 : h.discount;
+  const showStrikeRow = displayedStrike || displayedDiscountPct > 0;
   return (
   <div className={'hotel-card'+(highlight?' highlight':'')}
     role="link" tabIndex={0}
-    aria-label={`${h.name}, ${h.stars} csillag, értékelés ${h.score} ${h.scoreLbl}, ${fmt(priceFor(h.price, tw.priceMode))} Ft`}
+    aria-label={`${h.name}, ${h.stars} csillag, értékelés ${h.score} ${h.scoreLbl}, ${fmt(displayedPrice)} Ft`}
     onMouseEnter={onHover} onMouseLeave={onLeave}
     onClick={onClick}
     onKeyDown={(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); onClick && onClick(); } }}>
@@ -616,77 +558,35 @@ const HotelCard = ({ h, highlight, saved, onHover, onLeave, onSave, onClick }) =
         aria-label={saved ? 'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}
         aria-pressed={saved}
         onClick={(e)=>{e.stopPropagation();onSave()}}>{saved?'❤':'♡'}</button>
-      {h.discount>0 && <div className="discount">−{h.discount}%</div>}
-      {h.vipEligible && <div className="vip-eligible">VIP −15%</div>}
-      <div className="hotel-img-label">{h.city}</div>
-      <button className="card-arrow card-arrow-prev" onClick={goPrev} aria-label="Előző kép">‹</button>
-      <button className="card-arrow card-arrow-next" onClick={goNext} aria-label="Következő kép">›</button>
-      <div className="card-dots">
-        {imgs.map((_, i) => (
-          <button key={i} className={'card-dot'+(i===imgIdx?' active':'')}
-            onClick={(e)=>{e.stopPropagation(); setImgIdx(i)}} aria-label={`${i+1}. kép`}/>
-        ))}
-      </div>
+      <div className={'campaign-badge '+campaignBadge.cls}>{campaignBadge.lbl}</div>
     </div>
-    <div className="hotel-info">
-      <div className="name-row">
-        <div className="name-stars">
-          <h3>{h.name}</h3>
-          <span className="stars">{'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span>
-        </div>
-        <div className="name-score">
-          <div className="name-score-text">
-            <div className="lbl">{h.scoreLbl}</div>
-            <div className="cnt">{fmt(h.reviews)} értékelés</div>
+    <div className="hotel-body">
+      <h3>{h.name}<span className="stars"> {'★'.repeat(h.stars)}{h.superior && <span className="superior">+sup</span>}</span></h3>
+      <div className="location">{h.distance} · {h.city}</div>
+      <div className="score-row">
+        <div className="score-num">{h.score}</div>
+        <span className="score-count">{fmt(h.reviews)} értékelés</span>
+      </div>
+      {showVipSignup && (
+        <button className="vip-signup" onClick={(e)=>e.stopPropagation()}>
+          <span className="flag">🚩</span>
+          <span>Lépj be VIP kedvezményért</span>
+        </button>
+      )}
+      <div className="price-block">
+        {showStrikeRow && (
+          <div className="strike-row">
+            {displayedStrike && <span className="strike">{fmt(displayedStrike)} Ft</span>}
+            <span className="info-icon" title="Adók és díjak benne">i</span>
+            {displayedDiscountPct > 0 && <span className="discount-pill">−{displayedDiscountPct}%</span>}
           </div>
-          <div className="name-score-num">{h.score}</div>
+        )}
+        <div className="big-price">{fmt(displayedPrice)}<span className="ft">Ft</span></div>
+        <div className="perks">
+          {h.refundable && <div className="perk">Ingyenes lemondás {h.cancelUntil}-ig</div>}
+          <div className="perk">{h.board}</div>
         </div>
       </div>
-      <div className="location"><span className="pin">📍</span>{h.distance} · {h.city}</div>
-      <div className="facts">
-        {h.amenities.includes('📶') && <span><span className="ico">✓</span>Wi-Fi az árban</span>}
-        {h.amenities.includes('🅿️') && <span><span className="ico">✓</span>Ingyenes parkolás</span>}
-        {h.wellness && <span><span className="ico">✓</span>Wellness részleg</span>}
-        {h.amenities.includes('❄️') && <span><span className="ico">✓</span>Klíma</span>}
-      </div>
-      <div className="quote">{h.topQuote}</div>
-      <div className="promo-badges">
-        {h.score >= 9.3 && <span className="promo-badge promo-top">🔥 Top választás</span>}
-        {h.vipEligible && <span className="promo-badge promo-vip">🎖 VIP klub −15%</span>}
-        {h.discount > 0 && <span className="promo-badge promo-last">⚡ Last minute akció</span>}
-        {h.wellness && <span className="promo-badge promo-wellness">🎫 Wellness ajándékba</span>}
-      </div>
-      <div className="badges">
-        <span className={'badge board-'+(h.boardKind==='allinc'?'ai':h.boardKind==='halfboard'?'hp':'br')}>
-          {h.boardKind==='allinc'?'🥂':h.boardKind==='halfboard'?'🍽️':'🍳'} {h.board}
-        </span>
-        {h.refundable
-          ? <span className="badge cancel">↩️ Ingyenes lemondás {h.cancelUntil}-ig</span>
-          : <span className="badge noref">🔒 Nem visszatéríthető</span>}
-        <span className="badge szep">💳 SZÉP-kártya</span>
-      </div>
-    </div>
-    <div className="hotel-price">
-      <div className="hotel-pricing">
-        {tw.loggedIn && h.vipEligible
-          ? <React.Fragment>
-              <span className="hotel-strike">{fmt(priceFor(h.price, tw.priceMode))} Ft</span>
-              <span className="hotel-savings">VIP −{fmt(priceFor(h.price, tw.priceMode) - priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)} Ft</span>
-              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode) * VIP_DISCOUNT)}<span className="ft">Ft</span></div>
-              <div className="hotel-priceunit" style={{color:'#6B21A8',fontWeight:700}}>VIP −15% · {pmSuffix(tw.priceMode)}</div>
-            </React.Fragment>
-          : <React.Fragment>
-              {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-strike">{fmt(priceFor(h.original, tw.priceMode))} Ft</span>}
-              {tw.showPriceAnchor !== false && h.original>0 && <span className="hotel-savings">Megtakarítás {fmt(priceFor(h.original-h.price, tw.priceMode))} Ft</span>}
-              <div className="hotel-bigprice">{fmt(priceFor(h.price, tw.priceMode))}<span className="ft">Ft</span></div>
-              <div className="hotel-priceunit">{pmSuffix(tw.priceMode)}</div>
-            </React.Fragment>
-        }
-        {tw.priceMode !== 'nightly' && tw.priceMode !== 'per-person' && <div className="hotel-pernight">≈ {fmt(Math.round(h.price/2))} Ft / éj</div>}
-        <div className="hotel-tax">Adók és díjak benne</div>
-        {tw.showUrgency && (h.id==='aurora' || h.id==='ensana') && <div style={{color:'var(--c-primary)',fontSize:11,fontWeight:800,marginTop:4}}>🔥 Csak 2 szoba ezen az áron</div>}
-      </div>
-      <button className="hotel-cta" onClick={(e)=>{e.stopPropagation(); onClick && onClick();}}>Megnézem →</button>
     </div>
   </div>
   );
