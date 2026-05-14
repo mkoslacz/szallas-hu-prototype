@@ -81,6 +81,11 @@ h1,h2,h3,h4{margin:0;font-weight:800;color:var(--ink-900);letter-spacing:-.01em}
 .lm-toggle{display:inline-flex;gap:0;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:3px;margin-left:10px;flex-shrink:0}
 .lm-toggle button{padding:6px 14px;border:0;background:transparent;color:var(--ink-700);font-weight:700;font-size:13px;cursor:pointer;border-radius:999px;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
 .lm-toggle button.on{background:var(--ink-900);color:#fff;box-shadow:var(--shadow-sm)}
+/* Short label only visible on mobile (see html[data-view="mobile"] rules below) */
+.lm-toggle .lm-label-short{display:none}
+
+/* Bottom breadcrumbs — desktop hides them (top crumbs are shown instead) */
+.crumbs-bottom{display:none}
 
 /* Map button inside filters column (sticky top of sidebar) */
 .filters-map-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;background:linear-gradient(135deg,#aac6d3,#7ba9bb);color:#fff;border:0;border-radius:var(--radius-lg) var(--radius-lg) 0 0;cursor:pointer;font-weight:700;font-size:14px;text-align:left;position:relative;overflow:hidden;transition:filter .15s}
@@ -301,8 +306,8 @@ html[data-view="mobile"] .search-bar > .field-cell .val{font-size:11.5px;white-s
 html[data-view="mobile"] .search-bar > .btn-search{flex-basis:100%;border-radius:0 0 var(--radius) var(--radius);width:100%;padding:9px 12px;justify-content:center;font-size:13px;border-top:1px solid #b40510}
 html[data-view="mobile"] .page{padding:0 10px}
 html[data-view="mobile"] .title-row h1{font-size:19px}
-html[data-view="mobile"] .quick-chips{padding:10px 0 8px}
-html[data-view="mobile"] .quick-chips button{font-size:12.5px;padding:8px 12px;min-height:36px}
+/* Mobile: drop preset chips entirely — saves vertical space, redundant w/ filters drawer */
+html[data-view="mobile"] .quick-chips{display:none}
 /* Mobile sticky toolbar — Szűrők / Lista+Mapa / Sort always visible while scrolling */
 html[data-view="mobile"] .results-bar{padding:6px 10px;gap:6px;position:sticky;top:80px;z-index:20;background:#F5F6F8;margin:0 -10px;border-bottom:1px solid var(--line);box-shadow:0 4px 8px -8px rgba(0,0,0,.18);transition:padding .15s ease}
 html[data-view="mobile"] .results-bar.scrolled{padding:4px 10px}
@@ -310,12 +315,21 @@ html[data-view="mobile"] .results-bar.scrolled .summary-left{display:none}
 html[data-view="mobile"] .results-bar .summary-left{gap:6px;flex:1 1 100%;order:0}
 html[data-view="mobile"] .results-bar .summary-left .count{font-size:13px}
 html[data-view="mobile"] .results-bar .summary-left .cancel-stat{display:none}
-html[data-view="mobile"] .crumbs{display:block;padding:4px 0 2px !important;font-size:11px !important;color:var(--ink-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+/* Mobile: top crumbs hidden — moved to the bottom of the page (.crumbs-bottom) */
+html[data-view="mobile"] .page > .crumbs:not(.crumbs-bottom){display:none}
+html[data-view="mobile"] .crumbs-bottom{display:block;padding:14px 0 24px;font-size:12px;color:var(--ink-500);line-height:1.4}
+html[data-view="mobile"] .crumbs-bottom a{color:var(--ink-700);text-decoration:none}
+html[data-view="mobile"] .crumbs-bottom a:hover{text-decoration:underline}
 html[data-view="mobile"] .disclosure{display:none}
 html[data-view="mobile"] .results-bar .right{width:100%;justify-content:space-between;gap:6px;order:1}
 html[data-view="mobile"] .results-bar select{font-size:12.5px;padding:8px 10px;flex:1;min-width:0;min-height:36px}
-html[data-view="mobile"] .lm-toggle{margin-left:0;padding:3px}
-html[data-view="mobile"] .lm-toggle button{padding:8px 11px;font-size:12.5px;min-height:34px}
+/* Mobile: collapse the segmented Lista/Térkép toggle to a single Térkép pill button */
+html[data-view="mobile"] .lm-toggle{margin-left:0;padding:0;background:transparent;border:0;border-radius:8px}
+html[data-view="mobile"] .lm-toggle button:first-child{display:none}
+html[data-view="mobile"] .lm-toggle .lm-label-full{display:none}
+html[data-view="mobile"] .lm-toggle .lm-label-short{display:inline}
+html[data-view="mobile"] .lm-toggle button{padding:8px 14px;font-size:12.5px;min-height:36px;background:#fff;border:1px solid var(--line-strong);border-radius:8px;color:var(--ink-900);font-weight:700;gap:5px}
+html[data-view="mobile"] .lm-toggle button.on{background:#fff;color:var(--ink-900);box-shadow:none}
 html[data-view="mobile"] .disclosure{font-size:10.5px;margin:2px 0 8px}
 html[data-view="mobile"] .layout{grid-template-columns:1fr;gap:10px}
 html[data-view="mobile"] .layout.with-map{grid-template-columns:1fr}
@@ -907,7 +921,7 @@ const Page = () => {
             <button className="mobile-filter-btn" onClick={()=>setMobileFilters(true)}>🎚 Szűrők</button>
             <div className="lm-toggle">
               <button className={view==='list'?'on':''} onClick={()=>setView('list')}>☰ Lista</button>
-              <button className={view==='split'?'on':''} onClick={()=>{ if (isMobilePreview) { setFsMap(true); } else { setView('split'); } }}>🗺 Lista + térkép</button>
+              <button className={view==='split'?'on':''} onClick={()=>{ if (isMobilePreview) { setFsMap(true); } else { setView('split'); } }}>🗺 <span className="lm-label-full">Lista + térkép</span><span className="lm-label-short">Térkép</span></button>
             </div>
             <select>
               <option>Ajánlásunk szerint</option>
@@ -962,6 +976,10 @@ const Page = () => {
           </div>
 
           {view === 'split' && <MapView hotels={HOTELS} activeId={active} onMarkerClick={setActive}/>}
+        </div>
+
+        <div className="crumbs crumbs-bottom">
+          <a href="01-homepage.html">Főoldal</a> &rsaquo; <a href="#">Magyarország</a> &rsaquo; Balaton
         </div>
       </div>
 
